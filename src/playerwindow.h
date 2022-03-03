@@ -7,14 +7,20 @@
 #include <QFileDialog>
 #include <QPalette>
 #include <QDesktopServices>
-#include "play.h"
+#include "playerbutton.h"
+#include "player.h"
 
 namespace Ui { class PlayerWindow; }
 class PlayerWindow : public QMainWindow {
     Q_OBJECT
-    Player *playButton = nullptr;
-    void registerSlots();
+private:
+    Ui::PlayerWindow *ui;
+    PlayerButton *playButton;
+    PlayerCore *player;
     void ensureExit();
+    void setBackground();
+    void registerSlots();
+    void setIcon(bool needOperation = true);
 public:
     PlayerWindow(QWidget *parent = nullptr);
     ~PlayerWindow();
@@ -24,8 +30,5 @@ private slots:
     void on_volumeSlider_valueChanged(int value);
     void on_progressSlider_valueChanged(int value);
     void on_progressSlider_sliderMoved(int position);
-
-private:
-    Ui::PlayerWindow *ui;
 };
 #endif // PLAYERWINDOW_H

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>660</width>
+    <width>690</width>
     <height>220</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>660</width>
+    <width>690</width>
     <height>220</height>
    </size>
   </property>
@@ -31,12 +31,6 @@
   <property name="windowTitle">
    <string>TinyPlayer</string>
   </property>
-  <property name="windowOpacity">
-   <double>1.000000000000000</double>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -44,13 +38,10 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>340</x>
       <y>130</y>
       <width>331</width>
       <height>51</height>
@@ -59,9 +50,6 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QSlider" name="volumeSlider">
-       <property name="toolTip">
-        <string/>
-       </property>
        <property name="maximum">
         <number>100</number>
        </property>
@@ -117,7 +105,7 @@
    <widget class="QLabel" name="volLabel">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>350</x>
       <y>120</y>
       <width>72</width>
       <height>15</height>
@@ -132,13 +120,16 @@
      <rect>
       <x>50</x>
       <y>60</y>
-      <width>561</width>
+      <width>591</width>
       <height>44</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QSlider" name="progressSlider">
+       <property name="maximum">
+        <number>0</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -166,7 +157,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>660</width>
+     <width>690</width>
      <height>26</height>
     </rect>
    </property>
@@ -187,7 +178,6 @@
    <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionopenFile">
    <property name="text">
     <string>打开...</string>

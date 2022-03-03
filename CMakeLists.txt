@@ -22,12 +22,14 @@ set(INCLUDE_DIRECTORIES
 set(TS_FILES TinyPlayer_zh_CN.ts)
 
 set(PROJECT_SOURCES
-        src/main.cpp
         src/playerwindow.cpp
         src/playerwindow.h
         src/playerwindow.ui
-        src/play.cpp
-        src/play.h
+        src/player.cpp
+        src/player.h
+        src/playerbutton.cpp
+        src/playerbutton.h
+        src/main.cpp
         icon.rc
         Icons.qrc
         qm.qrc

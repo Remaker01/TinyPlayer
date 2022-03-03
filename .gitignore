@@ -72,6 +72,8 @@ Thumbs.db
 *.dll
 *.exe
 
+# Backups
+*.bak
+
 # Tempoary
 stop.png
-
