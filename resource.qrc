@@ -5,5 +5,7 @@
         <file>images/stop.png</file>
         <file>images/back.jpg</file>
         <file>images/icon.ico</file>
+        <file>images/stylesheet.qss</file>
+        <file>images/border.png</file>
     </qresource>
 </RCC>

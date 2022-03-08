@@ -2,16 +2,23 @@
 #define PLAYERBUTTON_H
 #include <QLabel>
 #include <QMouseEvent>
+/**
+ * 播放器按钮类
+ */
 class PlayerButton : public QLabel {
     Q_OBJECT
-    int w,h;
+    const int w,h;  //初始大小
+    bool replyClick = true;
 public:
-    PlayerButton(int w,int h,QWidget *parent = nullptr);
+    PlayerButton(int W,int H,QWidget *parent = nullptr);
+    ///设置鼠标点击时是否相应clicked()信号
+    void setReplyClick(bool f);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     ~PlayerButton();
 signals:
     //void mousePressed();
+    /// 鼠标点击信号
     void clicked();
 };
 

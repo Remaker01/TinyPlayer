@@ -1,15 +1,17 @@
 #include "playerwindow.h"
 #include "./ui_playerwindow.h"
+#include <QThread>
 #ifndef SLOTS
 #define SLOTS
 #endif
 PlayerWindow::PlayerWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
     playButton = new PlayerButton(50,50,this);
-    playButton->move(10,155);
-    playButton->setPixmap(QPixmap(":/Icons/images/play.png"));
-    playButton->setEnabled(false);
-    playButton->show();
+    stopButton = new PlayerButton(45,45,this);
+    setButton(playButton,QPixmap(":/Icons/images/play.png"),QPoint(10,155));
+    setButton(stopButton,QPixmap(":/Icons/images/stop.png"),QPoint(70,160));
+    playButton->setToolTip("开始");
+    stopButton->setToolTip("停止");
     player = new PlayerCore;
     setBackground();
     registerSlots();
@@ -23,6 +25,13 @@ inline void PlayerWindow::setBackground() {
     setAutoFillBackground(true);
 }
 
+inline void PlayerWindow::setButton(PlayerButton *button, const QPixmap &pic, const QPoint &loc) {
+    button->move(loc);
+    button->setPixmap(pic);
+    button->setReplyClick(false);
+    button->show();
+}
+
 inline void PlayerWindow::registerSlots() {
     connect(ui->actionExit,&QAction::triggered,this,&PlayerWindow::ensureExit);
     connect(ui->actionAbout,&QAction::triggered,this,[this]() {
@@ -31,15 +40,14 @@ inline void PlayerWindow::registerSlots() {
                                                         "界面框架:Qt5.12\n"
                                                         "环境:QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.0 Alpha  1.0.220227");
+                                                        "版本号:1.0 Beta1  1.0.220306");
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
         QFile media(QFileDialog::getOpenFileName(this,"选择文件","","音频文件(*.mp3;*.wav;*.wma;*.aiff)"));
         QString name = media.fileName();
-        if(name.isEmpty())
+        if(name.isEmpty()||QUrl::fromLocalFile(name) == player->getMedia())
             return;
         player->setMedia(&media);
-        //player->setVolum(ui->volumeSlider->value());
         ui->mediaLabel->setText(player->getMedia().fileName());
     });
     connect(ui->actionOpenHelp,&QAction::triggered,this,[]() {
@@ -51,9 +59,16 @@ inline void PlayerWindow::registerSlots() {
             setIcon();
          }
     });
+    connect(stopButton,&PlayerButton::clicked,this,[this]() {
+        if(player->isAudioAvailable()&&player->state() != QMediaPlayer::StoppedState) {
+           player->stop();
+           player->changeState(playButton,"开始",QPixmap(":/Icons/images/play.png"),PlayerCore::STOP);
+           ui->progressSlider->setValue(0);
+        }
+    });
     //音频改变，触发durationChanged信号，改变标签
     connect(player,&PlayerCore::durationChanged,playButton,[&,this](qint64 totTime) {
-        playButton->setEnabled(player->isAudioAvailable());
+        playButton->setReplyClick(player->isAudioAvailable());
         //注意这里只能改为开始图标，不要调用setIcon();
         player->changeState(playButton,"开始",QPixmap(":/Icons/images/play.png"),PlayerCore::STOP);
         totTime = qRound(totTime / 1000.0);
@@ -74,6 +89,10 @@ inline void PlayerWindow::registerSlots() {
             ui->progressSlider->setValue(0);
             setIcon(false);
         }
+        stopButton->setReplyClick(nState != QMediaPlayer::StoppedState);
+    });
+    connect(ui->progressSlider,&PlayerSlider::playerSliderClicked,this,[&,this](int loc) {
+        player->setPos(loc);
     });
 }
 
@@ -81,12 +100,15 @@ void PlayerWindow::setIcon(bool needOperation) {
     static const QPixmap playIcon(":/Icons/images/play.png");
     static const QPixmap pauseIcon(":/Icons/images/pause.png");
     if(*(playButton->pixmap()) == playIcon) {
+        if(needOperation) {
+            player->play();
+            stopButton->setReplyClick(true);
+        }
         player->changeState(playButton,"暂停",pauseIcon,PlayerCore::START);
-        if(needOperation) player->play();
     }
     else {
-        player->changeState(playButton,"开始",playIcon,PlayerCore::STOP);
         if(needOperation) player->pause();
+        player->changeState(playButton,"开始",playIcon,PlayerCore::STOP);
     }
 }
 
@@ -99,6 +121,8 @@ inline void PlayerWindow::ensureExit() {
 }
 SLOTS
 void PlayerWindow::on_closeButton_clicked() {
+    if(player->state() != QMediaPlayer::StoppedState)
+        player->stop();
     static const QFile emptyFile("");
     player->setMedia(&emptyFile);
     ui->mediaLabel->clear();

@@ -16,9 +16,11 @@ class PlayerWindow : public QMainWindow {
 private:
     Ui::PlayerWindow *ui;
     PlayerButton *playButton;
+    PlayerButton *stopButton;
     PlayerCore *player;
     void ensureExit();
     void setBackground();
+    void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
     void registerSlots();
     void setIcon(bool needOperation = true);
 public:

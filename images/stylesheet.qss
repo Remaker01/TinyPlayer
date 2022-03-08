@@ -1,0 +1,23 @@
+QSlider::groove:horizontal {
+    position: absolute; /* absolutely position 4px from the left and right of the widget. setting margins on the widget should work too... */
+    left: 4px; right: 4px;
+}
+
+QSlider::handle:horizontal {
+    height: 10px;
+    width: 10px;
+    border:0px;
+    border-image: url(:/Icons/images/border.png);
+    /*background: green;*/
+    margin: 0 -4px; /* expand outside the groove */
+}
+
+//还没有滑上去的地方
+QSlider::add-page:horizontal{
+background: white; 
+
+}
+//已经划过的从地方
+QSlider::sub-page:horizontal{
+ background: blue;
+}

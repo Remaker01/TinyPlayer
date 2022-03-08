@@ -29,10 +29,12 @@ set(PROJECT_SOURCES
         src/player.h
         src/playerbutton.cpp
         src/playerbutton.h
+        src/playerslider.cpp
+        src/playerslider.h
         src/main.cpp
         icon.rc
-        Icons.qrc
-        qm.qrc
+        resource.qrc
+        #qm.qrc
         ${TS_FILES}
 )
 
