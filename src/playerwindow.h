@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QPalette>
 #include <QDesktopServices>
+#include <QStringListModel>
 #include "playerbutton.h"
 #include "player.h"
 
@@ -15,22 +16,31 @@ class PlayerWindow : public QMainWindow {
     Q_OBJECT
 private:
     Ui::PlayerWindow *ui;
-    PlayerButton *playButton;
-    PlayerButton *stopButton;
+    PlayerButton *playButton,*stopButton;
     PlayerCore *player;
+    QStringListModel *playListModel;
+    //QUrl:只获取文件名，QFile::fileName:获取文件名及目录名
+    //因此这个list里都是带目录名的
+    QStringList playList;
+    //当前正在播放
+    int selected = -1;
     void ensureExit();
-    void setBackground();
+    void initUi();
+    void initBackground();
+    void initPlayList();
     void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
-    void registerSlots();
+    void connectSlots();
     void setIcon(bool needOperation = true);
 public:
     PlayerWindow(QWidget *parent = nullptr);
     ~PlayerWindow();
 
 private slots:
-    void on_closeButton_clicked();
     void on_volumeSlider_valueChanged(int value);
     void on_progressSlider_valueChanged(int value);
     void on_progressSlider_sliderMoved(int position);
+    void on_listView_doubleClicked(const QModelIndex &index);
+    void on_listView_clicked(const QModelIndex &index);
+    void on_delButton_clicked();
 };
 #endif // PLAYERWINDOW_H

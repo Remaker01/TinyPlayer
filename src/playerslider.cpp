@@ -12,9 +12,6 @@ void PlayerSlider::mousePressEvent(QMouseEvent *e) {
         double r = e->x() / (double)width();
         int loc = qRound(r * maximum());
         setValue(loc);
-#ifndef NDEBUG
-        qDebug() << objectName() << "clicked on" << loc;
-#endif
         emit playerSliderClicked(loc);
         QSlider::mousePressEvent(e);
     }

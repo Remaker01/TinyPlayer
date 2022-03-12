@@ -14,8 +14,7 @@ void PlayerButton::mousePressEvent(QMouseEvent *e) {
         wi = wi - (wi >> 3);
         he = he - (he >> 3);
         resize(wi,he);
-        static int baseW = w / 10 - 1,baseH = h / 10;
-        move(x() + baseW,y() + baseH);
+        move(x() + (w/10-1),y() + h/10);
     }
 }
 
@@ -24,9 +23,7 @@ void PlayerButton::mouseReleaseEvent(QMouseEvent *e) {
         //当前仍未播放
         emit clicked();
         resize(w,h);
-        static int baseW = w / 10 - 1,baseH = h / 10;
-        move(x() - baseW,y() - baseH);
-
+        move(x() - (w/10-1),y() - h/10);
     }
 }
 

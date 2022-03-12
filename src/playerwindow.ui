@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>690</width>
-    <height>220</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>690</width>
-    <height>220</height>
+    <height>500</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>760</width>
-    <height>220</height>
+    <height>500</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -141,17 +141,40 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="closeButton">
+   <widget class="QListView" name="listView">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>20</y>
+      <x>50</x>
+      <y>230</y>
+      <width>591</width>
+      <height>192</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="listLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>200</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>播放列表</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="delButton">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>430</y>
       <width>93</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
-     <string>关闭文件</string>
+     <string>删除</string>
     </property>
    </widget>
   </widget>

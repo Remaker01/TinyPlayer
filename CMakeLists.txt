@@ -32,7 +32,6 @@ set(PROJECT_SOURCES
         src/playerslider.cpp
         src/playerslider.h
         src/main.cpp
-        icon.rc
         resource.qrc
         #qm.qrc
         ${TS_FILES}
@@ -56,6 +55,12 @@ else()
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+# for Windows
+    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        add_executable(TinyPlayer
+            ${PROJECT_SOURCES}
+            meta.rc
+        )
     else()
         add_executable(TinyPlayer
             ${PROJECT_SOURCES}

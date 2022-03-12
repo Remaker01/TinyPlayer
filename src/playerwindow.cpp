@@ -1,23 +1,36 @@
 #include "playerwindow.h"
 #include "./ui_playerwindow.h"
-#include <QThread>
+#include <QStringListModel>
 #ifndef SLOTS
 #define SLOTS
 #endif
 PlayerWindow::PlayerWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
+    player = new PlayerCore;
+    initUi();
+    connectSlots();
+}
+
+inline void PlayerWindow::initUi() {
     playButton = new PlayerButton(50,50,this);
     stopButton = new PlayerButton(45,45,this);
     setButton(playButton,QPixmap(":/Icons/images/play.png"),QPoint(10,155));
     setButton(stopButton,QPixmap(":/Icons/images/stop.png"),QPoint(70,160));
     playButton->setToolTip("开始");
     stopButton->setToolTip("停止");
-    player = new PlayerCore;
-    setBackground();
-    registerSlots();
+    ui->delButton->setEnabled(false);
+    initPlayList();
+    initBackground();
 }
 
-inline void PlayerWindow::setBackground() {
+inline void PlayerWindow::initPlayList() {
+    playListModel = new QStringListModel(this);
+    playListModel->setStringList(playList);
+    ui->listView->setModel(playListModel);
+    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+}
+
+inline void PlayerWindow::initBackground() {
     QPixmap img(":/Icons/images/back.jpg");
     QPalette pl;
     pl.setBrush(backgroundRole(),QBrush(img));
@@ -32,7 +45,7 @@ inline void PlayerWindow::setButton(PlayerButton *button, const QPixmap &pic, co
     button->show();
 }
 
-inline void PlayerWindow::registerSlots() {
+inline void PlayerWindow::connectSlots() {
     connect(ui->actionExit,&QAction::triggered,this,&PlayerWindow::ensureExit);
     connect(ui->actionAbout,&QAction::triggered,this,[this]() {
         QMessageBox::information(this,"关于","TinyPlayer播放器\n"
@@ -40,20 +53,25 @@ inline void PlayerWindow::registerSlots() {
                                                         "界面框架:Qt5.12\n"
                                                         "环境:QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.0 Beta1  1.0.220306");
+                                                        "版本号:1.0 Beta1  1.0.220311");
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
-        QFile media(QFileDialog::getOpenFileName(this,"选择文件","","音频文件(*.mp3;*.wav;*.wma;*.aiff)"));
-        QString name = media.fileName();
-        if(name.isEmpty()||QUrl::fromLocalFile(name) == player->getMedia())
-            return;
-        player->setMedia(&media);
-        ui->mediaLabel->setText(player->getMedia().fileName());
+        QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件","","音频文件(*.mp3;*.wav;*.wma;*.aiff)"));
+        if(medias.size() == 0)  return;
+        for(QString &name : medias) {
+            if(name.isEmpty()||playList.indexOf(name) >= 0)
+                continue;
+            playList.append(name);
+            player->addToList(QFile(name));
+        }
+        playListModel->setStringList(playList);
+        if(playList.size() > 0)
+            ui->delButton->setEnabled(true);
+        player->setCurrentMediaIndex(playList.size() - 1);
     });
     connect(ui->actionOpenHelp,&QAction::triggered,this,[]() {
         return QDesktopServices::openUrl(QUrl::fromLocalFile("README.htm"));
     });
-    //按下按钮，开始播放
     connect(playButton,&PlayerButton::clicked,this,[this](){
          if(player->isAudioAvailable()) {
             setIcon();
@@ -76,6 +94,7 @@ inline void PlayerWindow::registerSlots() {
         static const QLatin1Char zero('0');
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
+        ui->mediaLabel->setText(player->getMedia().fileName());
         //重置进度条（好像不加也可以？）
         ui->progressSlider->setValue(0);
     });
@@ -120,15 +139,6 @@ inline void PlayerWindow::ensureExit() {
     box.exec();
 }
 SLOTS
-void PlayerWindow::on_closeButton_clicked() {
-    if(player->state() != QMediaPlayer::StoppedState)
-        player->stop();
-    static const QFile emptyFile("");
-    player->setMedia(&emptyFile);
-    ui->mediaLabel->clear();
-    player->stop();
-}
-
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     player->setVolume(value);
     QString str = QString("音量：%1").arg(value);
@@ -148,5 +158,29 @@ void PlayerWindow::on_progressSlider_sliderMoved(int position) {
     player->setPos(position);
     on_progressSlider_valueChanged(player->getPosInSecond());
 }
+/*
+ * 双击后：
+ * 1.触发QStringListView::doubleClicked信号，调用此槽函数。
+ * 2.调用PlayerCore::setCurrentMediaIndex，修改当前媒体为当前行对应文件。
+ * 3.触发QMediaPlayer::durationChanged信号，触发槽函数，改变标签、图标等。
+ */
+void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
+    player->setCurrentMediaIndex((uint)index.row());
+}
 
+void PlayerWindow::on_listView_clicked(const QModelIndex &index) {selected = index.row();}
+
+void PlayerWindow::on_delButton_clicked() {
+    if(selected >= 0) {
+        if(!player->removeFromList((uint)selected)) {
+            QMessageBox::critical(this,"错误","删除失败。");
+        }
+        else {
+            playList.removeAt(selected);
+            selected = -1;
+            playListModel->setStringList(playList);
+        }
+    }
+    ui->delButton->setEnabled(playList.size() > 0);
+}
 PlayerWindow::~PlayerWindow() {delete ui;}
