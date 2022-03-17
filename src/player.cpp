@@ -9,6 +9,27 @@ PlayerCore::PlayerCore(QWidget *p):timer(new QTimer(this)),list(new QMediaPlayli
 
 inline void PlayerCore::connectSlots() {
     connect(timer,&QTimer::timeout,this,&PlayerCore::timedOut);
+    connect(this,&QMediaPlayer::stateChanged,this,[this]() {
+        if(QMediaPlayer::state() == QMediaPlayer::StoppedState&&position() > 0) {
+            switch (mode) {
+            case SIGNLE:
+                emit finished();
+                break;
+            case SEQUENTIAL:
+                if(list->currentIndex() != list->mediaCount() - 1) {
+                    list->next();
+                    QMediaPlayer::setMedia(list->currentMedia());
+                    QMediaPlayer::play();
+                }
+                else    emit finished();
+                break;
+            case LOOP:
+                QMediaPlayer::setPosition(0);
+                QMediaPlayer::play();
+                break;
+            }
+        }
+    });
 }
 
 void PlayerCore::changeState(QLabel *label,const QString &toolTip, const QPixmap &pixmap,TimerOperation opt) {
@@ -56,12 +77,14 @@ bool PlayerCore::removeFromList(uint loc) {
 #ifndef NDEBUG
         qDebug() << "before delete:" << list->currentIndex();
 #endif
-    uint now = (uint)list->currentIndex();
-    bool ret = list->removeMedia(loc);
+    int now = list->currentIndex();
+    bool ret = list->removeMedia((int)loc);
     if(loc <= now) {
         list->setCurrentIndex(now - 1);
-        if(loc==now)
+        if(loc==now) {
             QMediaPlayer::setMedia(list->currentMedia());
+            emit finished();
+        }
     }
     else    list->setCurrentIndex(now);
 #ifndef NDEBUG
@@ -70,4 +93,9 @@ bool PlayerCore::removeFromList(uint loc) {
         return ret;
 }
 
-const QMediaPlaylist *PlayerCore::getAllMedia() {return list;}
+//const QMediaPlaylist *PlayerCore::getAllMedia() {return list;}
+
+void PlayerCore::clear() {
+    list->clear();
+    QMediaPlayer::setMedia(list->currentMedia());
+}

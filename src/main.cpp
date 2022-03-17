@@ -11,6 +11,9 @@ int main(int argc, char *argv[]) {
         a.setStyleSheet(style);
         qss.close();
     }
+    else {
+        QMessageBox::critical(nullptr,"错误","样式加载失败");
+    }
     PlayerWindow w;
     w.show();
     return a.exec();

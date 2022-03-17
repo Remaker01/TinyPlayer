@@ -9,72 +9,82 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="54"/>
+        <location filename="src/playerwindow.ui" line="61"/>
         <source>音量：50</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="83"/>
+        <location filename="src/playerwindow.ui" line="68"/>
         <source>当前媒体:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="131"/>
-        <source>00:00</source>
+        <location filename="src/playerwindow.ui" line="78"/>
+        <source>清空</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="138"/>
-        <source>/00:00</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="164"/>
+        <location filename="src/playerwindow.ui" line="85"/>
         <source>播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="177"/>
+        <location filename="src/playerwindow.ui" line="108"/>
         <source>删除</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="192"/>
-        <source>文件</source>
+        <location filename="src/playerwindow.ui" line="182"/>
+        <source>00:00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="189"/>
+        <source>/00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/playerwindow.ui" line="199"/>
-        <source>帮助</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="209"/>
-        <source>打开...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="212"/>
-        <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="217"/>
-        <source>退出</source>
+        <source>单曲播放</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/playerwindow.ui" line="222"/>
+        <source>文件</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="229"/>
+        <source>帮助</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="239"/>
+        <source>打开...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="242"/>
+        <source>Ctrl+O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="247"/>
+        <source>退出</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="252"/>
         <source>打开帮助</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="225"/>
+        <location filename="src/playerwindow.ui" line="255"/>
         <source>F1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="230"/>
+        <location filename="src/playerwindow.ui" line="260"/>
         <source>关于</source>
         <translation type="unfinished"></translation>
     </message>

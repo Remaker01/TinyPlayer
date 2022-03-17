@@ -17,9 +17,10 @@ private:
     QMediaPlaylist *list;
 public:
     enum TimerOperation{NONE,START,STOP};
+    enum PlayMode{SIGNLE = 0,SEQUENTIAL,LOOP};
+    PlayMode mode = SIGNLE;
     PlayerCore(QWidget *p = nullptr);
     void changeState(QLabel *label,const QString &toolTip,const QPixmap &pixmap,TimerOperation opt = NONE);
-//    void clear();
     ///获取当前媒体
     QUrl getMedia();
     ///获取以秒为单位的时间
@@ -34,7 +35,9 @@ public:
     void addToList(const QFile &media);
     ///从播放列表中移除
     bool removeFromList(uint loc);
-    const QMediaPlaylist *getAllMedia();
+    ///清空播放列表
+    void clear();
+    //const QMediaPlaylist *getAllMedia();
 signals:
     void timedOut();
     void finished();

@@ -1,4 +1,5 @@
 #include "playerbutton.h"
+PlayerButton::PlayerButton(QWidget *parent):PlayerButton(40,44,parent) {}
 
 PlayerButton::PlayerButton(int W,int H,QWidget *parent):w(W),h(H){
     setParent(parent);

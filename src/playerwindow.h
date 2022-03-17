@@ -15,6 +15,7 @@ namespace Ui { class PlayerWindow; }
 class PlayerWindow : public QMainWindow {
     Q_OBJECT
 private:
+    const QPixmap PLAY_ICON,PAUSE_ICON;
     Ui::PlayerWindow *ui;
     PlayerButton *playButton,*stopButton;
     PlayerCore *player;
@@ -30,7 +31,6 @@ private:
     void initPlayList();
     void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
     void connectSlots();
-    void setIcon(bool needOperation = true);
 public:
     PlayerWindow(QWidget *parent = nullptr);
     ~PlayerWindow();
@@ -42,5 +42,6 @@ private slots:
     void on_listView_doubleClicked(const QModelIndex &index);
     void on_listView_clicked(const QModelIndex &index);
     void on_delButton_clicked();
+    void on_clearButton_clicked();
 };
 #endif // PLAYERWINDOW_H
