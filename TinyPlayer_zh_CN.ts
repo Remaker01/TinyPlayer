@@ -54,38 +54,61 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="229"/>
+        <location filename="src/playerwindow.ui" line="237"/>
         <source>帮助</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="239"/>
+        <location filename="src/playerwindow.ui" line="247"/>
         <source>打开...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="242"/>
+        <location filename="src/playerwindow.ui" line="250"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="247"/>
+        <location filename="src/playerwindow.ui" line="255"/>
         <source>退出</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="252"/>
+        <location filename="src/playerwindow.ui" line="260"/>
         <source>打开帮助</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="255"/>
+        <location filename="src/playerwindow.ui" line="263"/>
         <source>F1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="260"/>
+        <location filename="src/playerwindow.ui" line="268"/>
         <source>关于</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="273"/>
+        <source>还原默认</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="278"/>
+        <source>打开文件...</source>
+        <oldsource>自文件...</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="281"/>
+        <source>Alt+O</source>
+        <oldsource>Ctrl+Alt+O</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="226"/>
+        <source>更换背景</source>
+        <oldsource>更换外观</oldsource>
         <translation type="unfinished"></translation>
     </message>
 </context>

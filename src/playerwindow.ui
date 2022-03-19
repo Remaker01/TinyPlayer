@@ -221,7 +221,15 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>更换背景</string>
+     </property>
+     <addaction name="actionLoadImg"/>
+     <addaction name="actionToDefault"/>
+    </widget>
     <addaction name="actionopenFile"/>
+    <addaction name="menu_3"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -258,6 +266,19 @@
   <action name="actionAbout">
    <property name="text">
     <string>关于</string>
+   </property>
+  </action>
+  <action name="actionToDefault">
+   <property name="text">
+    <string>还原默认</string>
+   </property>
+  </action>
+  <action name="actionLoadImg">
+   <property name="text">
+    <string>打开文件...</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+O</string>
    </property>
   </action>
  </widget>

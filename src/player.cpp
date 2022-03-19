@@ -2,6 +2,7 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
+static const QString supportFormats[4] = {".mp3",".wav",".wma",".aiff"};
 PlayerCore::PlayerCore(QWidget *p):timer(new QTimer(this)),list(new QMediaPlaylist) {
     connectSlots();
     timer->setInterval(250);
@@ -24,7 +25,7 @@ inline void PlayerCore::connectSlots() {
                 else    emit finished();
                 break;
             case LOOP:
-                QMediaPlayer::setPosition(0);
+                QMediaPlayer::setPosition(0ll);
                 QMediaPlayer::play();
                 break;
             }
@@ -56,21 +57,26 @@ void PlayerCore::setMedia(const QFile *media) {
 void PlayerCore::setPos(int pos) {QMediaPlayer::setPosition((qint64)pos * 1000);}
 
 void PlayerCore::setCurrentMediaIndex(uint i) {
-#ifndef NDEBUG
-    qDebug() << "before set:" << list->currentIndex();
-#endif
     if(i > list->mediaCount()||i == list->currentIndex())
         return;
     list->setCurrentIndex((int)i);
     QMediaPlayer::setMedia(list->currentMedia());
-#ifndef NDEBUG
-    qDebug() << "after set:" << list->currentIndex();
-#endif
+    emit finished();
 }
 
-void PlayerCore::addToList(const QFile &media) {
-    QMediaContent content(QUrl::fromLocalFile(media.fileName()));
-    list->addMedia(content);
+bool PlayerCore::addToList(QString &media) {
+    if(media.startsWith("http",Qt::CaseInsensitive)||media.startsWith("ftp",Qt::CaseInsensitive))
+        return false;
+    bool ok = false;
+    for (const QString &format : supportFormats) {
+        if(media.endsWith(format,Qt::CaseInsensitive)) {
+            ok = true;
+            break;
+        }
+    }
+    if(!ok)  return false;
+    QMediaContent content(QUrl::fromLocalFile(media));
+    return list->addMedia(content);
 }
 
 bool PlayerCore::removeFromList(uint loc) {
@@ -93,9 +99,8 @@ bool PlayerCore::removeFromList(uint loc) {
         return ret;
 }
 
-//const QMediaPlaylist *PlayerCore::getAllMedia() {return list;}
-
 void PlayerCore::clear() {
     list->clear();
-    QMediaPlayer::setMedia(list->currentMedia());
+    QMediaPlayer::setMedia(QUrl(""));
+    emit finished();
 }

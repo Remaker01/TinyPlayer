@@ -13,11 +13,13 @@ QSlider::handle:horizontal {
 }
 
 //还没有滑上去的地方
-QSlider::add-page:horizontal{
+/*QSlider::add-page:horizontal{
 background: white; 
-
+*/
 }
 //已经划过的从地方
+/*
 QSlider::sub-page:horizontal{
  background: blue;
 }
+*/

@@ -10,6 +10,7 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     player = new PlayerCore;
     initUi();
     connectSlots();
+    setAcceptDrops(true);
 }
 
 inline void PlayerWindow::initUi() {
@@ -21,7 +22,7 @@ inline void PlayerWindow::initUi() {
     stopButton->setToolTip("停止");
     ui->delButton->setEnabled(false);
     initPlayList();
-    initBackground();
+    setBackground(QPixmap(":/Icons/images/back.jpg"));
 }
 
 inline void PlayerWindow::initPlayList() {
@@ -31,8 +32,7 @@ inline void PlayerWindow::initPlayList() {
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
-inline void PlayerWindow::initBackground() {
-    QPixmap img(":/Icons/images/back.jpg");
+inline void PlayerWindow::setBackground(const QPixmap &img) {
     QPalette pl;
     pl.setBrush(backgroundRole(),QBrush(img));
     setPalette(pl);
@@ -54,22 +54,11 @@ inline void PlayerWindow::connectSlots() {
                                                         "界面框架:Qt5.12\n"
                                                         "环境:QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.0 Beta2  1.0.220316");
+                                                        "版本号:1.0 Beta2  1.0.220319");
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
         QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件","","音频文件(*.mp3;*.wav;*.wma;*.aiff)"));
-        //if(medias.size() == 0)  return;
-        for(QString &name : medias) {
-            if(name.isEmpty()||playList.indexOf(name) >= 0)
-                continue;
-            playList.append(name);
-            player->addToList(QFile(name));
-        }
-        playListModel->setStringList(playList);
-        if(playList.size() > 0)
-            ui->delButton->setEnabled(true);
-        if(medias.size() == playList.size())
-            player->setCurrentMediaIndex(0);
+        doAddMedia(medias);
     });
     connect(ui->modeButton,&PlayerButton::clicked,this,[this]() {
         const QString TIPS[3]={"单曲播放","顺序播放","单曲循环"};
@@ -83,6 +72,15 @@ inline void PlayerWindow::connectSlots() {
     });
     connect(ui->actionOpenHelp,&QAction::triggered,this,[]() {
         return QDesktopServices::openUrl(QUrl::fromLocalFile("README.htm"));
+    });
+    connect(ui->actionLoadImg,&QAction::triggered,this,[this]() {
+        QString back = QFileDialog::getOpenFileName(this,"选择文件","","所有图片文件(*.jpg;*.jpeg;*.png;*.jfif)\n"
+                                                    "JPEG文件(*.jpg;*.jpeg,*.jfif)\n"
+                                                    "PNG文件(*.png)");
+        setBackground(QPixmap(back));
+    });
+    connect(ui->actionToDefault,&QAction::triggered,this,[this](){
+        setBackground(QPixmap(":/Icons/images/back.jpg"));
     });
     connect(playButton,&PlayerButton::clicked,this,[this](){
          if(player->isAudioAvailable()) {
@@ -136,6 +134,31 @@ inline void PlayerWindow::ensureExit() {
     connect(Yes,&QPushButton::clicked,this,&QMainWindow::close);
     box.exec();
 }
+
+inline void PlayerWindow::doAddMedia(QStringList medias) {
+    for(QString &name : medias) {
+        name.replace("file:///",QString(),Qt::CaseInsensitive);
+        if(name.isEmpty()||playList.indexOf(name) >= 0)
+            continue;
+        if(player->addToList(name)) {
+             playList.append(name);
+        }
+    }
+    playListModel->setStringList(playList);
+    if(playList.size() > 0)
+        ui->delButton->setEnabled(true);
+    if(medias.size() == playList.size())
+        player->setCurrentMediaIndex(0u);
+}
+
+void PlayerWindow::dragEnterEvent(QDragEnterEvent *e) {e->accept();}
+
+void PlayerWindow::dropEvent(QDropEvent *e) {
+    QList<QUrl> urls(e->mimeData()->urls());
+    QStringList medias(QUrl::toStringList(urls));
+    std::sort(medias.begin(),medias.end());
+    doAddMedia(medias);
+}
 SLOTS
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     player->setVolume(value);
@@ -162,7 +185,6 @@ void PlayerWindow::on_progressSlider_sliderMoved(int position) {
  */
 void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
     player->setCurrentMediaIndex((uint)index.row());
-    emit player->finished();
 }
 
 void PlayerWindow::on_listView_clicked(const QModelIndex &index) {selected = index.row();}
@@ -185,6 +207,5 @@ void PlayerWindow::on_clearButton_clicked() {
     playListModel->setStringList(playList);
     player->clear();
     ui->delButton->setEnabled(false);
-    CHANGE_TO_PLAYICON;
 }
 PlayerWindow::~PlayerWindow() {delete ui;}

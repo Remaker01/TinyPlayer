@@ -8,6 +8,7 @@
 #include <QPalette>
 #include <QDesktopServices>
 #include <QStringListModel>
+#include <QMimeData>
 #include "playerbutton.h"
 #include "player.h"
 
@@ -27,10 +28,14 @@ private:
     int selected = -1;
     void ensureExit();
     void initUi();
-    void initBackground();
+    void setBackground(const QPixmap &img);
     void initPlayList();
     void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
     void connectSlots();
+    void doAddMedia(QStringList medias);
+protected:
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
 public:
     PlayerWindow(QWidget *parent = nullptr);
     ~PlayerWindow();

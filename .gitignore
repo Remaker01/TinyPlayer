@@ -33,6 +33,7 @@ Thumbs.db
 *.res
 *.rc
 *.psd
+CMakeLists.txt.user
 /.qmake.cache
 /.qmake.stash
 
