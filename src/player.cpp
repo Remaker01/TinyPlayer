@@ -2,7 +2,7 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-static const QString supportFormats[4] = {".mp3",".wav",".wma",".aiff"};
+static const QString supportFormats[] = {".mp3",".wav",".wma",".aiff"};
 PlayerCore::PlayerCore(QWidget *p):timer(new QTimer(this)),list(new QMediaPlaylist) {
     connectSlots();
     timer->setInterval(250);
@@ -47,7 +47,7 @@ int PlayerCore::getPosInSecond() {
     return qRound(QMediaPlayer::position() / 1000.0);
 }
 
-uint PlayerCore::getCurrentMediaIndex() {return list->currentIndex();}
+uint PlayerCore::getCurrentMediaIndex() {return (uint)list->currentIndex();}
 void PlayerCore::setMedia(const QFile *media) {
     QString filename = media->fileName();
     QMediaContent content(QUrl::fromLocalFile(filename));
@@ -64,9 +64,7 @@ void PlayerCore::setCurrentMediaIndex(uint i) {
     emit finished();
 }
 
-bool PlayerCore::addToList(QString &media) {
-    if(media.startsWith("http",Qt::CaseInsensitive)||media.startsWith("ftp",Qt::CaseInsensitive))
-        return false;
+bool PlayerCore::addToList(const QString &media) {
     bool ok = false;
     for (const QString &format : supportFormats) {
         if(media.endsWith(format,Qt::CaseInsensitive)) {
@@ -74,7 +72,7 @@ bool PlayerCore::addToList(QString &media) {
             break;
         }
     }
-    if(!ok)  return false;
+    if(!ok)    return false;
     QMediaContent content(QUrl::fromLocalFile(media));
     return list->addMedia(content);
 }
@@ -83,7 +81,7 @@ bool PlayerCore::removeFromList(uint loc) {
 #ifndef NDEBUG
         qDebug() << "before delete:" << list->currentIndex();
 #endif
-    int now = list->currentIndex();
+    uint now = (uint)list->currentIndex();
     bool ret = list->removeMedia((int)loc);
     if(loc <= now) {
         list->setCurrentIndex(now - 1);

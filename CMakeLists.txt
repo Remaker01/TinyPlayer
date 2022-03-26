@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
         src/playerbutton.h
         src/playerslider.cpp
         src/playerslider.h
+        src/playlistview.h
+        src/playlistview.cpp
         src/main.cpp
         resource.qrc
         #qm.qrc
@@ -70,7 +72,10 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(TinyPlayer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
+target_link_libraries(TinyPlayer PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Multimedia
+    )
 
 set_target_properties(TinyPlayer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

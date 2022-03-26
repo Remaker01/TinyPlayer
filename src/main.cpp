@@ -1,7 +1,7 @@
 #include "playerwindow.h"
 
 #include <QApplication>
-#include <QLocale>
+#include <QSettings>
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -10,9 +10,6 @@ int main(int argc, char *argv[]) {
         QString style = qss.readAll();
         a.setStyleSheet(style);
         qss.close();
-    }
-    else {
-        QMessageBox::critical(nullptr,"错误","样式加载失败");
     }
     PlayerWindow w;
     w.show();

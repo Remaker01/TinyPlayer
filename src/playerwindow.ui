@@ -39,21 +39,18 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="1">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="2" column="1" colspan="2">
+     <widget class="QLabel" name="mediaLabel">
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>10</height>
-       </size>
+      <property name="text">
+       <string/>
       </property>
-     </spacer>
+     </widget>
     </item>
     <item row="5" column="2">
      <widget class="QLabel" name="volLabel">
@@ -62,75 +59,19 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QLabel" name="mediaLabel0">
-      <property name="text">
-       <string>当前媒体:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0" colspan="4">
-     <widget class="QWidget" name="buttomwidget" native="true">
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="2">
-        <widget class="QPushButton" name="clearButton">
-         <property name="text">
-          <string>清空</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="listLabel">
-         <property name="text">
-          <string>播放列表</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="4">
-        <widget class="QListView" name="listView"/>
-       </item>
-       <item row="2" column="0">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="delButton">
-         <property name="text">
-          <string>删除</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <spacer name="horizontalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item row="6" column="2">
      <widget class="QWidget" name="middleWidget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="PlayerButton" name="volumeButton">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/volume.png</pixmap>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="PlayerSlider" name="volumeSlider">
          <property name="maximum">
@@ -147,27 +88,11 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="1" colspan="2">
-     <widget class="QLabel" name="mediaLabel">
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="0" colspan="4">
      <widget class="QWidget" name="topWidget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="PlayerSlider" name="progressSlider">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
          <property name="maximum">
           <number>0</number>
          </property>
@@ -193,6 +118,75 @@
       </layout>
      </widget>
     </item>
+    <item row="0" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLabel" name="mediaLabel0">
+      <property name="text">
+       <string>当前媒体:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" colspan="4">
+     <widget class="QWidget" name="buttomwidget" native="true">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="2">
+        <widget class="QPushButton" name="clearButton">
+         <property name="text">
+          <string>清空</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="delButton">
+         <property name="text">
+          <string>删除</string>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+D</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="listLabel">
+         <property name="text">
+          <string>播放列表</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <widget class="PlayListView" name="listView"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="6" column="3">
      <widget class="PlayerButton" name="modeButton">
       <property name="toolTip">
@@ -205,6 +199,22 @@
        <pixmap resource="../resource.qrc">:/Icons/images/0.png</pixmap>
       </property>
      </widget>
+    </item>
+    <item row="6" column="1">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
@@ -292,6 +302,11 @@
    <class>PlayerButton</class>
    <extends>QLabel</extends>
    <header>src/playerbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlayListView</class>
+   <extends>QListView</extends>
+   <header>src/playlistview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

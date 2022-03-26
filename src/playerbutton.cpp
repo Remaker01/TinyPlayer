@@ -12,6 +12,7 @@ void PlayerButton::setReplyClick(bool f) {replyClick = f;}
 void PlayerButton::mousePressEvent(QMouseEvent *e) {
     if(e->button() == Qt::LeftButton&&replyClick) {
         int wi = width(),he = height();
+        w = wi,h = he;
         wi = wi - (wi >> 3);
         he = he - (he >> 3);
         resize(wi,he);

@@ -7,7 +7,7 @@
  */
 class PlayerButton : public QLabel {
     Q_OBJECT
-    const int w,h;  //初始大小
+    int w,h;  //初始大小
     bool replyClick = true;
 public:
     PlayerButton(QWidget *parent);

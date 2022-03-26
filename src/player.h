@@ -32,7 +32,7 @@ public:
     void setPos(int pos);
     void setCurrentMediaIndex(uint i);
     ///添加到播放列表
-    bool addToList(QString &media);
+    bool addToList(const QString &media);
     ///从播放列表中移除
     bool removeFromList(uint loc);
     ///清空播放列表

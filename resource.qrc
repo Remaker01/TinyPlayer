@@ -10,5 +10,7 @@
         <file>images/0.png</file>
         <file>images/1.png</file>
         <file>images/2.png</file>
+        <file>images/volume.png</file>
+        <file>images/muted.png</file>
     </qresource>
 </RCC>
