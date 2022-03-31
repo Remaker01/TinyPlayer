@@ -9,9 +9,6 @@
 class PlayListView : public QListView
 {
     Q_OBJECT
-private:
-    QMenu *menu;
-    QAction *add;
 public:
     PlayListView(QWidget *parent = nullptr);
     void dragEnterEvent(QDragEnterEvent *e);

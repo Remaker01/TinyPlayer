@@ -2,7 +2,7 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-static const QString supportFormats[] = {".mp3",".wav",".wma",".aiff"};
+static const QString Formats[] = {".mp3",".wav",".wma",".aiff"};
 PlayerCore::PlayerCore(QWidget *p):timer(new QTimer(this)),list(new QMediaPlaylist) {
     connectSlots();
     timer->setInterval(250);
@@ -33,7 +33,7 @@ inline void PlayerCore::connectSlots() {
     });
 }
 
-void PlayerCore::changeState(QLabel *label,const QString &toolTip, const QPixmap &pixmap,TimerOperation opt) {
+void PlayerCore::changeState(PlayerButton *label,const QString &toolTip, const QPixmap &pixmap,TimerOperation opt) {
     label->setPixmap(pixmap);
     label->setToolTip(toolTip);
     if(opt == START&&!timer->isActive())
@@ -66,7 +66,7 @@ void PlayerCore::setCurrentMediaIndex(uint i) {
 
 bool PlayerCore::addToList(const QString &media) {
     bool ok = false;
-    for (const QString &format : supportFormats) {
+    for (const QString &format : Formats) {
         if(media.endsWith(format,Qt::CaseInsensitive)) {
             ok = true;
             break;

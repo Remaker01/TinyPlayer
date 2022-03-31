@@ -1,5 +1,4 @@
 #include "playerwindow.h"
-#include "./ui_playerwindow.h"
 #define SLOTS
 #define CHANGE_TO_PLAYICON player->changeState(playButton,"开始",PLAY_ICON,PlayerCore::STOP)
 #define CHANGE_TO_PAUSEICON player->changeState(playButton,"暂停",PAUSE_ICON,PlayerCore::START)
@@ -64,12 +63,16 @@ inline void PlayerWindow::initConfiguration() {
 inline void PlayerWindow::connectSlots() {
     connect(ui->actionExit,&QAction::triggered,this,&PlayerWindow::ensureExit);
     connect(ui->actionAbout,&QAction::triggered,this,[this]() {
-        QMessageBox::information(this,"关于","TinyPlayer播放器\n"
+        QMessageBox box(QMessageBox::Information,"关于","TinyPlayer播放器\n"
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "界面框架:Qt5.12\n"
                                                         "环境:QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.0 Gamma  1.0.220325");
+                                                        "版本号:1.0  1.0.220328");
+        box.addButton("确定",QMessageBox::AcceptRole);
+        QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
+        connect(b,&QPushButton::clicked,this,[]{QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));});
+        box.exec();
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
         QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件",lastPath,"音频文件(*.mp3;*.wav;*.wma;*.aiff)"));
@@ -92,9 +95,7 @@ inline void PlayerWindow::connectSlots() {
         return QDesktopServices::openUrl(QUrl::fromLocalFile("README.htm"));
     });
     connect(ui->actionLoadImg,&QAction::triggered,this,[this]() {
-        QString back = QFileDialog::getOpenFileName(this,"选择文件","","所有图片文件(*.jpg;*.jpeg;*.png;*.jfif)\n"
-                                                    "JPEG文件(*.jpg;*.jpeg,*.jfif)\n"
-                                                    "PNG文件(*.png)");
+        QString back = QFileDialog::getOpenFileName(this,"选择文件","","所有图片文件(*.jpg;*.jpeg;*.png;*.jfif)\n");
         setBackground(QPixmap(back));
     });
     connect(ui->actionToDefault,&QAction::triggered,this,[this](){

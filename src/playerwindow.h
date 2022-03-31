@@ -13,6 +13,7 @@
 #include <QProcess>
 #include "playerbutton.h"
 #include "player.h"
+#include "./ui_playerwindow.h"
 
 namespace Ui { class PlayerWindow; }
 class PlayerWindow : public QMainWindow {

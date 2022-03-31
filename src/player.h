@@ -1,6 +1,6 @@
 #ifndef PLAY_H
 #define PLAY_H
-#include <QLabel>
+#include "playerbutton.h"
 #include <QFile>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
@@ -20,7 +20,7 @@ public:
     enum PlayMode{SIGNLE = 0,SEQUENTIAL,LOOP};
     PlayMode mode = SIGNLE;
     PlayerCore(QWidget *p = nullptr);
-    void changeState(QLabel *label,const QString &toolTip,const QPixmap &pixmap,TimerOperation opt = NONE);
+    void changeState(PlayerButton *label,const QString &toolTip,const QPixmap &pixmap,TimerOperation opt = NONE);
     ///获取当前媒体
     QUrl getMedia();
     ///获取以秒为单位的时间
