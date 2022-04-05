@@ -161,6 +161,16 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="listLabel">
+         <property name="text">
+          <string>播放列表</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <widget class="PlayListView" name="listView"/>
+       </item>
        <item row="2" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -173,16 +183,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="listLabel">
-         <property name="text">
-          <string>播放列表</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="4">
-        <widget class="PlayListView" name="listView"/>
        </item>
       </layout>
      </widget>
@@ -239,6 +239,7 @@
      <addaction name="actionToDefault"/>
     </widget>
     <addaction name="actionopenFile"/>
+    <addaction name="actionOpenDir"/>
     <addaction name="menu_3"/>
     <addaction name="actionExit"/>
    </widget>
@@ -254,7 +255,7 @@
   </widget>
   <action name="actionopenFile">
    <property name="text">
-    <string>打开...</string>
+    <string>打开文件...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -289,6 +290,19 @@
    </property>
    <property name="shortcut">
     <string>Alt+O</string>
+   </property>
+  </action>
+  <action name="actionOpenDir">
+   <property name="text">
+    <string>打开文件夹...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>设置</string>
    </property>
   </action>
  </widget>

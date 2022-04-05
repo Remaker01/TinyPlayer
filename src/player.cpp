@@ -43,25 +43,37 @@ void PlayerCore::changeState(PlayerButton *label,const QString &toolTip, const Q
 }
 
 QUrl PlayerCore::getMedia() {return QMediaPlayer::media().canonicalUrl();}
+
+QUrl PlayerCore::getMedia(int i) {
+    QMediaContent content(list->media(i));
+    return content.canonicalUrl();
+}
+
 int PlayerCore::getPosInSecond() {
     return qRound(QMediaPlayer::position() / 1000.0);
 }
 
-uint PlayerCore::getCurrentMediaIndex() {return (uint)list->currentIndex();}
+int PlayerCore::getCurrentMediaIndex() {return list->currentIndex();}
 void PlayerCore::setMedia(const QFile *media) {
     QString filename = media->fileName();
-    QMediaContent content(QUrl::fromLocalFile(filename));
+    QUrl s = QUrl::fromLocalFile(filename);
+    QMediaContent content(s);
+    if(!medias.contains(s)) {
+        medias.insert(s);
+        list->addMedia(content);
+    }
     QMediaPlayer::setMedia(content);
 }
 
 void PlayerCore::setPos(int pos) {QMediaPlayer::setPosition((qint64)pos * 1000);}
 
-void PlayerCore::setCurrentMediaIndex(uint i) {
+bool PlayerCore::setCurrentMediaIndex(uint i) {
     if(i > list->mediaCount()||i == list->currentIndex())
-        return;
+        return false;
     list->setCurrentIndex((int)i);
     QMediaPlayer::setMedia(list->currentMedia());
     emit finished();
+    return QMediaPlayer::isAudioAvailable();
 }
 
 bool PlayerCore::addToList(const QString &media) {
@@ -72,9 +84,14 @@ bool PlayerCore::addToList(const QString &media) {
             break;
         }
     }
-    if(!ok)    return false;
-    QMediaContent content(QUrl::fromLocalFile(media));
-    return list->addMedia(content);
+    QUrl tmp = QUrl::fromLocalFile(media);
+    if(!ok||medias.contains(tmp))
+        return false;
+    QMediaContent content(tmp);
+    ok &= list->addMedia(content);
+    if(ok)
+        medias.insert(tmp);
+    return ok;
 }
 
 bool PlayerCore::removeFromList(uint loc) {
@@ -82,11 +99,13 @@ bool PlayerCore::removeFromList(uint loc) {
         qDebug() << "before delete:" << list->currentIndex();
 #endif
     uint now = (uint)list->currentIndex();
+    medias.remove(list->media((int)loc).canonicalUrl());
     bool ret = list->removeMedia((int)loc);
     if(loc <= now) {
         list->setCurrentIndex(now - 1);
         if(loc==now) {
-            QMediaPlayer::setMedia(list->currentMedia());
+            if(now == 0)    QMediaPlayer::setMedia(QUrl(""));
+            else    QMediaPlayer::setMedia(list->currentMedia());
             emit finished();
         }
     }
@@ -99,6 +118,9 @@ bool PlayerCore::removeFromList(uint loc) {
 
 void PlayerCore::clear() {
     list->clear();
+    medias.clear();
     QMediaPlayer::setMedia(QUrl(""));
     emit finished();
 }
+
+PlayerCore::~PlayerCore() {delete list;}

@@ -22,7 +22,6 @@ void PlayerButton::mousePressEvent(QMouseEvent *e) {
 
 void PlayerButton::mouseReleaseEvent(QMouseEvent *e) {
     if(e->button() == Qt::LeftButton&&replyClick) {
-        //当前仍未播放
         emit clicked();
         resize(w,h);
         move(x() - (w/10-1),y() - h/10);

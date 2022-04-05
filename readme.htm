@@ -2,12 +2,23 @@
 <head>
     <meta charset="UTF-8">
     <title>使用说明</title>
+    <style>
+    .del{
+            text-decoration-line: line-through;
+            text-decoration-style: wavy;
+            text-decoration-color: rgb(112, 112, 112);
+        }
+    </style>
 </head>
-<body>
+<body background="images/help_background.jpg">
 <h3>简易播放器TinyPlayer</h3>
 
 <p>采用QT构建的音频播放器</p>
-
+<ul>快捷键
+    <li>Ctrl+O：打开音乐文件</li>
+    <li>Ctrl+Shift+O：打开目录，自动添加并扫描目录下的合法文件</li>
+    <li>Alt+O：打开背景图片文件</li>
+</ul>
 <ol>
     <li>支持格式：采用的播放器引擎是QMediaPlayer,支持的格式主要与平台有关，Windows下默认支持mp3,wav,wma,aiff格式。</li>
     <li>构建平台：
@@ -16,18 +27,18 @@
             <li>软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1</li>
         </ol>
     </li>
-    <li>功能展望
+    <li>功能展望(带波浪线说明已完成)
         <ol>
-            <li><s>支持播放列表，并由此支持顺序播放、单曲循环播放等模式。</s>(已完成)</li>
-            <li><s>支持自定义背景。</s>(已完成)</li>
-            <li>支持打开文件夹，自动扫描并添加文件夹下的合法音频文件</li>
+            <li class="del">支持播放列表，并由此支持顺序播放、单曲循环播放等模式。</li>
+            <li class="del">支持自定义背景。</li>
+            <li class="del">支持打开文件夹，自动扫描并添加文件夹下的合法音频文件</li>
             <li>采用更加好看的界面</li>
             <li>支持自定义设置</li>
-            <li>自动打开上次打开的文件夹</li>
+            <li class="del">自动打开上次打开的文件夹</li>
             <li>支持更多文件格式</li>
         </ol>
     </li>
 </ol>
 <p>欢迎提出意见与建议。</p>
-</html>
 </body>
+</html>

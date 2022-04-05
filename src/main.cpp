@@ -1,5 +1,4 @@
 #include "playerwindow.h"
-
 #include <QApplication>
 #include <QSettings>
 
