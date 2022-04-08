@@ -31,14 +31,17 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
     if(!tmp.empty()) {
         QMenu menu(this);
         del = menu.addAction("删除");
-        QAction *open=nullptr;
         connect(del,&QAction::triggered,this,&PlayListView::itemDelRequirement);
         if(tmp.size() == 1) {
-            open = menu.addAction("打开目录");
+            QAction *open = menu.addAction("打开目录"),*showDetail = menu.addAction("详细信息");
             connect(open,&QAction::triggered,this,[&,this]() {
                emit openDirRequirement(tmp[0].row());
             });
+            connect(showDetail,&QAction::triggered,this,[&,this](){
+               emit showDetailRequirement(tmp[0].row());
+            });
             open->deleteLater();
+            showDetail->deleteLater();
         }
         menu.exec(QCursor::pos());
     }

@@ -145,13 +145,6 @@
      <widget class="QWidget" name="buttomwidget" native="true">
       <layout class="QGridLayout" name="gridLayout">
        <item row="2" column="2">
-        <widget class="QPushButton" name="clearButton">
-         <property name="text">
-          <string>清空</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
         <widget class="QPushButton" name="delButton">
          <property name="text">
           <string>删除</string>
@@ -168,9 +161,6 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="4">
-        <widget class="PlayListView" name="listView"/>
-       </item>
        <item row="2" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -183,6 +173,23 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="1" column="0" colspan="5">
+        <widget class="PlayListView" name="listView"/>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="clearButton">
+         <property name="text">
+          <string>清空</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="waitingLabel">
+         <property name="text">
+          <string>正在打开...</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

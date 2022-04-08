@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QDir>
+#include "music.h"
 /**
  * 播放器核心类
  */
@@ -15,7 +16,7 @@ class PlayerCore:public QMediaPlayer {
 private:
     QTimer *timer;
     void connectSlots();
-    QSet<QUrl> medias;
+    QSet<Music> medias;
     QMediaPlaylist *list;
 public:
     enum TimerOperation{NONE,START,STOP};
@@ -27,6 +28,7 @@ public:
     QUrl getMedia();
     ///获取指定媒体
     QUrl getMedia(int i);
+    Music getMediaDetail(int i);
     ///获取以秒为单位的时间
     int getPosInSecond();
     int getCurrentMediaIndex();

@@ -22,12 +22,12 @@ inline void PlayerWindow::initUi() {
     ui->delButton->setEnabled(false);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
+    ui->waitingLabel->hide();
     initPlayList();
 }
 
 inline void PlayerWindow::initPlayList() {
     playListModel = new QStringListModel(this);
-    playListModel->setStringList(playList);
     ui->listView->setModel(playListModel);
 }
 
@@ -37,12 +37,12 @@ inline void PlayerWindow::initSystemtray() {
     QMenu *trayMenu = new QMenu;
     QAction *e = trayMenu->addAction("退出");
     tray->setContextMenu(trayMenu);
-    connect(e,&QAction::triggered,this,&QMainWindow::close);
+    connect(e,&QAction::triggered,qApp,&QApplication::quit);
     tray->show();
 }
 
 inline void PlayerWindow::setBackground(const QPixmap &img) {
-    QPalette pl;
+    static QPalette pl;
     pl.setBrush(backgroundRole(),QBrush(img));
     setPalette(pl);
     setAutoFillBackground(true);
@@ -132,10 +132,9 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->actionAbout,&QAction::triggered,this,[this]() {
         QMessageBox box(QMessageBox::Information,"关于","TinyPlayer播放器\n"
                                                         "基于Qt的简易音频播放器\n\n"
-                                                        "界面框架:Qt5.12\n"
-                                                        "环境:QT Creator5+CMake3.21+MinGW8.1\n"
+                                                        "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.5 Beta  1.5.220405");
+                                                        "版本号:1.5 Beta  1.5.220408");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
         connect(b,&QPushButton::clicked,this,[]{QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));});
@@ -195,24 +194,29 @@ inline void PlayerWindow::connectUiSlots() {
             s = dir.absolutePath() + '/' + s;
         doAddMedia(files);
     });
+    connect(ui->listView,&PlayListView::showDetailRequirement,this,[this](int row) {
+        QMessageBox::information(this,"信息",player->getMediaDetail(row).toString());
+    });
 }
 
 inline void PlayerWindow::ensureExit() {
     QMessageBox box(QMessageBox::Question,"退出确认","确认退出?");
     QPushButton *minimize = box.addButton("最小化",QMessageBox::AcceptRole);
-    QPushButton *Yes = box.addButton("是",QMessageBox::NoRole);
+    QPushButton *yes = box.addButton("是",QMessageBox::NoRole);
     box.addButton("否",QMessageBox::RejectRole);
-    connect(Yes,&QPushButton::clicked,this,&QMainWindow::close);
+    connect(yes,&QPushButton::clicked,qApp,&QApplication::quit);
     connect(minimize,&QPushButton::clicked,this,&QMainWindow::hide);
     box.exec();
 }
 
 inline void PlayerWindow::doAddMedia(QStringList medias) {
+    ui->waitingLabel->show();
     int s = playList.size();
     lastPath = QFileInfo(medias.last()).absolutePath();
     for(QString &name:medias) {
         if(name.isEmpty())    continue;
         QFileInfo a(name);
+        ui->waitingLabel->setText("正在打开" + a.fileName());
         if(player->addToList(name))
              playList.append(a.fileName());
     }
@@ -221,6 +225,7 @@ inline void PlayerWindow::doAddMedia(QStringList medias) {
         ui->delButton->setEnabled(true);
     if(s == 0&&playList.size() > 0)
         player->setCurrentMediaIndex(0u);
+    ui->waitingLabel->hide();
 }
 SLOTS
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {

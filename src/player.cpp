@@ -49,6 +49,10 @@ QUrl PlayerCore::getMedia(int i) {
     return content.canonicalUrl();
 }
 
+Music PlayerCore::getMediaDetail(int i) {
+    return Music(getMedia(i));
+}
+
 int PlayerCore::getPosInSecond() {
     return qRound(QMediaPlayer::position() / 1000.0);
 }
@@ -85,7 +89,10 @@ bool PlayerCore::addToList(const QString &media) {
         }
     }
     QUrl tmp = QUrl::fromLocalFile(media);
-    if(!ok||medias.contains(tmp))
+    if(!Music::isLegal(media)||!ok||medias.contains(tmp))
+        return false;
+    Music music(tmp);
+    if(music.getUrl().toLocalFile() != media)
         return false;
     QMediaContent content(tmp);
     ok &= list->addMedia(content);

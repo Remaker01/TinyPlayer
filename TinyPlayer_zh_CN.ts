@@ -29,17 +29,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="173"/>
+        <location filename="src/playerwindow.ui" line="183"/>
         <source>清空</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="180"/>
+        <location filename="src/playerwindow.ui" line="150"/>
         <source>删除</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="183"/>
+        <location filename="src/playerwindow.ui" line="153"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
@@ -54,13 +54,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="150"/>
+        <location filename="src/playerwindow.ui" line="160"/>
         <source>播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/playerwindow.ui" line="190"/>
-        <source>正在添加...</source>
+        <source>正在打开...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -134,14 +134,6 @@
     <name>SettingWindow</name>
     <message>
         <location filename="src/settingwindow.ui" line="32"/>
-        <source>设置</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>settingWindow</name>
-    <message>
-        <location filename="src/setting.ui" line="32"/>
         <source>设置</source>
         <translation type="unfinished"></translation>
     </message>

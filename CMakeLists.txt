@@ -34,6 +34,8 @@ set(PROJECT_SOURCES
         src/playlistview.h
         src/playlistview.cpp
         src/main.cpp
+        src/music.h
+        src/music.cpp
         resource.qrc
         #qm.qrc
         ${TS_FILES}

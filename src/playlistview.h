@@ -22,6 +22,7 @@ signals:
     void mediaDropin(const QStringList &medias);
     void itemDelRequirement();
     void openDirRequirement(int row);
+    void showDetailRequirement(int row);
 };
 
 #endif // PLAYLISTVIEW_H
