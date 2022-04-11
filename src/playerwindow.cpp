@@ -1,6 +1,7 @@
 #include "playerwindow.h"
 #define CHANGE_TO_PLAYICON player->changeState(playButton,"开始",PLAY_ICON,PlayerCore::STOP)
 #define CHANGE_TO_PAUSEICON player->changeState(playButton,"暂停",PAUSE_ICON,PlayerCore::START)
+static const QString CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
 static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME";
 PlayerWindow::PlayerWindow(QWidget *parent):
@@ -56,8 +57,8 @@ inline void PlayerWindow::setButton(PlayerButton *button, const QPixmap &pic, co
 }
 
 inline void PlayerWindow::initConfiguration() {
-    QSettings setting("config/player.ini",QSettings::IniFormat);
-    if(!QFile::exists("config/player.ini")) {
+    QSettings setting(CONFIG_FILE,QSettings::IniFormat);
+    if(!QFile::exists(CONFIG_FILE)) {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
         setting.setValue(LAST_VOL,50);
     }
@@ -283,7 +284,7 @@ void PlayerWindow::on_clearButton_clicked() {
 }
 
 PlayerWindow::~PlayerWindow() {
-    QSettings setting("config/player.ini",QSettings::IniFormat);
+    QSettings setting(CONFIG_FILE,QSettings::IniFormat);
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     delete ui;

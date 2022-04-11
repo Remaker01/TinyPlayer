@@ -28,11 +28,9 @@ const QUrl &Music::getUrl() {return url;}
 
 bool Music::isLegal(const QString &media) {
     QFile rawData(media);
-    if(!rawData.open(QIODevice::ReadOnly)||rawData.size() < 1024)
+    if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
         return false;
     int size = rawData.size();
-    if(size <= 1024)
-        return false;
     return isMP3(&rawData,size)||isWav(&rawData,size)||isWma(&rawData)||isAiff(&rawData,size);
 }
 #define RETURN(POINTER_NAME,VALUE) {\
@@ -43,11 +41,12 @@ bool Music::isLegal(const QString &media) {
 //判断方式：头部为"ID3"，或倒数128字节起为"TAG"，或头11位为1
 bool Music::isMP3(QFile *media,uint32_t size) {
     QDataStream reader(media);
-    char *head = new char[4];
-    head[3] = 0;
-    reader.readRawData(head,3);
+    reader.setByteOrder(QDataStream::BigEndian);
+    char *head = new char[5];
+    head[4] = 0;
+    reader.readRawData(head,4);
     QString str(head);
-    if(str == "ID3")   RETURN(head,true)
+    if(str.left(3) == "ID3")   RETURN(head,str[3] >= '\02'&&str[3] <= '\04')
     bool ret = false;
     media->seek(size - 128);
     reader.readRawData(head,3);
@@ -57,19 +56,20 @@ bool Music::isMP3(QFile *media,uint32_t size) {
     media->seek(0ll);
     uint16_t first_2B;
     reader >> first_2B;
+    //按大端序，这样写是对的？
     if(first_2B >= 0xffe0u)
         ret = true;
     delete [] head;
     media->seek(0ll);
     return ret;
 }
-//头部格式："RIFF"+文件大小+"WAVE"+"fmt"
+//头部格式："RIFF"+文件大小+"WAVE"+"fmt "
 bool Music::isWav(QFile *media,uint32_t size) {
     QDataStream reader(media);
     //注意改为小端序
     reader.setByteOrder(QDataStream::LittleEndian);
-    char *head = new char[8];
-    head[4] = head[7] = 0;
+    char *head = new char[9];
+    head[4] = head[8] = 0;
     uint32_t sizePart;
     //头4个字节
     reader.readRawData(head,4);
@@ -79,11 +79,11 @@ bool Music::isWav(QFile *media,uint32_t size) {
     reader >> sizePart;
     if(sizePart != size - 8)   RETURN(head,false)
     //接下来7字节
-    reader.readRawData(head,7);
+    reader.readRawData(head,8);
     QString str2(head);
     delete [] head;
     media->seek(0ll);
-    return str2 == "WAVEfmt";
+    return str2 == "WAVEfmt ";
 }
 //头部格式：前16B为30 26 B2 75 8E 66 CF 11 A6 D9 00 AA 00 62 CE 6C
 bool Music::isWma(QFile *media) {
@@ -105,6 +105,7 @@ bool Music::isWma(QFile *media) {
 //头部：46 4F 52 4D，即"FROM";大端序
 bool Music::isAiff(QFile *media,uint32_t size) {
     QDataStream reader(media);
+    reader.setByteOrder(QDataStream::BigEndian);
     char *head = new char[5];
     head[4] = 0;
     uint32_t sizePart;

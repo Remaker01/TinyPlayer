@@ -43,7 +43,6 @@ public:
     bool removeFromList(uint loc);
     ///清空播放列表
     void clear();
-    ///打开文件所在文件夹
     ~PlayerCore();
 signals:
     void timedOut();
