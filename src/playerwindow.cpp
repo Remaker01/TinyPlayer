@@ -1,6 +1,6 @@
 #include "playerwindow.h"
-#define CHANGE_TO_PLAYICON player->changeState(playButton,"开始",PLAY_ICON,PlayerCore::STOP)
-#define CHANGE_TO_PAUSEICON player->changeState(playButton,"暂停",PAUSE_ICON,PlayerCore::START)
+#define CHANGE_TO_PLAYICON player->changeState(ui->playButton,"开始",PLAY_ICON,PlayerCore::STOP)
+#define CHANGE_TO_PAUSEICON player->changeState(ui->playButton,"暂停",PAUSE_ICON,PlayerCore::START)
 static const QString CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
 static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME";
@@ -14,13 +14,12 @@ PlayerWindow::PlayerWindow(QWidget *parent):
 }
 
 inline void PlayerWindow::initUi() {
-    playButton = new PlayerButton(50,50,this);
-    stopButton = new PlayerButton(45,45,this);
-    setButton(playButton,PLAY_ICON,QPoint(10,150));
-    setButton(stopButton,QPixmap(":/Icons/images/stop.png"),QPoint(70,155));
-    playButton->setToolTip("开始");
-    stopButton->setToolTip("停止");
+    ui->playButton->setReplyClick(false);
+    ui->stopButton->setReplyClick(false);
+    ui->playButton->resize(50,50);
+    ui->stopButton->resize(45,45);
     ui->delButton->setEnabled(false);
+    ui->listView->setOpacity(0.6);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
@@ -49,13 +48,6 @@ inline void PlayerWindow::setBackground(const QPixmap &img) {
     setAutoFillBackground(true);
 }
 
-inline void PlayerWindow::setButton(PlayerButton *button, const QPixmap &pic, const QPoint &loc) {
-    button->move(loc);
-    button->setPixmap(pic);
-    button->setReplyClick(false);
-    button->show();
-}
-
 inline void PlayerWindow::initConfiguration() {
     QSettings setting(CONFIG_FILE,QSettings::IniFormat);
     if(!QFile::exists(CONFIG_FILE)) {
@@ -71,12 +63,12 @@ inline void PlayerWindow::initConfiguration() {
 
 inline void PlayerWindow::connectSlots() {
     connectUiSlots();
-    connect(playButton,&PlayerButton::clicked,this,[this](){
+    connect(ui->playButton,&PlayerButton::clicked,this,[this](){
          if(player->isAudioAvailable()) {
-             stopButton->setReplyClick(true);
+             ui->stopButton->setReplyClick(true);
              if(player->state() != QMediaPlayer::PlayingState) {
                  player->play();
-                 stopButton->setReplyClick(true);
+                 ui->stopButton->setReplyClick(true);
                  CHANGE_TO_PAUSEICON;
              }
              else {
@@ -90,16 +82,16 @@ inline void PlayerWindow::connectSlots() {
              err.exec();
          }
     });
-    connect(stopButton,&PlayerButton::clicked,this,[this]() {
+    connect(ui->stopButton,&PlayerButton::clicked,this,[this]() {
         if(player->isAudioAvailable()&&player->state() != QMediaPlayer::StoppedState) {
            player->stop();
            CHANGE_TO_PLAYICON;
-           stopButton->setReplyClick(false);
+           ui->stopButton->setReplyClick(false);
            ui->progressSlider->setValue(0);
         }
     });
-    connect(player,&PlayerCore::durationChanged,playButton,[&,this](qint64 totTime) {
-        playButton->setReplyClick(true);
+    connect(player,&PlayerCore::durationChanged,ui->playButton,[&,this](qint64 totTime) {
+        ui->playButton->setReplyClick(true);
         totTime = qRound(totTime / 1000.0);
         //改变总时间
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
@@ -116,7 +108,7 @@ inline void PlayerWindow::connectSlots() {
     connect(player,&PlayerCore::finished,this,[&,this]() {
         ui->progressSlider->setValue(0);
         CHANGE_TO_PLAYICON;
-        stopButton->setReplyClick(false);
+        ui->stopButton->setReplyClick(false);
     });
     connect(tray,&QSystemTrayIcon::activated,this,[this](QSystemTrayIcon::ActivationReason r){
         if(r == QSystemTrayIcon::Trigger)
@@ -135,7 +127,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.5 Beta  1.5.220408");
+                                                        "版本号:1.5 Beta2  1.5.220414");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
         connect(b,&QPushButton::clicked,this,[]{QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));});
@@ -219,7 +211,7 @@ inline void PlayerWindow::doAddMedia(QStringList medias) {
         QFileInfo a(name);
         ui->waitingLabel->setText("正在打开" + a.fileName());
         if(player->addToList(name))
-             playList.append(a.fileName());
+             playList.append(a.fileName() + '\n' + player->getMediaDetail(name).formatTime());
     }
     playListModel->setStringList(playList);
     if(playList.size() > 0)
@@ -252,7 +244,7 @@ void PlayerWindow::on_progressSlider_sliderMoved(int position) {
 }
 
 void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
-    player->setCurrentMediaIndex((uint)index.row());
+    player->setCurrentMediaIndex(index.row());
 }
 
 void PlayerWindow::doDelMedia() {
@@ -270,8 +262,8 @@ void PlayerWindow::doDelMedia() {
     }
     bool a = (playList.size() > 0);
     ui->delButton->setEnabled(a);
-    playButton->setReplyClick(a&&player->getCurrentMediaIndex() >= 0);
-    stopButton->setReplyClick(a&&player->getCurrentMediaIndex() >= 0);
+    ui->playButton->setReplyClick(a&&player->getCurrentMediaIndex() >= 0);
+    ui->stopButton->setReplyClick(a&&player->getCurrentMediaIndex() >= 0);
 }
 
 void PlayerWindow::on_clearButton_clicked() {
@@ -279,8 +271,12 @@ void PlayerWindow::on_clearButton_clicked() {
     playListModel->setStringList(playList);
     player->clear();
     ui->delButton->setEnabled(false);
-    playButton->setReplyClick(false);
-    stopButton->setReplyClick(false);
+    ui->playButton->setReplyClick(false);
+    ui->stopButton->setReplyClick(false);
+}
+
+void PlayerWindow::on_addButton_clicked() {
+    ui->actionopenFile->trigger();
 }
 
 PlayerWindow::~PlayerWindow() {

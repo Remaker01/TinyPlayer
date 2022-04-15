@@ -53,6 +53,14 @@ Music PlayerCore::getMediaDetail(int i) {
     return Music(getMedia(i));
 }
 
+Music PlayerCore::getMediaDetail(const QString &fileName) {
+    for(auto it = medias.begin(); it!=medias.end(); ++it) {
+        if(it->getUrl() == QUrl::fromLocalFile(fileName))
+            return *it;
+    }
+    return Music();
+}
+
 int PlayerCore::getPosInSecond() {
     return qRound(QMediaPlayer::position() / 1000.0);
 }
@@ -102,9 +110,6 @@ bool PlayerCore::addToList(const QString &media) {
 }
 
 bool PlayerCore::removeFromList(uint loc) {
-#ifndef NDEBUG
-        qDebug() << "before delete:" << list->currentIndex();
-#endif
     uint now = (uint)list->currentIndex();
     medias.remove(list->media((int)loc).canonicalUrl());
     bool ret = list->removeMedia((int)loc);
@@ -117,10 +122,7 @@ bool PlayerCore::removeFromList(uint loc) {
         }
     }
     else    list->setCurrentIndex(now);
-#ifndef NDEBUG
-        qDebug() << "after delete:" << list->currentIndex();
-#endif
-        return ret;
+    return ret;
 }
 
 void PlayerCore::clear() {

@@ -29,6 +29,7 @@ public:
     ///获取指定媒体
     QUrl getMedia(int i);
     Music getMediaDetail(int i);
+    Music getMediaDetail(const QString &fileName);
     ///获取以秒为单位的时间
     int getPosInSecond();
     int getCurrentMediaIndex();

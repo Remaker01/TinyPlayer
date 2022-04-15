@@ -1,11 +1,8 @@
 #include "playerbutton.h"
-PlayerButton::PlayerButton(QWidget *parent):PlayerButton(40,44,parent) {}
-
-PlayerButton::PlayerButton(int W,int H,QWidget *parent):w(W),h(H){
+PlayerButton::PlayerButton(QWidget *parent){
     setParent(parent);
     setScaledContents(true);
     setCursor(Qt::PointingHandCursor);
-    resize(W,H);
 }
 
 void PlayerButton::setReplyClick(bool f) {replyClick = f;}

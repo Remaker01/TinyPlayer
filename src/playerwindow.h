@@ -6,7 +6,6 @@
 #include <QPalette>
 #include <QDesktopServices>
 #include <QStringListModel>
-#include <QMimeData>
 #include <QSettings>
 #include <QProcess>
 #include <QSystemTrayIcon>
@@ -22,12 +21,11 @@ class PlayerWindow : public QMainWindow {
 private:
     const QPixmap PLAY_ICON,PAUSE_ICON;
     Ui::PlayerWindow *ui;
-    PlayerButton *playButton,*stopButton;
+    //PlayerButton *playButton,*stopButton;
     PlayerCore *player;
     QStringListModel *playListModel;
     QSystemTrayIcon *tray;
-    //QUrl:只获取文件名，QFile::fileName:获取文件名及目录名
-    //因此这个list里都是带目录名的
+    //这个list里都是带目录名的
     QStringList playList;
     QString lastPath;
     //当前正在播放
@@ -36,11 +34,10 @@ private:
     void initPlayList();
     void initSystemtray();
     void setBackground(const QPixmap &img);
-    void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
+    //void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
     void initConfiguration();
     void connectSlots();
     void connectUiSlots();
-    //void scanAndAdd(const QDir &dir);
 public:
     PlayerWindow(QWidget *parent = nullptr);
     ~PlayerWindow();
@@ -58,5 +55,6 @@ private slots:
     void on_listView_doubleClicked(const QModelIndex &index);
     void doDelMedia();
     void on_clearButton_clicked();
+    void on_addButton_clicked();
 };
 #endif // PLAYERWINDOW_H

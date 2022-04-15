@@ -18,6 +18,7 @@ public:
     void dropEvent(QDropEvent *e);
     void contextMenuEvent ( QContextMenuEvent *e);
     QModelIndexList getSelections();
+    void setOpacity(double value);
 signals:
     void mediaDropin(const QStringList &medias);
     void itemDelRequirement();

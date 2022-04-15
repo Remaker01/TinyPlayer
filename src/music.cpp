@@ -5,16 +5,15 @@ Music::Music(const QUrl &uri):url(uri) {
     while(!tmp.isMetaDataAvailable())
         QCoreApplication::processEvents();
     length = tmp.duration();
-    title = tmp.metaData("Title").toString();
+    title = tmp.metaData("Title").toString() + "\t\t";
     description = tmp.metaData("Description").toString();
+    album = tmp.metaData(QStringLiteral("AlbumTitle")).toString();
 }
 
-QString Music::toString() const{
-    int tmp = length / 1000;
-    QString len = QString::number(tmp / 60)
-            + ':' + QString::number(tmp % 60);
+QString Music::toString() {
     return "标题：" + title + '\n' +
-            "时长：" + len + '\n' +
+            "时长：" + formatTime() + '\n' +
+            "唱片集：" + album + '\n' +
             "描述：" + description;
 }
 
@@ -24,23 +23,31 @@ bool Music::equals(const Music &a) const {
              length == a.length);
 }
 
-const QUrl &Music::getUrl() {return url;}
+const QUrl &Music::getUrl() const {return url;}
+
+QString Music::formatTime() {
+    if(!formattedTime.isEmpty())
+        return formattedTime;
+    int len = qRound(length / 1000.0);
+    return formattedTime = QString::number(len / 60)
+            + ':' + QString::number(len % 60);
+}
 
 bool Music::isLegal(const QString &media) {
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
         return false;
     int size = rawData.size();
-    return isMP3(&rawData,size)||isWav(&rawData,size)||isWma(&rawData)||isAiff(&rawData,size);
+    QDataStream ds(&rawData);
+    return isMP3(&rawData,ds,size)||isWav(&rawData,ds,size)||isWma(&rawData,ds)||isAiff(&rawData,ds,size);
 }
-#define RETURN(POINTER_NAME,VALUE) {\
+#define RETURN(POINTER_NAME,CONDITION) {\
     delete [] (POINTER_NAME);\
     media->seek(0ll);\
-    return (VALUE);\
+    return (CONDITION);\
 }
 //判断方式：头部为"ID3"，或倒数128字节起为"TAG"，或头11位为1
-bool Music::isMP3(QFile *media,uint32_t size) {
-    QDataStream reader(media);
+bool Music::isMP3(QFile *media,QDataStream &reader,uint32_t size) {
     reader.setByteOrder(QDataStream::BigEndian);
     char *head = new char[5];
     head[4] = 0;
@@ -64,8 +71,7 @@ bool Music::isMP3(QFile *media,uint32_t size) {
     return ret;
 }
 //头部格式："RIFF"+文件大小+"WAVE"+"fmt "
-bool Music::isWav(QFile *media,uint32_t size) {
-    QDataStream reader(media);
+bool Music::isWav(QFile *media,QDataStream &reader,uint32_t size) {
     //注意改为小端序
     reader.setByteOrder(QDataStream::LittleEndian);
     char *head = new char[9];
@@ -78,7 +84,7 @@ bool Music::isWav(QFile *media,uint32_t size) {
     //接下来4字节
     reader >> sizePart;
     if(sizePart != size - 8)   RETURN(head,false)
-    //接下来7字节
+    //接下来8字节
     reader.readRawData(head,8);
     QString str2(head);
     delete [] head;
@@ -86,8 +92,7 @@ bool Music::isWav(QFile *media,uint32_t size) {
     return str2 == "WAVEfmt ";
 }
 //头部格式：前16B为30 26 B2 75 8E 66 CF 11 A6 D9 00 AA 00 62 CE 6C
-bool Music::isWma(QFile *media) {
-    QDataStream reader(media);
+bool Music::isWma(QFile *media,QDataStream &reader) {
     reader.setByteOrder(QDataStream::LittleEndian);
     static constexpr int BASE = 4;
     static const uint32_t ss[BASE] = {0x75b22630u,0x11cf668eu,0xaa00d9a6u,0x6cce6200u};
@@ -102,9 +107,8 @@ bool Music::isWma(QFile *media) {
     media->seek(0ll);
     return true;
 }
-//头部：46 4F 52 4D，即"FROM";大端序
-bool Music::isAiff(QFile *media,uint32_t size) {
-    QDataStream reader(media);
+//头部：46 4F 52 4D，即"FORM";大端序
+bool Music::isAiff(QFile *media,QDataStream &reader,uint32_t size) {
     reader.setByteOrder(QDataStream::BigEndian);
     char *head = new char[5];
     head[4] = 0;
@@ -112,7 +116,7 @@ bool Music::isAiff(QFile *media,uint32_t size) {
     //0~3字节
     reader.readRawData(head,4);
     QString str1(head);
-    if(str1 != "FROM")   RETURN(head,false)
+    if(str1 != "FORM")   RETURN(head,false)
     reader >> sizePart;
     if(sizePart != size - 8)   RETURN(head,false)
     //8~11字节

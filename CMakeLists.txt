@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools multimedia REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools multimedia REQUIRED)
-set(CMAKE_CXX_FLAGS_RELEASE "-mwindows -O2 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-mwindows -Os -DNDEBUG")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-mwindows -Os -s -DNDEBUG")
 set(INCLUDE_DIRECTORIES
     ./qm
@@ -37,7 +37,6 @@ set(PROJECT_SOURCES
         src/music.h
         src/music.cpp
         resource.qrc
-        #qm.qrc
         ${TS_FILES}
 )
 
