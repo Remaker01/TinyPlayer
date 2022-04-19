@@ -14,5 +14,6 @@
         <file>images/muted.png</file>
         <file>images/open.png</file>
         <file>images/delete.png</file>
+        <file>images/3.png</file>
     </qresource>
 </RCC>

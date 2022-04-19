@@ -1,16 +1,18 @@
 #include "playerwindow.h"
-#include <QApplication>
-#include <QSettings>
-
+#include <QSharedMemory>
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    QFile qss(":/Icons/images/stylesheet.qss");
-    if(qss.open(QFile::ReadOnly)) {
-        QString style = qss.readAll();
-        a.setStyleSheet(style);
-        qss.close();
+    QSharedMemory shared("player");
+    if(shared.create(1)) {
+        QFile qss(":/Icons/images/stylesheet.qss");
+        if(qss.open(QFile::ReadOnly)) {
+            QString style = qss.readAll();
+            a.setStyleSheet(style);
+            qss.close();
+        }
+        PlayerWindow w;
+        w.show();
+        return a.exec();
     }
-    PlayerWindow w;
-    w.show();
-    return a.exec();
+    return 0;
 }

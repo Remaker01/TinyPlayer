@@ -17,7 +17,6 @@ public:
     void mouseReleaseEvent(QMouseEvent *e);
     ~PlayerButton();
 signals:
-    //void mousePressed();
     /// 鼠标点击信号
     void clicked();
 };

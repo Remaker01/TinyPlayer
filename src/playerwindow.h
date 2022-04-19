@@ -21,7 +21,6 @@ class PlayerWindow : public QMainWindow {
 private:
     const QPixmap PLAY_ICON,PAUSE_ICON;
     Ui::PlayerWindow *ui;
-    //PlayerButton *playButton,*stopButton;
     PlayerCore *player;
     QStringListModel *playListModel;
     QSystemTrayIcon *tray;
@@ -34,12 +33,13 @@ private:
     void initPlayList();
     void initSystemtray();
     void setBackground(const QPixmap &img);
+    void changeMode(PlayerCore::PlayMode m);
     //void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
-    void initConfiguration();
     void connectSlots();
     void connectUiSlots();
 public:
     PlayerWindow(QWidget *parent = nullptr);
+    void initConfiguration();
     ~PlayerWindow();
 
 private slots:

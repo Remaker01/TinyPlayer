@@ -3,7 +3,7 @@
 #define CHANGE_TO_PAUSEICON player->changeState(ui->playButton,"暂停",PAUSE_ICON,PlayerCore::START)
 static const QString CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
-static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME";
+static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
 PlayerWindow::PlayerWindow(QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
@@ -16,8 +16,6 @@ PlayerWindow::PlayerWindow(QWidget *parent):
 inline void PlayerWindow::initUi() {
     ui->playButton->setReplyClick(false);
     ui->stopButton->setReplyClick(false);
-    ui->playButton->resize(50,50);
-    ui->stopButton->resize(45,45);
     ui->delButton->setEnabled(false);
     ui->listView->setOpacity(0.6);
     initSystemtray();
@@ -35,9 +33,11 @@ inline void PlayerWindow::initSystemtray() {
     tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.ico"),this);
     tray->setToolTip("TinyPlayer");
     QMenu *trayMenu = new QMenu;
-    QAction *e = trayMenu->addAction("退出");
+    QAction *e2 = trayMenu->addAction("打开窗口");
+    QAction *e1 = trayMenu->addAction("退出");
     tray->setContextMenu(trayMenu);
-    connect(e,&QAction::triggered,qApp,&QApplication::quit);
+    connect(e1,&QAction::triggered,qApp,&QApplication::quit);
+    connect(e2,&QAction::triggered,this,&QMainWindow::showNormal);
     tray->show();
 }
 
@@ -53,12 +53,23 @@ inline void PlayerWindow::initConfiguration() {
     if(!QFile::exists(CONFIG_FILE)) {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
         setting.setValue(LAST_VOL,50);
+        setting.setValue(LAST_MODE,0);
     }
     else {
         lastPath = setting.value(LAST_PATH).toString();
         int v = setting.value(LAST_VOL).toInt();
         ui->volumeSlider->setValue(v);
+        changeMode((PlayerCore::PlayMode)setting.value(LAST_MODE).toInt());
     }
+}
+
+inline void PlayerWindow::changeMode(PlayerCore::PlayMode m) {
+    const QString TIPS[]={"单曲播放","顺序播放","单曲循环","列表循环"};
+    int mode = (int)m;
+    QString name = ":/Icons/images/" + QString::number(mode) + ".png";
+    ui->modeButton->setPixmap(QPixmap(name));
+    player->mode = (PlayerCore::PlayMode)mode;
+    ui->modeButton->setToolTip(TIPS[mode]);
 }
 
 inline void PlayerWindow::connectSlots() {
@@ -139,13 +150,8 @@ inline void PlayerWindow::connectUiSlots() {
             doAddMedia(medias);
     });
     connect(ui->modeButton,&PlayerButton::clicked,this,[this]() {
-        const QString TIPS[]={"单曲播放","顺序播放","单曲循环"};
-        int mode = (int)player->mode;
-        mode = (mode + 1) % (sizeof(TIPS)/sizeof (TIPS[0]));
-        QString nextName = ":/Icons/images/" + QString::number(mode) + ".png";
-        ui->modeButton->setPixmap(QPixmap(nextName));
-        player->mode = (PlayerCore::PlayMode)mode;
-        ui->modeButton->setToolTip(TIPS[mode]);
+        int now = (int)player->mode;
+        changeMode((PlayerCore::PlayMode)((now + 1) % PlayerCore::MODE_COUNT));
     });
     connect(ui->actionOpenHelp,&QAction::triggered,this,[]() {
         return QDesktopServices::openUrl(QUrl::fromLocalFile("README.htm"));
@@ -201,8 +207,8 @@ inline void PlayerWindow::ensureExit() {
     connect(minimize,&QPushButton::clicked,this,&QMainWindow::hide);
     box.exec();
 }
-
-inline void PlayerWindow::doAddMedia(QStringList medias) {
+SLOTS
+void PlayerWindow::doAddMedia(QStringList medias) {
     ui->waitingLabel->show();
     int s = playList.size();
     lastPath = QFileInfo(medias.last()).absolutePath();
@@ -220,7 +226,7 @@ inline void PlayerWindow::doAddMedia(QStringList medias) {
         player->setCurrentMediaIndex(0u);
     ui->waitingLabel->hide();
 }
-SLOTS
+
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     if(value > 0)
         ui->volumeButton->setPixmap(QPixmap(":/Icons/images/volume.png"));
@@ -283,5 +289,7 @@ PlayerWindow::~PlayerWindow() {
     QSettings setting(CONFIG_FILE,QSettings::IniFormat);
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
+    setting.setValue(LAST_MODE,(int)player->mode);
+    delete player;
     delete ui;
 }

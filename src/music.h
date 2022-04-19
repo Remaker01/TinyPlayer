@@ -7,15 +7,15 @@
 #include <QFile>
 class Music{
 private:
-    static bool isMP3(QFile *media,QDataStream &reader,uint32_t size);
-    static bool isWav(QFile *media,QDataStream &reader,uint32_t size);
-    static bool isWma(QFile *media,QDataStream &reader);
-    static bool isAiff(QFile *media,QDataStream &reader,uint32_t size);
     QString formattedTime;
     const QUrl url;
     int length;
     //歌曲名
     QString title,description,album;
+    static bool isMP3(QFile *media,QDataStream &reader,uint32_t size);
+    static bool isWav(QFile *media,QDataStream &reader,uint32_t size);
+    static bool isWma(QFile *media,QDataStream &reader);
+    static bool isAiff(QFile *media,QDataStream &reader,uint32_t size);
 public:
     /**
      * @brief Music 根据指定的URL建立音乐文件

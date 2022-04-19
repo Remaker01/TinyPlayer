@@ -24,8 +24,14 @@ inline void PlayerCore::connectSlots() {
                 }
                 else    emit finished();
                 break;
-            case LOOP:
+            case SIGNLE_LOOP:
                 QMediaPlayer::setPosition(0ll);
+                QMediaPlayer::play();
+                break;
+            case LIST_LOOP:
+                int cur = list->currentIndex();
+                list->setCurrentIndex((cur + 1)%list->mediaCount());
+                QMediaPlayer::setMedia(list->currentMedia());
                 QMediaPlayer::play();
                 break;
             }
@@ -116,8 +122,10 @@ bool PlayerCore::removeFromList(uint loc) {
     if(loc <= now) {
         list->setCurrentIndex(now - 1);
         if(loc==now) {
-            if(now == 0)    QMediaPlayer::setMedia(QUrl(""));
-            else    QMediaPlayer::setMedia(list->currentMedia());
+            if(now == 0)
+                QMediaPlayer::setMedia(QUrl(""));
+            else
+                QMediaPlayer::setMedia(list->currentMedia());
             emit finished();
         }
     }
