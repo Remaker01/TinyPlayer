@@ -21,6 +21,7 @@ inline void PlayerWindow::initUi() {
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
+    ui->cancelButton->hide();
     initPlayList();
 }
 
@@ -32,17 +33,15 @@ inline void PlayerWindow::initPlayList() {
 inline void PlayerWindow::initSystemtray() {
     tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.ico"),this);
     tray->setToolTip("TinyPlayer");
-    QMenu *trayMenu = new QMenu;
-    QAction *e2 = trayMenu->addAction("打开窗口");
-    QAction *e1 = trayMenu->addAction("退出");
+    QMenu *trayMenu = new QMenu(this);
+    trayMenu->addAction("打开窗口",this,&QMainWindow::showNormal);
+    trayMenu->addAction("退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
-    connect(e1,&QAction::triggered,qApp,&QApplication::quit);
-    connect(e2,&QAction::triggered,this,&QMainWindow::showNormal);
     tray->show();
 }
 
 inline void PlayerWindow::setBackground(const QPixmap &img) {
-    static QPalette pl;
+    QPalette pl;
     pl.setBrush(backgroundRole(),QBrush(img));
     setPalette(pl);
     setAutoFillBackground(true);
@@ -65,11 +64,10 @@ inline void PlayerWindow::initConfiguration() {
 
 inline void PlayerWindow::changeMode(PlayerCore::PlayMode m) {
     const QString TIPS[]={"单曲播放","顺序播放","单曲循环","列表循环"};
-    int mode = (int)m;
-    QString name = ":/Icons/images/" + QString::number(mode) + ".png";
+    QString name = ":/Icons/images/" + QString::number((int)m) + ".png";
     ui->modeButton->setPixmap(QPixmap(name));
-    player->mode = (PlayerCore::PlayMode)mode;
-    ui->modeButton->setToolTip(TIPS[mode]);
+    player->mode = m;
+    ui->modeButton->setToolTip(TIPS[(int)m]);
 }
 
 inline void PlayerWindow::connectSlots() {
@@ -133,12 +131,12 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->delButton,&QPushButton::clicked,this,&PlayerWindow::doDelMedia);
     connect(ui->listView,&PlayListView::itemDelRequirement,this,&PlayerWindow::doDelMedia);
     connect(ui->progressSlider,&PlayerSlider::playerSliderClicked,player,&PlayerCore::setPos);
-    connect(ui->actionAbout,&QAction::triggered,this,[this]() {
+    connect(ui->actionAbout,&QAction::triggered,this,[this] {
         QMessageBox box(QMessageBox::Information,"关于","TinyPlayer播放器\n"
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:1.5 Beta2  1.5.220414");
+                                                        "版本号:1.5  1.5.220422");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
         connect(b,&QPushButton::clicked,this,[]{QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));});
@@ -157,7 +155,7 @@ inline void PlayerWindow::connectUiSlots() {
         return QDesktopServices::openUrl(QUrl::fromLocalFile("README.htm"));
     });
     connect(ui->actionLoadImg,&QAction::triggered,this,[this]() {
-        QString back = QFileDialog::getOpenFileName(this,"选择文件","","所有图片文件(*.jpg;*.jpeg;*.png;*.jfif)");
+        QString back = QFileDialog::getOpenFileName(this,"选择文件","","图片文件(*.jpg;*.jpeg;*.png;*.jfif)");
         setBackground(QPixmap(back));
     });
     connect(ui->actionToDefault,&QAction::triggered,this,[this](){
@@ -199,7 +197,7 @@ inline void PlayerWindow::connectUiSlots() {
 }
 
 inline void PlayerWindow::ensureExit() {
-    QMessageBox box(QMessageBox::Question,"退出确认","确认退出?");
+    QMessageBox box(QMessageBox::Question,"退出确认","确认退出?",QMessageBox::NoButton,this);
     QPushButton *minimize = box.addButton("最小化",QMessageBox::AcceptRole);
     QPushButton *yes = box.addButton("是",QMessageBox::NoRole);
     box.addButton("否",QMessageBox::RejectRole);
@@ -209,21 +207,28 @@ inline void PlayerWindow::ensureExit() {
 }
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
+    bool f = true;
+    ui->cancelButton->show();
+    connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
     ui->waitingLabel->show();
     int s = playList.size();
     lastPath = QFileInfo(medias.last()).absolutePath();
-    for(QString &name:medias) {
-        if(name.isEmpty())    continue;
-        QFileInfo a(name);
+    for(QString &fullName:medias) {
+        if(!f)    break;
+        if(fullName.isEmpty())    continue;
+        QFileInfo a(fullName);
         ui->waitingLabel->setText("正在打开" + a.fileName());
-        if(player->addToList(name))
-             playList.append(a.fileName() + '\n' + player->getMediaDetail(name).formatTime());
+        qDebug() << a.fileName();
+        if(player->addToList(fullName))
+             playList.append(a.fileName() + '\n' + Music::getMediaDetail(fullName).formatTime());
     }
     playListModel->setStringList(playList);
     if(playList.size() > 0)
         ui->delButton->setEnabled(true);
     if(s == 0&&playList.size() > 0)
         player->setCurrentMediaIndex(0u);
+    //这里一定要隐藏按钮，防止函数退出后继续调用上面的lambda表达式
+    ui->cancelButton->hide();
     ui->waitingLabel->hide();
 }
 

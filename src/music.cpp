@@ -18,9 +18,16 @@ QString Music::toString() {
 }
 
 bool Music::equals(const Music &a) const {
+    QString name1(url.fileName()),name2(url.fileName());
+#ifndef Q_OS_LINUX
     return url == a.url||
-            (title == a.title&&
-             length == a.length);
+            (name1.compare(name2,Qt::CaseInsensitive)==0
+             &&length == a.length&&title == a.title);
+#else
+    return url == a.url||
+            (name1 == name2
+             &&length == a.length&&title == a.title);
+#endif
 }
 
 const QUrl &Music::getUrl() const {return url;}
@@ -33,6 +40,12 @@ QString Music::formatTime() {
             + ':' + QString::number(len % 60);
 }
 
+Music Music::getMediaDetail(const QString &fileName) {
+    if(!Music::isLegal(fileName))
+        return Music();
+    return Music(QUrl::fromLocalFile(fileName));
+}
+
 bool Music::isLegal(const QString &media) {
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
@@ -41,6 +54,7 @@ bool Music::isLegal(const QString &media) {
     QDataStream ds(&rawData);
     return isMP3(&rawData,ds,size)||isWav(&rawData,ds,size)||isWma(&rawData,ds)||isAiff(&rawData,ds,size);
 }
+
 #define RETURN(CONDITION) {\
     media->seek(0ll);\
     return (CONDITION);\

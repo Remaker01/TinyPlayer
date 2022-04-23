@@ -13,7 +13,7 @@ void PlayerButton::mousePressEvent(QMouseEvent *e) {
         wi = wi - (wi >> 3);
         he = he - (he >> 3);
         resize(wi,he);
-        move(x() + (w/10-1),y() + h/10);
+        move(x() + ((w >> 3) -1),y() + (h >> 3));
     }
 }
 
@@ -21,7 +21,7 @@ void PlayerButton::mouseReleaseEvent(QMouseEvent *e) {
     if(e->button() == Qt::LeftButton&&replyClick) {
         emit clicked();
         resize(w,h);
-        move(x() - (w/10-1),y() - h/10);
+        move(x() - ((w >> 3) -1),y() - (h >> 3));
     }
 }
 

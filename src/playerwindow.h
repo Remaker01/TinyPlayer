@@ -34,7 +34,6 @@ private:
     void initSystemtray();
     void setBackground(const QPixmap &img);
     void changeMode(PlayerCore::PlayMode m);
-    //void setButton(PlayerButton *button,const QPixmap &pic,const QPoint &loc);
     void connectSlots();
     void connectUiSlots();
 public:

@@ -59,14 +59,6 @@ Music PlayerCore::getMediaDetail(int i) {
     return Music(getMedia(i));
 }
 
-Music PlayerCore::getMediaDetail(const QString &fileName) {
-    for(auto it = medias.begin(); it!=medias.end(); ++it) {
-        if(it->getUrl() == QUrl::fromLocalFile(fileName))
-            return *it;
-    }
-    return Music();
-}
-
 int PlayerCore::getPosInSecond() {
     return qRound(QMediaPlayer::position() / 1000.0);
 }
@@ -110,8 +102,7 @@ bool PlayerCore::addToList(const QString &media) {
         return false;
     QMediaContent content(tmp);
     ok &= list->addMedia(content);
-    if(ok)
-        medias.insert(tmp);
+    if(ok)    medias.insert(music);
     return ok;
 }
 
