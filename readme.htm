@@ -3,42 +3,47 @@
     <meta charset="UTF-8">
     <title>使用说明</title>
     <style>
-    .del{
-            text-decoration-line: line-through;
-            text-decoration-style: wavy;
-            text-decoration-color: rgb(112, 112, 112);
+        .half_done {
+            text-decoration: line-through blue dashed;
         }
     </style>
 </head>
 <body background="images/help_background.jpg">
-<h3>简易播放器TinyPlayer</h3>
-
+<h2>简易播放器TinyPlayer</h2>
 <p>采用QT构建的音频播放器</p>
-<ul>快捷键
+<p>快捷键</p>
+<ul>
     <li>Ctrl+O：打开音乐文件</li>
     <li>Ctrl+Shift+O：打开目录，自动添加并扫描目录下的合法文件</li>
     <li>Alt+O：打开背景图片文件</li>
+    <li>Ctrl+D：删除乐曲</li>
 </ul>
+<hr>
+<p>支持格式：<del>采用QT自带的QMediaPlayer，支持格式与平台有关。</del><br>
+2022.4更新：自2.0版改用VLC-qt，支持MP3,WAV,AIFF,FLAC,AAC,WMA</p></li>
+构建平台：
+<p>硬件与系统环境：Intel 第十代酷睿CPU+Windows 10 x64</p>
+<p>软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1</p>
+功能展望
 <ol>
-    <li>支持格式：采用的播放器引擎是QMediaPlayer,支持的格式主要与平台有关，Windows下默认支持mp3,wav,wma,aiff格式。</li>
-    <li>构建平台：
-        <ol>
-            <li>硬件与系统环境：Intel 第十代酷睿CPU+Windows 10 x64</li>
-            <li>软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1</li>
-        </ol>
-    </li>
-    <li>功能展望(带波浪线说明已完成)
-        <ol>
-            <li class="del">支持播放列表，并由此支持顺序播放、单曲循环播放等模式。</li>
-            <li class="del">支持自定义背景。</li>
-            <li class="del">支持打开文件夹，自动扫描并添加文件夹下的合法音频文件</li>
-            <li>采用更加好看的界面</li>
-            <li>支持自定义设置</li>
-            <li class="del">自动打开上次打开的文件夹</li>
-            <li>支持更多文件格式</li>
-        </ol>
-    </li>
+    <li><del>支持打开文件夹，自动扫描并添加文件夹下的合法音频文件</del> (已完成)</li>
+    <li><del class="half_done">采用更加好看的界面。</del>(部分完成)</li>
+    <li>设置界面</li>
+    <li><del>自动打开上次打开的文件夹</del>(已完成)</li>
+    <li><del class="half_done">支持更多格式</del>(部分完成)</li>
+    <li>关联文件</li>
+</ol>
+目前Bug
+<ol>
+    <li>部分文件详细信息中有乱码（估计是VLC的问题？）</li>
+    <li>AAC文件添加进播放列表后无法及时更新信息。</li>
+    <li>某些文件(主要是MP3)在少数情况下点击进度条会从头开始</li>
+    <li>个别情况下界面会卡死，具体表现：字符及进度条按钮“重影”。</li>
 </ol>
 <p>欢迎提出意见与建议。</p>
+<h3>For developers:</h3>
+<p>本项目是CMake工程，如果要改成QMake请记得添加QT的Core,Widgets,Multimedia和VLC-qt的Core模块。</p>
+<p>由于gitignore设置，二进制文件无法添加到仓库中，请自行准备VLC-qt</p>
+
 </body>
-</html>
+</html>

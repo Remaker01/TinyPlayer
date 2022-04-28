@@ -2,93 +2,92 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-static const QString Formats[] = {".mp3",".wav",".wma",".aiff"};
-PlayerCore::PlayerCore(QWidget *p):timer(new QTimer(this)),list(new QMediaPlaylist) {
+const QString PlayerCore::Formats[6] = {".mp3",".wav",".aiff",".flac",".aac",".wma"};
+VlcInstance *PlayerCore::ins = new VlcInstance(VlcCommon::args());
+PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(ins) {
+    curMedia = new VlcMedia("",true,ins);
     connectSlots();
-    timer->setInterval(250);
 }
 
 inline void PlayerCore::connectSlots() {
-    connect(timer,&QTimer::timeout,this,&PlayerCore::timedOut);
-    connect(this,&QMediaPlayer::stateChanged,this,[this]() {
-        if(QMediaPlayer::state() == QMediaPlayer::StoppedState&&position() > 0) {
-            switch (mode) {
-            case SIGNLE:
-                emit finished();
-                break;
-            case SEQUENTIAL:
-                if(list->currentIndex() != list->mediaCount() - 1) {
-                    list->next();
-                    QMediaPlayer::setMedia(list->currentMedia());
-                    QMediaPlayer::play();
-                }
-                else    emit finished();
-                break;
-            case SIGNLE_LOOP:
-                QMediaPlayer::setPosition(0ll);
-                QMediaPlayer::play();
-                break;
-            case LIST_LOOP:
-                int cur = list->currentIndex();
-                list->setCurrentIndex((cur + 1)%list->mediaCount());
-                QMediaPlayer::setMedia(list->currentMedia());
-                QMediaPlayer::play();
-                break;
+    connect(this,&VlcMediaPlayer::end,this,[this]() {
+        //qDebug() << "Ended";
+        switch (mode) {
+        case SIGNLE:
+            //去掉这句，会导致结束后无法再次开始
+            setMedia(list[currentIndex].toString(),false);
+            emit finished();
+            break;
+        case SEQUENTIAL:
+            if(currentIndex < list.size() - 1) {
+                currentIndex++;
+                setMedia(list[currentIndex].toString());
             }
+            else
+                emit finished();
+            break;
+        case SIGNLE_LOOP:
+            //不能直接设为0再重新开始，否则导致进度条一直卡在满格
+            setMedia(list[currentIndex].toString());
+            break;
+        case LIST_LOOP:
+            currentIndex = ((currentIndex + 1) % list.size());
+            setMedia(list[currentIndex].toString());
+            break;
         }
     });
 }
 
-void PlayerCore::changeState(PlayerButton *label,const QString &toolTip, const QPixmap &pixmap,TimerOperation opt) {
-    label->setPixmap(pixmap);
-    label->setToolTip(toolTip);
-    if(opt == START&&!timer->isActive())
-        timer->start();
-    else if(opt == STOP)
-        timer->stop();
+inline void PlayerCore::setMedia(const QString &media,bool start) {
+    int orgLen = curMedia->duration();
+    delete curMedia;
+    curMedia = new VlcMedia(media,ins);
+    curMedia->parse();
+    while (!curMedia->parsed())
+        QCoreApplication::processEvents();
+    VlcMediaPlayer::openOnly(curMedia);
+    if(curMedia->duration() != orgLen)
+        emit VlcMediaPlayer::lengthChanged(curMedia->duration());
+    if(start)
+        VlcMediaPlayer::play();
 }
 
-QUrl PlayerCore::getMedia() {return QMediaPlayer::media().canonicalUrl();}
+QString PlayerCore::getMedia() {
+    QUrl url(curMedia->currentLocation());
+    return url.toLocalFile();
+}
 
-QUrl PlayerCore::getMedia(int i) {
-    QMediaContent content(list->media(i));
-    return content.canonicalUrl();
+QString PlayerCore::getMedia(int i) {
+    return list[i].toLocalFile();
 }
 
 Music PlayerCore::getMediaDetail(int i) {
-    return Music(getMedia(i));
+    QString tmp = getMedia(i);
+    return Music(QUrl::fromLocalFile(tmp));
 }
 
 int PlayerCore::getPosInSecond() {
-    return qRound(QMediaPlayer::position() / 1000.0);
+    return qRound(VlcMediaPlayer::time() / 1000.0);
 }
 
-int PlayerCore::getCurrentMediaIndex() {return list->currentIndex();}
-void PlayerCore::setMedia(const QFile *media) {
-    QString filename = media->fileName();
-    QUrl s = QUrl::fromLocalFile(filename);
-    QMediaContent content(s);
-    if(!medias.contains(s)) {
-        medias.insert(s);
-        list->addMedia(content);
-    }
-    QMediaPlayer::setMedia(content);
+int PlayerCore::getCurrentMediaIndex() {return currentIndex;}
+
+void PlayerCore::setPos(int pos) {
+    //TODO: 刚加载文件时无法设置
+    VlcMediaPlayer::setTime(qRound(pos * 1000.0));
 }
 
-void PlayerCore::setPos(int pos) {QMediaPlayer::setPosition((qint64)pos * 1000);}
-
-bool PlayerCore::setCurrentMediaIndex(uint i) {
-    if(i > list->mediaCount()||i == list->currentIndex())
-        return false;
-    list->setCurrentIndex((int)i);
-    QMediaPlayer::setMedia(list->currentMedia());
+void PlayerCore::setCurrentMediaIndex(int i) {
+    if(i >= list.size()||i == currentIndex)
+        return;
+    currentIndex = i;
+    setMedia(list[currentIndex].toString(),false);
     emit finished();
-    return QMediaPlayer::isAudioAvailable();
 }
 
 bool PlayerCore::addToList(const QString &media) {
     bool ok = false;
-    for (const QString &format : Formats) {
+    for(const QString &format:Formats) {
         if(media.endsWith(format,Qt::CaseInsensitive)) {
             ok = true;
             break;
@@ -98,37 +97,48 @@ bool PlayerCore::addToList(const QString &media) {
     if(!Music::isLegal(media)||!ok||medias.contains(tmp))
         return false;
     Music music(tmp);
-    if(music.getUrl().toLocalFile() != media)
+    if(music.getUrl().toLocalFile().isEmpty())
         return false;
-    QMediaContent content(tmp);
-    ok &= list->addMedia(content);
-    if(ok)    medias.insert(music);
-    return ok;
+    list.append(tmp);
+    medias.insert(music);
+    return true;
 }
 
 bool PlayerCore::removeFromList(uint loc) {
-    uint now = (uint)list->currentIndex();
-    medias.remove(list->media((int)loc).canonicalUrl());
-    bool ret = list->removeMedia((int)loc);
+    if(loc >= list.size())
+        return false;
+    uint now = currentIndex;
+    medias.remove(list[loc]);
+    qDebug() << loc;
+    list.removeAt(loc);
+    if(list.isEmpty()) {
+        currentIndex = -1;
+        return true;
+    }
     if(loc <= now) {
-        list->setCurrentIndex(now - 1);
-        if(loc==now) {
-            if(now == 0)
-                QMediaPlayer::setMedia(QUrl(""));
-            else
-                QMediaPlayer::setMedia(list->currentMedia());
+        if(loc == now) {
+            currentIndex = std::max(0,(int)loc - 1);
+            setMedia(list[currentIndex].toString(),false);
             emit finished();
         }
+        //loc<now,此时now一定不为0
+        else
+            currentIndex--;
     }
-    else    list->setCurrentIndex(now);
-    return ret;
+#ifndef NDEBUG
+    qDebug() << "now =" << currentIndex;
+#endif
+    return true;
 }
 
 void PlayerCore::clear() {
-    list->clear();
+    list.clear();
     medias.clear();
-    QMediaPlayer::setMedia(QUrl(""));
+    VlcMediaPlayer::stop();
+    currentIndex = -1;
     emit finished();
 }
 
-PlayerCore::~PlayerCore() {delete list;}
+PlayerCore::~PlayerCore() {
+    delete curMedia;
+}

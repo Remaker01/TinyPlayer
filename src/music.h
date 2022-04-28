@@ -1,10 +1,13 @@
 #ifndef MUSIC_H
 #define MUSIC_H
 #include <QtCore>
-#include <QMediaPlayer>
 #include <QHash>
 #include <QMessageBox>
 #include <QFile>
+#include <VLCQtCore/MetaManager.h>
+#include <VLCQtCore/Media.h>
+#include <VLCQtCore/Common.h>
+#include <VLCQtCore/Instance.h>
 class Music{
 private:
     QString formattedTime;
@@ -16,6 +19,8 @@ private:
     static bool isWav(QFile *media,QDataStream &reader,uint32_t size);
     static bool isWma(QFile *media,QDataStream &reader);
     static bool isAiff(QFile *media,QDataStream &reader,uint32_t size);
+    static bool isFlac(QFile *media,QDataStream &reader);
+    static bool isAAC(QFile *media,QDataStream &reader);
 public:
     /**
      * 根据指定的URL建立音乐对象
@@ -40,14 +45,14 @@ public:
         return !a.equals(b);
     }
     friend uint qHash(const Music &key,uint seed = 0) {
-        return qHash(key.title,seed) ^ qHash(key.length,seed);
+        return qHash(key.title,seed) ^ qHash(key.length,seed) ^ qHash(key.url.fileName(),seed);
     }
     ///获取Url
     const QUrl &getUrl() const;
     ///获取经格式化后的时间
     QString formatTime();
     static Music getMediaDetail(const QString &fileName);
-    static bool isLegal(const QString &media);
+    static bool isLegal(QString media);
 signals:
 
 };

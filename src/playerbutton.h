@@ -15,6 +15,7 @@ public:
     void setReplyClick(bool f);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
+    void changeState(const QString &toolTip, const QPixmap &pixmap);
     ~PlayerButton();
 signals:
     /// 鼠标点击信号

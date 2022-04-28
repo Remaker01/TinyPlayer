@@ -11,10 +11,15 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(VLCQt_DIR vlc-qt_1.1.0/lib/cmake/VLCQt)
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools multimedia REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools multimedia REQUIRED)
+find_package(VLCQt COMPONENTS Core REQUIRED)
+
 set(CMAKE_CXX_FLAGS_RELEASE "-mwindows -O2 -s -DNDEBUG")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-mwindows -Os -s -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO -"-O -g")
 set(INCLUDE_DIRECTORIES
     ./qm
     ./images
@@ -36,14 +41,18 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/music.h
         src/music.cpp
+        src/formatCheck.cpp
         resource.qrc
         ${TS_FILES}
 )
+set(HELP_FILES  readme.htm)
+include_directories(vlc-qt_1.1.0/include)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TinyPlayer
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${HELP_FILES}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET TinyPlayer APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -62,21 +71,22 @@ else()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         add_executable(TinyPlayer
             ${PROJECT_SOURCES}
+            ${HELP_FILES}
             meta.rc
         )
     else()
         add_executable(TinyPlayer
             ${PROJECT_SOURCES}
+            ${HELP_FILES}
         )
     endif()
-
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
 target_link_libraries(TinyPlayer PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Multimedia
-    )
+    VLCQt::Core
+)
 
 set_target_properties(TinyPlayer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

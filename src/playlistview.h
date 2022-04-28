@@ -6,8 +6,7 @@
 #include <QMimeData>
 #include <QContextMenuEvent>
 #include <QMenu>
-class PlayListView : public QListView
-{
+class PlayListView : public QListView {
     Q_OBJECT
 private:
     QAction *del;
