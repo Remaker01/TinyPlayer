@@ -1,5 +1,4 @@
 #include "music.h"
-
 Music::Music(const QUrl &uri):url(uri) {
     static VlcInstance *ins = new VlcInstance(VlcCommon::args());
     VlcMedia m(uri.toString(),ins);
@@ -49,15 +48,16 @@ Music Music::getMediaDetail(const QString &fileName) {
 }
 
 bool Music::isLegal(QString media) {
+    static bool (*checkers[6])(QFile *,QDataStream &) = {
+        &Music::isMP3,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma
+    };
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
         return false;
     QDataStream ds(&rawData);
-    uint32_t size = media.size();
-    return isMP3(&rawData,ds,size)||
-            isWav(&rawData,ds,size)||
-            isAiff(&rawData,ds,size)||
-            isFlac(&rawData,ds)||
-            isAAC(&rawData,ds)||
-            isWma(&rawData,ds);
+    for (auto checker : checkers) {
+        if(checker(&rawData,ds))
+            return true;
+    }
+    return false;
 }

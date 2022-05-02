@@ -4,7 +4,7 @@
     return (CONDITION);\
 }
 //判断方式：头部为"ID3"，或倒数128字节起为"TAG"，或头11位为1
-bool Music::isMP3(QFile *media,QDataStream &reader,uint32_t size) {
+bool Music::isMP3(QFile *media,QDataStream &reader) {
     reader.setByteOrder(QDataStream::BigEndian);
     char head[5];
     head[4] = 0;
@@ -12,7 +12,7 @@ bool Music::isMP3(QFile *media,QDataStream &reader,uint32_t size) {
     QString str(head);
     if(str.left(3) == "ID3")   RETURN(str[3] >= '\02'&&str[3] <= '\04')
     bool ret = false;
-    media->seek(size - 128);
+    media->seek(media->size() - 128);
     reader.readRawData(head,3);
     str = head;
     if(str == "TAG")   RETURN(true)
@@ -24,9 +24,10 @@ bool Music::isMP3(QFile *media,QDataStream &reader,uint32_t size) {
     RETURN(first_2B >= 0xffe0u)
 }
 //头部格式："RIFF"+文件大小+"WAVE"+"fmt "
-bool Music::isWav(QFile *media,QDataStream &reader,uint32_t size) {
+bool Music::isWav(QFile *media,QDataStream &reader) {
     //注意改为小端序
     reader.setByteOrder(QDataStream::LittleEndian);
+    uint32_t size = media->size();
     char head[9];
     head[4] = head[8] = 0;
     uint32_t sizePart;
@@ -43,8 +44,9 @@ bool Music::isWav(QFile *media,QDataStream &reader,uint32_t size) {
     RETURN(str2 == "WAVEfmt ")
 }
 //头部：46 4F 52 4D，即"FORM";大端序
-bool Music::isAiff(QFile *media,QDataStream &reader,uint32_t size) {
+bool Music::isAiff(QFile *media,QDataStream &reader) {
     reader.setByteOrder(QDataStream::BigEndian);
+    uint32_t size = media->size();
     char head[5];
     head[4] = 0;
     uint32_t sizePart;

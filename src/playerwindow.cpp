@@ -82,9 +82,8 @@ inline void PlayerWindow::connectSlots() {
                  CHANGE_TO_PLAYICON;
              }
          }
-         else {
+         else
              QMessageBox::critical(this,"播放失败","文件可能已损坏");
-         }
     });
     connect(ui->stopButton,&PlayerButton::clicked,this,[this]() {
         if(player->state() != Vlc::Stopped) {
@@ -105,7 +104,6 @@ inline void PlayerWindow::connectSlots() {
         //重置进度条（好像不加也可以？）
         ui->progressSlider->setValue(0);
     });
-    //定时器发出信号，开始改变时间
     connect(player,&PlayerCore::timeChanged,this,[this]() {
         ui->progressSlider->setValue(player->getPosInSecond());
     });
@@ -209,7 +207,6 @@ inline void PlayerWindow::ensureExit() {
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     bool f = true;
-    long st = clock();
     ui->waitingLabel->show();
     ui->cancelButton->show();
     connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
@@ -225,11 +222,11 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     playListModel->setStringList(playList);
     if(playList.size() > 0)
         ui->delButton->setEnabled(true);
-    player->setCurrentMediaIndex(0u);
+    if(player->getCurrentMediaIndex() < 0)
+        player->setCurrentMediaIndex(0u);
     //这里一定要隐藏按钮，防止函数退出后继续调用上面的lambda表达式
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
-    qDebug() << clock() - st;
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
@@ -260,6 +257,7 @@ void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
         ui->mediaLabel->clear();\
 }
 void PlayerWindow::doDelMedia() {
+    long st = clock();
     QModelIndexList tmp = ui->listView->getSelections();
     QList<int> selections;
     for (QModelIndex &i:tmp)
@@ -270,12 +268,11 @@ void PlayerWindow::doDelMedia() {
             QMessageBox::critical(this,"错误","删除失败。");
         else {
             playList.removeAt(i);
-            playListModel->setStringList(playList);
         }
     }
-    bool a = (playList.size() > 0);
-    ui->stopButton->setReplyClick(a);
-    LIST_DEL_ACTION(a)
+    playListModel->setStringList(playList);
+    LIST_DEL_ACTION(playList.size() > 0)
+    qDebug() << clock() - st;
 }
 
 void PlayerWindow::on_clearButton_clicked() {

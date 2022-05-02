@@ -15,7 +15,8 @@ private:
     VlcMedia *curMedia;
     QSet<Music> medias;
     QList<QUrl> list;
-    int currentIndex = -1;
+    int current = -1;
+    int startLoc = 0;
     void connectSlots();
     void setMedia(const QString &media,bool start = true);
 public:
@@ -42,6 +43,7 @@ public:
     bool removeFromList(uint loc);
     ///清空播放列表
     void clear();
+    void play();
     ~PlayerCore();
 signals:
     void finished();
