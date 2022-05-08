@@ -130,7 +130,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.0 Alpha  2.0.220426");
+                                                        "版本号:2.0 Beta  2.0.220510");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
         connect(b,&QPushButton::clicked,this,[]{
@@ -161,9 +161,18 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->actionToDefault,&QAction::triggered,this,[this](){
         setBackground(QPixmap(":/Icons/images/back.jpg"));
     });
+    connect(ui->actionSaveList,&QAction::triggered,this,[this]() {
+        QString tmp = QFileDialog::getSaveFileName(this,"选择保存目录",lastPath,"播放列表(*.lst)");
+        if(tmp.isEmpty())   return;
+        if(!saveList(tmp))
+            QMessageBox::warning(this,"警告","无法保存，请检查文件路径和文件名");
+    });
+    connect(ui->actionLoadList,&QAction::triggered,this,[this]() {
+        QString tmp = QFileDialog::getOpenFileName(this,"选择播放列表",lastPath,"播放列表(*.lst)");
+        if(!tmp.isEmpty())    openList(tmp);
+    });
     connect(ui->volumeButton,&PlayerButton::clicked,this,[this]() {
-        static const QPixmap muted(":/Icons/images/muted.png");
-        static const QPixmap unMuted(":/Icons/images/volume.png");
+        static const QPixmap muted(":/Icons/images/muted.png"),unMuted(":/Icons/images/volume.png");
         if(player->audio()->volume() > 0) {
             ui->volumeButton->setPixmap(muted);
             emit ui->volumeSlider->valueChanged(0);
@@ -257,7 +266,6 @@ void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
         ui->mediaLabel->clear();\
 }
 void PlayerWindow::doDelMedia() {
-    long st = clock();
     QModelIndexList tmp = ui->listView->getSelections();
     QList<int> selections;
     for (QModelIndex &i:tmp)
@@ -266,13 +274,11 @@ void PlayerWindow::doDelMedia() {
     for (int i:selections) {
         if(!player->removeFromList((uint)i))
             QMessageBox::critical(this,"错误","删除失败。");
-        else {
+        else
             playList.removeAt(i);
-        }
     }
     playListModel->setStringList(playList);
     LIST_DEL_ACTION(playList.size() > 0)
-    qDebug() << clock() - st;
 }
 
 void PlayerWindow::on_clearButton_clicked() {
@@ -284,6 +290,35 @@ void PlayerWindow::on_clearButton_clicked() {
 #undef LIST_DEL_ACTION
 void PlayerWindow::on_addButton_clicked() {
     ui->actionopenFile->trigger();
+}
+
+bool PlayerWindow::saveList(const QString &file) {
+    QFile lstFile(file);
+    if(playList.empty()||!lstFile.open(QIODevice::ReadWrite))
+        return false;
+    int tot = playList.size();
+    QDataStream ds(&lstFile);
+    ds.setVersion(QDataStream::Qt_5_0);
+    for(int i = 0; i < tot; i++) {
+        ds << player->getMedia(i);
+    }
+    return true;
+}
+
+bool PlayerWindow::openList(const QString &file) {
+    QFile lstFile(file);
+    if(!lstFile.open(QIODevice::ReadOnly))
+        return false;
+    QDataStream ds(&lstFile);
+    ds.setVersion(QDataStream::Qt_5_0);
+    QStringList mediaList;
+    QString str;
+    while (!ds.atEnd()) {
+        ds >> str;
+        mediaList.append(str);
+    }
+    doAddMedia(mediaList);
+    return true;
 }
 
 PlayerWindow::~PlayerWindow() {

@@ -47,6 +47,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
         menu.exec(QCursor::pos());
     }
     QListView::contextMenuEvent(e);
+
 }
 
 QModelIndexList PlayListView::getSelections() {return QListView::selectedIndexes();}

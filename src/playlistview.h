@@ -6,6 +6,7 @@
 #include <QMimeData>
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QStringListModel>
 class PlayListView : public QListView {
     Q_OBJECT
 private:

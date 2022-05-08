@@ -7,7 +7,7 @@
 #include <QDesktopServices>
 #include <QStringListModel>
 #include <QSettings>
-#include <QProcess>
+#include <QProgressDialog>
 #include <QSystemTrayIcon>
 #include "playerbutton.h"
 #include "player.h"
@@ -50,5 +50,7 @@ private slots:
     void doDelMedia();
     void on_clearButton_clicked();
     void on_addButton_clicked();
+    bool saveList(const QString &file);
+    bool openList(const QString &file);
 };
 #endif // PLAYERWINDOW_H
