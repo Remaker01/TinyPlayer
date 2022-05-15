@@ -2,16 +2,17 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-const QString PlayerCore::Formats[6] = {".mp3",".wav",".aiff",".flac",".aac",".wma"};
+const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".wav",".aiff",".flac",".aac",".wma"};
+const QString PlayerCore::MODE_TIPS[MODE_COUNT] {"单曲播放","顺序播放","单曲循环","列表循环"};
 VlcInstance *PlayerCore::ins = new VlcInstance(VlcCommon::args());
 PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(ins) {
+    ins->setLogLevel(Vlc::ErrorLevel);
     curMedia = new VlcMedia("",true,ins);
     connectSlots();
 }
 
 inline void PlayerCore::connectSlots() {
     connect(this,&VlcMediaPlayer::end,this,[this]() {
-        //qDebug() << "Ended";
         switch (mode) {
         case SIGNLE:
             //去掉这句，会导致结束后无法再次开始
@@ -73,11 +74,9 @@ int PlayerCore::getPosInSecond() {
 int PlayerCore::getCurrentMediaIndex() {return current;}
 
 void PlayerCore::setPos(int pos) {
-    //TODO: 刚加载文件时无法设置
     Vlc::State sta = VlcMediaPlayer::state();
     if(sta != Vlc::Playing&&sta != Vlc::Paused) {
         startLoc = pos * 1000;
-        qDebug() << sta;
     }
     else
         VlcMediaPlayer::setTime(pos * 1000);
@@ -103,17 +102,17 @@ bool PlayerCore::addToList(const QString &media) {
     if(!Music::isLegal(media)||!ok||medias.contains(tmp))
         return false;
     Music music(tmp);
-    if(music.getUrl().toLocalFile().isEmpty())
+    if(music.getUrl().isEmpty())
         return false;
     list.append(tmp);
     medias.insert(music);
     return true;
 }
 
-bool PlayerCore::removeFromList(uint loc) {
+bool PlayerCore::removeFromList(int loc) {
     if(loc >= list.size())
         return false;
-    uint now = current;
+    int now = current;
     medias.remove(list[loc]);
     list.removeAt(loc);
     if(list.isEmpty()) {
@@ -161,5 +160,4 @@ void PlayerCore::play() {
 
 PlayerCore::~PlayerCore() {
     delete curMedia;
-    ins->deleteLater();
 }

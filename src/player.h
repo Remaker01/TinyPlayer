@@ -20,8 +20,9 @@ private:
     void connectSlots();
     void setMedia(const QString &media,bool start = true);
 public:
-    static constexpr int MODE_COUNT = 4;
-    static const QString Formats[6];
+    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 6;
+    static const QString Formats[FORMAT_COUNT];
+    static const QString MODE_TIPS[MODE_COUNT];
     enum PlayMode{SIGNLE = 0,SEQUENTIAL,SIGNLE_LOOP,LIST_LOOP};
     PlayMode mode = SIGNLE;
     explicit PlayerCore(QObject *parent = nullptr);
@@ -40,7 +41,7 @@ public:
     ///添加到播放列表
     bool addToList(const QString &media);
     ///从播放列表中移除
-    bool removeFromList(uint loc);
+    bool removeFromList(int loc);
     ///清空播放列表
     void clear();
     void play();

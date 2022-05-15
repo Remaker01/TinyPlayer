@@ -2,7 +2,7 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-PlayerSlider::PlayerSlider(QWidget *parent) {
+PlayerSlider::PlayerSlider(QWidget *parent):QSlider(parent) {
     setCursor(Qt::PointingHandCursor);
     setPageStep(0);
 }

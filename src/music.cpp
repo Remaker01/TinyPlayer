@@ -1,7 +1,7 @@
 #include "music.h"
 Music::Music(const QUrl &uri):url(uri) {
-    static VlcInstance *ins = new VlcInstance(VlcCommon::args());
-    VlcMedia m(uri.toString(),ins);
+    static VlcInstance ins(VlcCommon::args());
+    VlcMedia m(uri.toString(),&ins);
     m.parse();
     while (!m.parsed())
         QCoreApplication::processEvents();

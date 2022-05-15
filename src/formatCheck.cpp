@@ -11,7 +11,6 @@ bool Music::isMP3(QFile *media,QDataStream &reader) {
     reader.readRawData(head,4);
     QString str(head);
     if(str.left(3) == "ID3")   RETURN(str[3] >= '\02'&&str[3] <= '\04')
-    bool ret = false;
     media->seek(media->size() - 128);
     reader.readRawData(head,3);
     str = head;
@@ -33,15 +32,15 @@ bool Music::isWav(QFile *media,QDataStream &reader) {
     uint32_t sizePart;
     //头4个字节
     reader.readRawData(head,4);
-    QString str1(head);
-    if(str1 != "RIFF")   RETURN(false)
+    QString str(head);
+    if(str != "RIFF")   RETURN(false)
     //接下来4字节
     reader >> sizePart;
     if(sizePart != size - 8)   RETURN(false)
     //接下来8字节
     reader.readRawData(head,8);
-    QString str2(head);
-    RETURN(str2 == "WAVEfmt ")
+    str = head;
+    RETURN(str == "WAVEfmt ")
 }
 //头部：46 4F 52 4D，即"FORM";大端序
 bool Music::isAiff(QFile *media,QDataStream &reader) {
@@ -52,14 +51,14 @@ bool Music::isAiff(QFile *media,QDataStream &reader) {
     uint32_t sizePart;
     //0~3字节
     reader.readRawData(head,4);
-    QString str1(head);
-    if(str1 != "FORM")   RETURN(false)
+    QString str(head);
+    if(str != "FORM")   RETURN(false)
     reader >> sizePart;
     if(sizePart != size - 8)   RETURN(false)
     //8~11字节
     reader.readRawData(head,4);
-    QString str2(head);
-    RETURN(str2 == "AIFF"||str2 == "AIFC")
+    str = head;
+    RETURN(str == "AIFF"||str == "AIFC")
 }
 //头部fLaC
 bool Music::isFlac(QFile *media, QDataStream &reader) {

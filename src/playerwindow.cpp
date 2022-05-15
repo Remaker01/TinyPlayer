@@ -22,12 +22,6 @@ inline void PlayerWindow::initUi() {
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
-    initPlayList();
-}
-
-inline void PlayerWindow::initPlayList() {
-    playListModel = new QStringListModel(this);
-    ui->listView->setModel(playListModel);
 }
 
 inline void PlayerWindow::initSystemtray() {
@@ -60,11 +54,10 @@ inline void PlayerWindow::initConfiguration() {
 }
 
 inline void PlayerWindow::changeMode(PlayerCore::PlayMode m) {
-    const QString TIPS[]={"单曲播放","顺序播放","单曲循环","列表循环"};
     QString name = ":/Icons/images/" + QString::number((int)m) + ".png";
     ui->modeButton->setPixmap(QPixmap(name));
     player->mode = m;
-    ui->modeButton->setToolTip(TIPS[(int)m]);
+    ui->modeButton->setToolTip(PlayerCore::MODE_TIPS[(int)m]);
 }
 
 inline void PlayerWindow::connectSlots() {
@@ -130,7 +123,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.0 Beta  2.0.220510");
+                                                        "版本号:2.0 Beta  2.0.220515");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
         connect(b,&QPushButton::clicked,this,[]{
@@ -215,11 +208,11 @@ inline void PlayerWindow::ensureExit() {
 }
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
+    //long st = clock();
     bool f = true;
     ui->waitingLabel->show();
     ui->cancelButton->show();
     connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
-    lastPath = QFileInfo(medias.last()).absolutePath();
     for(QString &fullName:medias) {
         if(!f)
             break;
@@ -228,7 +221,8 @@ void PlayerWindow::doAddMedia(QStringList medias) {
         if(player->addToList(fullName))
              playList.append(a.fileName() + '\n' + Music::getMediaDetail(fullName).formatTime());
     }
-    playListModel->setStringList(playList);
+    lastPath = QFileInfo(medias.last()).absolutePath();
+    ui->listView->setStringList(playList);
     if(playList.size() > 0)
         ui->delButton->setEnabled(true);
     if(player->getCurrentMediaIndex() < 0)
@@ -236,6 +230,7 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     //这里一定要隐藏按钮，防止函数退出后继续调用上面的lambda表达式
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
+    //qDebug() << clock() -st;
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
@@ -277,13 +272,13 @@ void PlayerWindow::doDelMedia() {
         else
             playList.removeAt(i);
     }
-    playListModel->setStringList(playList);
+    ui->listView->setStringList(playList);
     LIST_DEL_ACTION(playList.size() > 0)
 }
 
 void PlayerWindow::on_clearButton_clicked() {
     playList.clear();
-    playListModel->setStringList(playList);
+    ui->listView->setStringList(playList);
     player->clear();
     LIST_DEL_ACTION(false)
 }
@@ -291,7 +286,7 @@ void PlayerWindow::on_clearButton_clicked() {
 void PlayerWindow::on_addButton_clicked() {
     ui->actionopenFile->trigger();
 }
-
+static constexpr uint16_t MAGIC = (uint16_t)0x0102;
 bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
     if(playList.empty()||!lstFile.open(QIODevice::ReadWrite))
@@ -299,9 +294,9 @@ bool PlayerWindow::saveList(const QString &file) {
     int tot = playList.size();
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_0);
-    for(int i = 0; i < tot; i++) {
+    ds << MAGIC; //magic number
+    for(int i = 0; i < tot; i++)
         ds << player->getMedia(i);
-    }
     return true;
 }
 
@@ -311,13 +306,17 @@ bool PlayerWindow::openList(const QString &file) {
         return false;
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_0);
-    QStringList mediaList;
+    uint16_t magic;
+    ds >> magic;
+    if(magic != MAGIC)
+        return false;
+    QStringList mediasList;
     QString str;
     while (!ds.atEnd()) {
         ds >> str;
-        mediaList.append(str);
+        mediasList.append(str);
     }
-    doAddMedia(mediaList);
+    doAddMedia(mediasList);
     return true;
 }
 

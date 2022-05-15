@@ -6,7 +6,7 @@
 class PlayerSlider :public QSlider{
     Q_OBJECT
 public:
-    PlayerSlider(QWidget *parent = nullptr);
+    explicit PlayerSlider(QWidget *parent = nullptr);
     void mousePressEvent(QMouseEvent *e);
 signals:
     void playerSliderClicked(int loc);

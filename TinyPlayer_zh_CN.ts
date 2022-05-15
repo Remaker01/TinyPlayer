@@ -140,7 +140,8 @@
     </message>
     <message>
         <location filename="src/playerwindow.ui" line="485"/>
-        <source>保存当前播放列表</source>
+        <source>保存播放列表</source>
+        <oldsource>保存当前播放列表</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>

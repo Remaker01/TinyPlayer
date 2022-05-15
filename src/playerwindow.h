@@ -5,7 +5,6 @@
 #include <QFileDialog>
 #include <QPalette>
 #include <QDesktopServices>
-#include <QStringListModel>
 #include <QSettings>
 #include <QProgressDialog>
 #include <QSystemTrayIcon>
@@ -23,7 +22,6 @@ private:
     const QPixmap PLAY_ICON,PAUSE_ICON;
     Ui::PlayerWindow *ui;
     PlayerCore *player;
-    QStringListModel *playListModel;
     QSystemTrayIcon *tray;
     QStringList playList;
     QString lastPath;
@@ -36,7 +34,7 @@ private:
     void connectSlots();
     void connectUiSlots();
 public:
-    PlayerWindow(QWidget *parent = nullptr);
+    explicit PlayerWindow(QWidget *parent = nullptr);
     void initConfiguration();
     ~PlayerWindow();
 

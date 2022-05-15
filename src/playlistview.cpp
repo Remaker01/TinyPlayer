@@ -2,8 +2,9 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-PlayListView::PlayListView(QWidget *parent) {
-    setParent(parent);
+PlayListView::PlayListView(QWidget *parent):QListView(parent) {
+    model = new QStringListModel(this);
+    setModel(model);
     setAcceptDrops(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -47,7 +48,6 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
         menu.exec(QCursor::pos());
     }
     QListView::contextMenuEvent(e);
-
 }
 
 QModelIndexList PlayListView::getSelections() {return QListView::selectedIndexes();}
@@ -56,3 +56,7 @@ void PlayListView::setOpacity(double value) {
     int a = std::min(255,qRound(256*value));
     setStyleSheet("background-color: rgba(255,255,255," + QString::number(a) + ");");
 }
+
+void PlayListView::setStringList(const QStringList &list) {model->setStringList(list);}
+
+PlayListView::~PlayListView() {}

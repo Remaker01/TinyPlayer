@@ -11,19 +11,23 @@ class PlayListView : public QListView {
     Q_OBJECT
 private:
     QAction *del;
+    QStringListModel *model;
 public:
-    PlayListView(QWidget *parent = nullptr);
+    explicit PlayListView(QWidget *parent = nullptr);
     void dragEnterEvent(QDragEnterEvent *e);
     void dragMoveEvent(QDragMoveEvent *e);
     void dropEvent(QDropEvent *e);
     void contextMenuEvent ( QContextMenuEvent *e);
     QModelIndexList getSelections();
     void setOpacity(double value);
+    void setStringList(const QStringList &list);
+    ~PlayListView();
 signals:
     void mediaDropin(const QStringList &medias);
     void itemDelRequirement();
     void openDirRequirement(int row);
     void showDetailRequirement(int row);
+
 };
 
 #endif // PLAYLISTVIEW_H
