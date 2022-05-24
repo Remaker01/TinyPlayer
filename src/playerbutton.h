@@ -20,6 +20,8 @@ public:
 signals:
     /// 鼠标点击信号
     void clicked();
+public slots:
+    void click();
 };
 
 #endif // PLAYERBUTTON_H

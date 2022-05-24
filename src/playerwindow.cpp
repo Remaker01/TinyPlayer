@@ -71,7 +71,7 @@ inline void PlayerWindow::connectSlots() {
                  CHANGE_TO_PAUSEICON;
              }
              else {
-                 player->togglePause();
+                 player->pause();
                  CHANGE_TO_PLAYICON;
              }
          }
@@ -132,10 +132,12 @@ inline void PlayerWindow::connectUiSlots() {
         box.exec();
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
-        QString filiter = "音频文件(";
+        QString filiter = "所有支持的音频文件(";
         for(const QString &f : PlayerCore::Formats)
             filiter.append('*' + f + ';');
         filiter.append(')');
+        for(const QString &f : PlayerCore::Formats)
+            filiter.append(";;*" + f);
         QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件",lastPath,filiter));
         if(!medias.isEmpty())
             doAddMedia(medias);
@@ -206,6 +208,13 @@ inline void PlayerWindow::ensureExit() {
     connect(minimize,&QPushButton::clicked,this,&QMainWindow::hide);
     box.exec();
 }
+
+void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
+    if(e->key() == Qt::Key_Space) {
+        e->accept();
+        ui->playButton->click();
+    }
+}
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     //long st = clock();
@@ -226,7 +235,7 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     if(playList.size() > 0)
         ui->delButton->setEnabled(true);
     if(player->getCurrentMediaIndex() < 0)
-        player->setCurrentMediaIndex(0u);
+        player->setCurrentMediaIndex(0);
     //这里一定要隐藏按钮，防止函数退出后继续调用上面的lambda表达式
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
@@ -248,7 +257,8 @@ void PlayerWindow::on_progressSlider_valueChanged(int value) {
 
 void PlayerWindow::on_progressSlider_sliderMoved(int position) {
     player->setPos(position);
-    on_progressSlider_valueChanged(player->getPosInSecond());
+//    qDebug() << player->getPosInSecond();
+    on_progressSlider_valueChanged(position);
 }
 
 void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
@@ -267,7 +277,7 @@ void PlayerWindow::doDelMedia() {
         selections.append(i.row());
     std::sort(selections.begin(),selections.end(),std::greater<int>());
     for (int i:selections) {
-        if(!player->removeFromList((uint)i))
+        if(!player->removeFromList(i))
             QMessageBox::critical(this,"错误","删除失败。");
         else
             playList.removeAt(i);

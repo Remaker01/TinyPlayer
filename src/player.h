@@ -11,7 +11,7 @@
 class PlayerCore : public VlcMediaPlayer{
     Q_OBJECT
 private:
-    static VlcInstance *ins;
+    static VlcInstance ins;
     VlcMedia *curMedia;
     QSet<Music> medias;
     QList<QUrl> list;
@@ -23,6 +23,7 @@ public:
     static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 6;
     static const QString Formats[FORMAT_COUNT];
     static const QString MODE_TIPS[MODE_COUNT];
+    /// 播放模式
     enum PlayMode{SIGNLE = 0,SEQUENTIAL,SIGNLE_LOOP,LIST_LOOP};
     PlayMode mode = SIGNLE;
     explicit PlayerCore(QObject *parent = nullptr);
@@ -37,6 +38,7 @@ public:
     int getCurrentMediaIndex();
     ///设置时间，以秒为单位
     void setPos(int pos);
+    ///设置播放列表位置
     void setCurrentMediaIndex(int i);
     ///添加到播放列表
     bool addToList(const QString &media);
@@ -45,6 +47,7 @@ public:
     ///清空播放列表
     void clear();
     void play();
+    void pause();
     ~PlayerCore();
 signals:
     void finished();

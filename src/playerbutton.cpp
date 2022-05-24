@@ -30,4 +30,8 @@ void PlayerButton::changeState(const QString &toolTip, const QPixmap &pixmap) {
     setToolTip(toolTip);
 }
 
+void PlayerButton::click() {
+    if(replyClick)
+        emit clicked();
+}
 PlayerButton::~PlayerButton() {}

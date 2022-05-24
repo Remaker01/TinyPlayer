@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QProgressDialog>
 #include <QSystemTrayIcon>
+#include <QKeyEvent>
 #include "playerbutton.h"
 #include "player.h"
 #include "./ui_playerwindow.h"
@@ -33,6 +34,8 @@ private:
     void changeMode(PlayerCore::PlayMode m);
     void connectSlots();
     void connectUiSlots();
+protected:
+    void keyReleaseEvent(QKeyEvent *e);
 public:
     explicit PlayerWindow(QWidget *parent = nullptr);
     void initConfiguration();

@@ -4,10 +4,10 @@
 #endif
 const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".wav",".aiff",".flac",".aac",".wma"};
 const QString PlayerCore::MODE_TIPS[MODE_COUNT] {"单曲播放","顺序播放","单曲循环","列表循环"};
-VlcInstance *PlayerCore::ins = new VlcInstance(VlcCommon::args());
-PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(ins) {
-    ins->setLogLevel(Vlc::ErrorLevel);
-    curMedia = new VlcMedia("",true,ins);
+VlcInstance PlayerCore::ins(VlcCommon::args());
+PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
+    ins.setLogLevel(Vlc::ErrorLevel);
+    curMedia = new VlcMedia("",true,&ins);
     connectSlots();
 }
 
@@ -42,7 +42,7 @@ inline void PlayerCore::connectSlots() {
 inline void PlayerCore::setMedia(const QString &media,bool start) {
     int orgLen = (curMedia != nullptr) ? curMedia->duration() : 0;
     delete curMedia;
-    curMedia = new VlcMedia(media,ins);
+    curMedia = new VlcMedia(media,&ins);
     curMedia->parse();
     while (!curMedia->parsed())
         QCoreApplication::processEvents();
@@ -75,7 +75,7 @@ int PlayerCore::getCurrentMediaIndex() {return current;}
 
 void PlayerCore::setPos(int pos) {
     Vlc::State sta = VlcMediaPlayer::state();
-    if(sta != Vlc::Playing&&sta != Vlc::Paused) {
+    if(sta != Vlc::Playing) {
         startLoc = pos * 1000;
     }
     else
@@ -110,7 +110,7 @@ bool PlayerCore::addToList(const QString &media) {
 }
 
 bool PlayerCore::removeFromList(int loc) {
-    if(loc >= list.size())
+    if(loc >= list.size()||loc < 0)
         return false;
     int now = current;
     medias.remove(list[loc]);
@@ -123,7 +123,7 @@ bool PlayerCore::removeFromList(int loc) {
     }
     if(loc <= now) {
         if(loc == now) {
-            current = std::max(0,(int)loc - 1);
+            current = std::max(0,loc - 1);
             setMedia(list[current].toString(),false);
             emit finished();
         }
@@ -141,21 +141,30 @@ void PlayerCore::clear() {
     current = -1;
     emit finished();
 }
-
+//覆盖play()与pause()用于缓解进度条拖动及未开始播放不能设置时间问题
 void PlayerCore::play() {
     Vlc::State sta = VlcMediaPlayer::state();  //获取初始播放状态
     if(sta == Vlc::Playing)
         return;
-    VlcMediaPlayer::play();
+    //暂停
+    else if (sta == Vlc::Paused)
+        VlcMediaPlayer::resume();
+    //停止
+    else
+        VlcMediaPlayer::play();
     while (VlcMediaPlayer::state() != Vlc::Playing)
         QCoreApplication::processEvents();
-    if(sta != Vlc::Paused) {
-        VlcMediaPlayer::setTime(startLoc);
+    VlcMediaPlayer::setTime(startLoc);
 #ifndef NDEBUG
-        qDebug() << "start =" << startLoc;
+    qDebug() << "start =" << startLoc;
 #endif
-        startLoc = 0;
-    }
+    startLoc = 0;
+}
+
+void PlayerCore::pause() {
+    int tme = VlcMediaPlayer::time();
+    VlcMediaPlayer::togglePause();
+    startLoc = tme;
 }
 
 PlayerCore::~PlayerCore() {
