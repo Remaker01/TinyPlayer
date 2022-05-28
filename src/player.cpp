@@ -91,6 +91,10 @@ void PlayerCore::setCurrentMediaIndex(int i) {
 }
 
 bool PlayerCore::addToList(const QString &media) {
+    if(list.size() == MAX_MEDIA_COUNT) {
+        QMessageBox::warning(nullptr,"警告","已达到音乐数上限" + QString::number(MAX_MEDIA_COUNT));
+        return false;
+    }
     bool ok = false;
     for(const QString &format:Formats) {
         if(media.endsWith(format,Qt::CaseInsensitive)) {

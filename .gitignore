@@ -75,5 +75,8 @@ CMakeLists.txt.user
 # Backups
 *.bak
 
+# configs
+*.config
+
 # Tempoary
 stop.png

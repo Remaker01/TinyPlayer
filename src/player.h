@@ -11,6 +11,7 @@
 class PlayerCore : public VlcMediaPlayer{
     Q_OBJECT
 private:
+    static constexpr int MAX_MEDIA_COUNT = 10000;
     static VlcInstance ins;
     VlcMedia *curMedia;
     QSet<Music> medias;
