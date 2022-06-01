@@ -123,10 +123,10 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.0 Beta  2.0.220515");
+                                                        "版本号:2.0  2.0.220531");
         box.addButton("确定",QMessageBox::AcceptRole);
-        QPushButton *b = box.addButton("项目地址",QMessageBox::NoRole);
-        connect(b,&QPushButton::clicked,this,[]{
+        box.addButton("项目地址",QMessageBox::RejectRole);
+        connect(&box,&QMessageBox::rejected,this,[]{
             QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));
         });
         box.exec();
@@ -217,7 +217,6 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
 }
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
-    //long st = clock();
     bool f = true;
     ui->waitingLabel->show();
     ui->cancelButton->show();
@@ -239,7 +238,6 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     //这里一定要隐藏按钮，防止函数退出后继续调用上面的lambda表达式
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
-    //qDebug() << clock() -st;
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
@@ -248,7 +246,7 @@ void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     else
         ui->volumeButton->setPixmap(QPixmap(":/Icons/images/muted.png"));
     player->audio()->setVolume(value);
-    ui->volLabel->setText(QString("音量：%1").arg(value));
+    ui->volLabel->setText(QString("音量：%1").arg(value,2,10,QLatin1Char(' ')));
 }
 
 void PlayerWindow::on_progressSlider_valueChanged(int value) {
@@ -257,7 +255,6 @@ void PlayerWindow::on_progressSlider_valueChanged(int value) {
 
 void PlayerWindow::on_progressSlider_sliderMoved(int position) {
     player->setPos(position);
-//    qDebug() << player->getPosInSecond();
     on_progressSlider_valueChanged(position);
 }
 
@@ -299,7 +296,7 @@ void PlayerWindow::on_addButton_clicked() {
 static constexpr uint16_t MAGIC = (uint16_t)0x0102;
 bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
-    if(playList.empty()||!lstFile.open(QIODevice::ReadWrite))
+    if(playList.empty()||!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
         return false;
     int tot = playList.size();
     QDataStream ds(&lstFile);
@@ -307,6 +304,7 @@ bool PlayerWindow::saveList(const QString &file) {
     ds << MAGIC; //magic number
     for(int i = 0; i < tot; i++)
         ds << player->getMedia(i);
+    lstFile.close();
     return true;
 }
 
@@ -327,6 +325,7 @@ bool PlayerWindow::openList(const QString &file) {
         mediasList.append(str);
     }
     doAddMedia(mediasList);
+    lstFile.close();
     return true;
 }
 

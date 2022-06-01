@@ -26,7 +26,6 @@ bool Music::isMP3(QFile *media,QDataStream &reader) {
 bool Music::isWav(QFile *media,QDataStream &reader) {
     //注意改为小端序
     reader.setByteOrder(QDataStream::LittleEndian);
-    uint32_t size = media->size();
     char head[9];
     head[4] = head[8] = 0;
     uint32_t sizePart;
@@ -36,7 +35,7 @@ bool Music::isWav(QFile *media,QDataStream &reader) {
     if(str != "RIFF")   RETURN(false)
     //接下来4字节
     reader >> sizePart;
-    if(sizePart != size - 8)   RETURN(false)
+    if(sizePart != media->size() - 8)   RETURN(false)
     //接下来8字节
     reader.readRawData(head,8);
     str = head;

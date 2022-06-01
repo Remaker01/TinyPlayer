@@ -9,32 +9,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="356"/>
+        <location filename="src/playerwindow.ui" line="64"/>
         <source>00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="363"/>
+        <location filename="src/playerwindow.ui" line="71"/>
         <source>/00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="272"/>
+        <location filename="src/playerwindow.ui" line="264"/>
         <source>当前媒体:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="169"/>
+        <location filename="src/playerwindow.ui" line="161"/>
         <source>清空</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="143"/>
+        <location filename="src/playerwindow.ui" line="135"/>
         <source>删除</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="156"/>
+        <location filename="src/playerwindow.ui" line="148"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
@@ -49,12 +49,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="233"/>
+        <location filename="src/playerwindow.ui" line="225"/>
         <source>播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="223"/>
+        <location filename="src/playerwindow.ui" line="215"/>
         <source>正在打开...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -64,22 +64,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="120"/>
+        <location filename="src/playerwindow.ui" line="112"/>
         <source>添加</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="256"/>
+        <location filename="src/playerwindow.ui" line="248"/>
         <source>取消</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="60"/>
+        <location filename="src/playerwindow.ui" line="286"/>
         <source>开始</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="76"/>
+        <location filename="src/playerwindow.ui" line="302"/>
         <source>停止</source>
         <translation type="unfinished"></translation>
     </message>

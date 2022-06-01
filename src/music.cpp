@@ -56,8 +56,11 @@ bool Music::isLegal(QString media) {
         return false;
     QDataStream ds(&rawData);
     for (auto checker : checkers) {
-        if(checker(&rawData,ds))
+        if(checker(&rawData,ds)) {
+            rawData.close();
             return true;
+        }
     }
+    rawData.close();
     return false;
 }

@@ -49,6 +49,7 @@ inline void PlayerCore::setMedia(const QString &media,bool start) {
     VlcMediaPlayer::openOnly(curMedia);
     if(curMedia->duration() != orgLen)
         emit VlcMediaPlayer::lengthChanged(curMedia->duration());
+    setPos(0);
     if(start)
         VlcMediaPlayer::play();
 }
@@ -63,8 +64,7 @@ QString PlayerCore::getMedia(int i) {
 }
 
 Music PlayerCore::getMediaDetail(int i) {
-    QString tmp = getMedia(i);
-    return Music(QUrl::fromLocalFile(tmp));
+    return Music(list[i]);
 }
 
 int PlayerCore::getPosInSecond() {
@@ -91,7 +91,7 @@ void PlayerCore::setCurrentMediaIndex(int i) {
 }
 
 bool PlayerCore::addToList(const QString &media) {
-    if(list.size() == MAX_MEDIA_COUNT) {
+   if(list.size() == MAX_MEDIA_COUNT) {
         QMessageBox::warning(nullptr,"警告","已达到音乐数上限" + QString::number(MAX_MEDIA_COUNT));
         return false;
     }
