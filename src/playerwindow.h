@@ -24,6 +24,7 @@ private:
     Ui::PlayerWindow *ui;
     PlayerCore *player;
     QSystemTrayIcon *tray;
+    QMenu *trayMenu;
     QStringList playList;
     QString lastPath;
     void initUi();

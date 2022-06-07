@@ -20,15 +20,7 @@ QString Music::toString() {
 }
 
 bool Music::equals(const Music &a) const {
-    QString name1(url.fileName()),name2(url.fileName());
-    return url == a.url||
-#ifndef Q_OS_LINUX
-            (name1.compare(name2,Qt::CaseInsensitive) == 0
-             &&length == a.length&&title == a.title);
-#else
-            (name1 == name2
-             &&length == a.length&&title == a.title);
-#endif
+    return url == a.url||(length == a.length&&title == a.title);
 }
 
 const QUrl &Music::getUrl() const {return url;}
@@ -42,7 +34,7 @@ QString Music::formatTime() {
 }
 
 Music Music::getMediaDetail(const QString &fileName) {
-    if(!Music::isLegal(fileName))
+    if(!isLegal(fileName))
         return Music();
     return Music(QUrl::fromLocalFile(fileName));
 }

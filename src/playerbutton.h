@@ -8,7 +8,7 @@
 class PlayerButton : public QLabel {
     Q_OBJECT
     int w,h;  //初始大小
-    bool replyClick = true;
+    bool replyClick = false;
 public:
     explicit PlayerButton(QWidget *parent = nullptr);
     ///设置鼠标点击时是否相应clicked()信号

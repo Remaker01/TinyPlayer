@@ -4,6 +4,7 @@
 const QString PlayerWindow::CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
 static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
+//TODO: 利用QStackedWidget添加播放列表
 PlayerWindow::PlayerWindow(QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
@@ -11,11 +12,12 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     initUi();
     initConfiguration();
     connectSlots();
+    openList("default.lst");
 }
 
 inline void PlayerWindow::initUi() {
-    ui->playButton->setReplyClick(false);
-    ui->stopButton->setReplyClick(false);
+    ui->volumeButton->setReplyClick(true);
+    ui->modeButton->setReplyClick(true);
     ui->delButton->setEnabled(false);
     ui->listView->setOpacity(0.6);
     initSystemtray();
@@ -27,7 +29,7 @@ inline void PlayerWindow::initUi() {
 inline void PlayerWindow::initSystemtray() {
     tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.ico"),this);
     tray->setToolTip("TinyPlayer");
-    QMenu *trayMenu = new QMenu(this);
+    trayMenu = new QMenu(this);
     trayMenu->addAction("打开窗口",this,&QMainWindow::showNormal);
     trayMenu->addAction("退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
@@ -88,12 +90,14 @@ inline void PlayerWindow::connectSlots() {
     });
     connect(player,&PlayerCore::lengthChanged,this,[&,this](int totTime) {
         ui->playButton->setReplyClick(true);
+        ui->nextButton->setReplyClick(true);
+        ui->prevButton->setReplyClick(true);
         totTime = qRound(totTime / 1000.0);
         //改变总时间
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
         QFileInfo tmp(player->getMedia());
-        ui->mediaLabel->setText(tmp.fileName());
+        ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + tmp.fileName());
         //重置进度条（好像不加也可以？）
         ui->progressSlider->setValue(0);
     });
@@ -123,7 +127,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.0  2.0.220531");
+                                                        "版本号:2.2  2.2.220608");
         box.addButton("确定",QMessageBox::AcceptRole);
         box.addButton("项目地址",QMessageBox::RejectRole);
         connect(&box,&QMessageBox::rejected,this,[]{
@@ -197,6 +201,8 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->listView,&PlayListView::showDetailRequirement,this,[this](int row) {
         QMessageBox::information(this,"信息",player->getMediaDetail(row).toString());
     });
+    connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
+    connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
 }
 
 inline void PlayerWindow::ensureExit() {
@@ -246,7 +252,7 @@ void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     else
         ui->volumeButton->setPixmap(QPixmap(":/Icons/images/muted.png"));
     player->audio()->setVolume(value);
-    ui->volLabel->setText(QString("音量：%1").arg(value,2,10,QLatin1Char(' ')));
+    ui->volLabel->setText(QString("音量：%1").arg(value,2));
 }
 
 void PlayerWindow::on_progressSlider_valueChanged(int value) {
@@ -255,7 +261,7 @@ void PlayerWindow::on_progressSlider_valueChanged(int value) {
 
 void PlayerWindow::on_progressSlider_sliderMoved(int position) {
     player->setPos(position);
-    on_progressSlider_valueChanged(position);
+    //on_progressSlider_valueChanged(position);
 }
 
 void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
@@ -263,6 +269,8 @@ void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
 }
 #define LIST_DEL_ACTION(RPYCLICK_CONDITION) ui->playButton->setReplyClick(RPYCLICK_CONDITION);\
     ui->delButton->setEnabled(RPYCLICK_CONDITION);\
+    ui->prevButton->setReplyClick(RPYCLICK_CONDITION);\
+    ui->nextButton->setReplyClick(RPYCLICK_CONDITION);\
     if(!(RPYCLICK_CONDITION)) {\
         ui->timeLable->setText("/00:00");\
         ui->mediaLabel->clear();\
@@ -280,7 +288,8 @@ void PlayerWindow::doDelMedia() {
             playList.removeAt(i);
     }
     ui->listView->setStringList(playList);
-    LIST_DEL_ACTION(playList.size() > 0)
+    bool f = (playList.size() > 0);
+    LIST_DEL_ACTION(f)
 }
 
 void PlayerWindow::on_clearButton_clicked() {
@@ -296,7 +305,7 @@ void PlayerWindow::on_addButton_clicked() {
 static constexpr uint16_t MAGIC = (uint16_t)0x0102;
 bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
-    if(playList.empty()||!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
+    if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
         return false;
     int tot = playList.size();
     QDataStream ds(&lstFile);
@@ -310,7 +319,7 @@ bool PlayerWindow::saveList(const QString &file) {
 
 bool PlayerWindow::openList(const QString &file) {
     QFile lstFile(file);
-    if(!lstFile.open(QIODevice::ReadOnly))
+    if(!lstFile.open(QIODevice::ReadOnly)||lstFile.size() < 10)
         return false;
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_0);
@@ -334,5 +343,6 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
+    saveList("default.lst");
     delete ui;
 }

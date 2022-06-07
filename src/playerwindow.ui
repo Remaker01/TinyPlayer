@@ -39,36 +39,154 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="8" column="0" colspan="5">
-     <widget class="QWidget" name="middleWidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item row="8" column="0" colspan="3">
+     <widget class="QLabel" name="mediaLabel">
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="mediaLabel0">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>当前媒体:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="2">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="12" column="0" colspan="4">
+     <widget class="QWidget" name="buttomWidget2" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="PlayerSlider" name="progressSlider">
+        <widget class="PlayerButton" name="prevButton">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="maximum">
-          <number>0</number>
+         <property name="toolTip">
+          <string>上一首</string>
          </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/prev.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="PlayerButton" name="playButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>开始</string>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/play.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="PlayerButton" name="stopButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>停止</string>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/stop.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="PlayerButton" name="nextButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>下一首</string>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/next.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-        </widget>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="currentLabel">
-         <property name="text">
-          <string>00:00</string>
+        <widget class="PlayerButton" name="volumeButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/volume.png</pixmap>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="timeLable">
-         <property name="text">
-          <string>/00:00</string>
+        <widget class="PlayerSlider" name="volumeSlider">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
@@ -108,6 +226,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="text">
           <string>添加</string>
          </property>
@@ -130,6 +251,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
          </property>
          <property name="text">
           <string>删除</string>
@@ -157,6 +281,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="text">
           <string>清空</string>
          </property>
@@ -181,20 +308,59 @@
       </layout>
      </widget>
     </item>
-    <item row="7" column="0" colspan="4">
-     <widget class="QLabel" name="mediaLabel">
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
+    <item row="9" column="0" colspan="4">
+     <widget class="QWidget" name="middleWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="PlayerSlider" name="progressSlider">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximum">
+          <number>0</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="currentLabel">
+         <property name="text">
+          <string>00:00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="timeLable">
+         <property name="text">
+          <string>/00:00</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="6" column="3">
+     <widget class="PlayerButton" name="modeButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="lineWidth">
-       <number>0</number>
+      <property name="toolTip">
+       <string>单曲播放</string>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../resource.qrc">:/Icons/images/0.png</pixmap>
       </property>
      </widget>
     </item>
-    <item row="9" column="4">
-     <widget class="QLabel" name="volLabel"/>
-    </item>
-    <item row="3" column="2" colspan="3">
+    <item row="3" column="1" colspan="3">
      <widget class="QWidget" name="rightWidget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -203,6 +369,16 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="0" colspan="2">
+        <widget class="PlayListView" name="listView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
         <widget class="QLabel" name="waitingLabel">
          <property name="sizePolicy">
@@ -226,16 +402,6 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="PlayListView" name="listView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="1">
         <widget class="QPushButton" name="cancelButton">
          <property name="sizePolicy">
@@ -243,6 +409,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
          </property>
          <property name="text">
           <string>取消</string>
@@ -252,136 +421,8 @@
       </layout>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="mediaLabel0">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>当前媒体:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="11" column="0" colspan="3">
-     <widget class="QWidget" name="buttomWidget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="PlayerButton" name="playButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>开始</string>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../resource.qrc">:/Icons/images/play.png</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="PlayerButton" name="stopButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>停止</string>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../resource.qrc">:/Icons/images/stop.png</pixmap>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="6" column="3">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="11" column="3" colspan="2">
-     <widget class="QWidget" name="buttomWidget2" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>250</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="PlayerButton" name="volumeButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../resource.qrc">:/Icons/images/volume.png</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="PlayerSlider" name="volumeSlider">
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="6" column="4">
-     <widget class="PlayerButton" name="modeButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="toolTip">
-       <string>单曲播放</string>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="../resource.qrc">:/Icons/images/0.png</pixmap>
-      </property>
-     </widget>
+    <item row="11" column="3">
+     <widget class="QLabel" name="volLabel"/>
     </item>
    </layout>
   </widget>

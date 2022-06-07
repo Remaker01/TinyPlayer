@@ -19,7 +19,7 @@ private:
     int current = -1;
     int startLoc = 0;
     void connectSlots();
-    void setMedia(const QString &media,bool start = true);
+    void setMedia(const QString &media);
 public:
     static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 6;
     static const QString Formats[FORMAT_COUNT];
@@ -47,9 +47,12 @@ public:
     bool removeFromList(int loc);
     ///清空播放列表
     void clear();
+    ~PlayerCore();
+public slots:
     void play();
     void pause();
-    ~PlayerCore();
+    void goNext();
+    void goPrevious();
 signals:
     void finished();
     //void mediaSourceChanged(qint64 newTime);

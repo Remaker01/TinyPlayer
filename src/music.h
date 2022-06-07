@@ -35,7 +35,7 @@ public:
      * @param a 另一个Music
      * @return 当且仅当满足以下条件之一时返回true：
      * 1.url相同
-     * 2.文件名，长度，标题均相同
+     * 2.长度，标题均相同
      */
     bool equals(const Music &a) const;
     friend bool operator==(const Music &a,const Music &b) {
@@ -44,8 +44,12 @@ public:
     friend bool operator!=(const Music &a,const Music &b) {
         return !a.equals(b);
     }
+    /*
+     * hash相同，可能不同，但若hash不同，则认为一定不同
+     * 此处弄一个一定
+     */
     friend uint qHash(const Music &key,uint seed = 0) {
-        return qHash(key.title,seed) ^ qHash(key.length,seed) ^ qHash(key.url.fileName(),seed);
+        return qHash(key.title,seed) ^ qHash(key.length,seed);
     }
     ///获取Url
     const QUrl &getUrl() const;
@@ -53,7 +57,6 @@ public:
     QString formatTime();
     static Music getMediaDetail(const QString &fileName);
     static bool isLegal(QString media);
-signals:
 
 };
 #endif // MUSIC_H

@@ -15,5 +15,7 @@
         <file>images/open.png</file>
         <file>images/delete.png</file>
         <file>images/3.png</file>
+        <file>images/next.png</file>
+        <file>images/prev.png</file>
     </qresource>
 </RCC>
