@@ -57,6 +57,8 @@ void PlayListView::setOpacity(double value) {
     setStyleSheet("background-color: rgba(255,255,255," + QString::number(a) + ");");
 }
 
-void PlayListView::setStringList(const QStringList &list) {model->setStringList(list);}
+void PlayListView::commitChange() {model->setStringList(playList);}
+
+QStringList &PlayListView::currentList() {return playList;}
 
 PlayListView::~PlayListView() {}

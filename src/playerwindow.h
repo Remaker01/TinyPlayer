@@ -11,6 +11,7 @@
 #include <QKeyEvent>
 #include "playerbutton.h"
 #include "player.h"
+#include "playlistview.h"
 #include "./ui_playerwindow.h"
 #ifndef SLOTS
 #define SLOTS
@@ -25,7 +26,6 @@ private:
     PlayerCore *player;
     QSystemTrayIcon *tray;
     QMenu *trayMenu;
-    QStringList playList;
     QString lastPath;
     void initUi();
     void ensureExit();
@@ -41,18 +41,17 @@ public:
     explicit PlayerWindow(QWidget *parent = nullptr);
     void initConfiguration();
     ~PlayerWindow();
-
 private slots:
     void doAddMedia(QStringList medias);
     void on_volumeSlider_valueChanged(int value);
     void on_progressSlider_valueChanged(int value);
     void on_progressSlider_sliderMoved(int position);
 
-    void on_listView_doubleClicked(const QModelIndex &index);
     void doDelMedia();
     void on_clearButton_clicked();
     void on_addButton_clicked();
     bool saveList(const QString &file);
     bool openList(const QString &file);
+    void on_playView_doubleClicked(const QModelIndex &index);
 };
 #endif // PLAYERWINDOW_H

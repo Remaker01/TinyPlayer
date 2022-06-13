@@ -1,10 +1,14 @@
+/*
+ * TODO: 利用QStackedWidget添加播放列表
+ * 在退出时，需要先保存播放列表的列表(listsView)，再分别保存所有播放列表
+ * 可先创建playLists文件夹，将播放列表都保存进文件夹中
+ */
 #include "playerwindow.h"
 #define CHANGE_TO_PLAYICON ui->playButton->changeState("开始",PLAY_ICON)
 #define CHANGE_TO_PAUSEICON ui->playButton->changeState("暂停",PAUSE_ICON)
 const QString PlayerWindow::CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
 static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
-//TODO: 利用QStackedWidget添加播放列表
 PlayerWindow::PlayerWindow(QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
@@ -12,14 +16,16 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     initUi();
     initConfiguration();
     connectSlots();
-    openList("default.lst");
+    QDir().mkdir("playlists");
+    openList("./playlists/default.lst");
 }
 
 inline void PlayerWindow::initUi() {
     ui->volumeButton->setReplyClick(true);
     ui->modeButton->setReplyClick(true);
     ui->delButton->setEnabled(false);
-    ui->listView->setOpacity(0.6);
+    ui->playView->setOpacity(0.6);
+    ui->listsView->setOpacity(0.6);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
@@ -96,13 +102,12 @@ inline void PlayerWindow::connectSlots() {
         //改变总时间
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
-        QFileInfo tmp(player->getMedia());
-        ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + tmp.fileName());
+        ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
         //重置进度条（好像不加也可以？）
         ui->progressSlider->setValue(0);
     });
-    connect(player,&PlayerCore::timeChanged,this,[this]() {
-        ui->progressSlider->setValue(player->getPosInSecond());
+    connect(player,&PlayerCore::timeChanged,this,[this](int t) {
+        ui->progressSlider->setValue(qRound(t / 1000.0));
     });
     //停止后重置进度条
     connect(player,&PlayerCore::finished,this,[&,this]() {
@@ -118,9 +123,9 @@ inline void PlayerWindow::connectSlots() {
 
 inline void PlayerWindow::connectUiSlots() {
     connect(ui->actionExit,&QAction::triggered,this,&PlayerWindow::ensureExit);
-    connect(ui->listView,&PlayListView::mediaDropin,this,&PlayerWindow::doAddMedia);
+    connect(ui->playView,&PlayListView::mediaDropin,this,&PlayerWindow::doAddMedia);
     connect(ui->delButton,&QPushButton::clicked,this,&PlayerWindow::doDelMedia);
-    connect(ui->listView,&PlayListView::itemDelRequirement,this,&PlayerWindow::doDelMedia);
+    connect(ui->playView,&PlayListView::itemDelRequirement,this,&PlayerWindow::doDelMedia);
     connect(ui->progressSlider,&PlayerSlider::playerSliderClicked,player,&PlayerCore::setPos);
     connect(ui->actionAbout,&QAction::triggered,this,[this] {
         QMessageBox box(QMessageBox::Information,"关于","TinyPlayer播放器\n"
@@ -168,7 +173,8 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->actionLoadList,&QAction::triggered,this,[this]() {
         QString tmp = QFileDialog::getOpenFileName(this,"选择播放列表",lastPath,"播放列表(*.lst)");
-        if(!tmp.isEmpty())    openList(tmp);
+        if(!tmp.isEmpty())
+            openList(tmp);
     });
     connect(ui->volumeButton,&PlayerButton::clicked,this,[this]() {
         static const QPixmap muted(":/Icons/images/muted.png"),unMuted(":/Icons/images/volume.png");
@@ -184,8 +190,8 @@ inline void PlayerWindow::connectUiSlots() {
             }
         }
     });
-    connect(ui->listView,&PlayListView::openDirRequirement,this,[this](int row){
-        QFileInfo tmp(player->getMedia(row));
+    connect(ui->playView,&PlayListView::openDirRequirement,this,[this](int row){
+        QFileInfo tmp(player->getMedia().toLocalFile());
         QDesktopServices::openUrl(QUrl::fromLocalFile(tmp.absolutePath()));
     });
     connect(ui->actionOpenDir,&QAction::triggered,this,[this]() {
@@ -198,7 +204,7 @@ inline void PlayerWindow::connectUiSlots() {
             s = dir.absolutePath() + '/' + s;
         doAddMedia(files);
     });
-    connect(ui->listView,&PlayListView::showDetailRequirement,this,[this](int row) {
+    connect(ui->playView,&PlayListView::showDetailRequirement,this,[this](int row) {
         QMessageBox::information(this,"信息",player->getMediaDetail(row).toString());
     });
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
@@ -207,11 +213,11 @@ inline void PlayerWindow::connectUiSlots() {
 
 inline void PlayerWindow::ensureExit() {
     QMessageBox box(QMessageBox::Question,"退出确认","确认退出?");
-    QPushButton *minimize = box.addButton("最小化",QMessageBox::AcceptRole);
+    box.addButton("最小化",QMessageBox::AcceptRole);
     QPushButton *yes = box.addButton("是",QMessageBox::NoRole);
     box.addButton("否",QMessageBox::RejectRole);
     connect(yes,&QPushButton::clicked,qApp,&QApplication::quit);
-    connect(minimize,&QPushButton::clicked,this,&QMainWindow::hide);
+    connect(&box,&QMessageBox::accepted,this,&QMainWindow::hide);
     box.exec();
 }
 
@@ -223,20 +229,23 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
 }
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
+    if(medias.isEmpty())
+        return;
     bool f = true;
     ui->waitingLabel->show();
     ui->cancelButton->show();
     connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
+    QStringList &playList = ui->playView->currentList();
     for(QString &fullName:medias) {
         if(!f)
             break;
         QFileInfo a(fullName);
         ui->waitingLabel->setText("正在打开" + a.fileName());
         if(player->addToList(fullName))
-             playList.append(a.fileName() + '\n' + Music::getMediaDetail(fullName).formatTime());
+            playList.append(a.fileName() + '\n' + Music::getMediaDetail(fullName).formatTime());
     }
     lastPath = QFileInfo(medias.last()).absolutePath();
-    ui->listView->setStringList(playList);
+    ui->playView->commitChange();
     if(playList.size() > 0)
         ui->delButton->setEnabled(true);
     if(player->getCurrentMediaIndex() < 0)
@@ -252,7 +261,7 @@ void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     else
         ui->volumeButton->setPixmap(QPixmap(":/Icons/images/muted.png"));
     player->audio()->setVolume(value);
-    ui->volLabel->setText(QString("音量：%1").arg(value,2));
+    ui->volLabel->setText(QString("音量：%1").arg(value,2) + ' ');
 }
 
 void PlayerWindow::on_progressSlider_valueChanged(int value) {
@@ -261,10 +270,9 @@ void PlayerWindow::on_progressSlider_valueChanged(int value) {
 
 void PlayerWindow::on_progressSlider_sliderMoved(int position) {
     player->setPos(position);
-    //on_progressSlider_valueChanged(position);
 }
 
-void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
+void PlayerWindow::on_playView_doubleClicked(const QModelIndex &index) {
     player->setCurrentMediaIndex(index.row());
 }
 #define LIST_DEL_ACTION(RPYCLICK_CONDITION) ui->playButton->setReplyClick(RPYCLICK_CONDITION);\
@@ -276,8 +284,9 @@ void PlayerWindow::on_listView_doubleClicked(const QModelIndex &index) {
         ui->mediaLabel->clear();\
 }
 void PlayerWindow::doDelMedia() {
-    QModelIndexList tmp = ui->listView->getSelections();
+    QModelIndexList tmp = ui->playView->getSelections();
     QList<int> selections;
+    QStringList &playList = ui->playView->currentList();
     for (QModelIndex &i:tmp)
         selections.append(i.row());
     std::sort(selections.begin(),selections.end(),std::greater<int>());
@@ -287,14 +296,15 @@ void PlayerWindow::doDelMedia() {
         else
             playList.removeAt(i);
     }
-    ui->listView->setStringList(playList);
+    ui->playView->commitChange();
+    ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
     bool f = (playList.size() > 0);
     LIST_DEL_ACTION(f)
 }
 
 void PlayerWindow::on_clearButton_clicked() {
-    playList.clear();
-    ui->listView->setStringList(playList);
+    ui->playView->currentList().clear();
+    ui->playView->commitChange();
     player->clear();
     LIST_DEL_ACTION(false)
 }
@@ -307,19 +317,19 @@ bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
     if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
         return false;
-    int tot = playList.size();
+    int tot = ui->playView->currentList().size();
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_0);
     ds << MAGIC; //magic number
     for(int i = 0; i < tot; i++)
-        ds << player->getMedia(i);
+        ds << player->getMedia(i).toLocalFile();
     lstFile.close();
     return true;
 }
 
 bool PlayerWindow::openList(const QString &file) {
     QFile lstFile(file);
-    if(!lstFile.open(QIODevice::ReadOnly)||lstFile.size() < 10)
+    if(!lstFile.open(QIODevice::ReadOnly))
         return false;
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_0);
@@ -327,13 +337,13 @@ bool PlayerWindow::openList(const QString &file) {
     ds >> magic;
     if(magic != MAGIC)
         return false;
-    QStringList mediasList;
+    QStringList tmp;
     QString str;
     while (!ds.atEnd()) {
         ds >> str;
-        mediasList.append(str);
+        tmp.append(str);
     }
-    doAddMedia(mediasList);
+    doAddMedia(tmp);
     lstFile.close();
     return true;
 }
@@ -343,6 +353,6 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
-    saveList("default.lst");
+    saveList("./playlists/default.lst");
     delete ui;
 }

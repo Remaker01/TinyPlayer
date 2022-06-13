@@ -1,6 +1,5 @@
 #ifndef PLAY_H
 #define PLAY_H
-#include "playerbutton.h"
 #include <QFile>
 #include <VLCQtCore/MediaPlayer.h>
 #include <VLCQtCore/Audio.h>
@@ -11,7 +10,6 @@
 class PlayerCore : public VlcMediaPlayer{
     Q_OBJECT
 private:
-    static constexpr int MAX_MEDIA_COUNT = 10000;
     static VlcInstance ins;
     VlcMedia *curMedia;
     QSet<Music> medias;
@@ -21,6 +19,7 @@ private:
     void connectSlots();
     void setMedia(const QString &media);
 public:
+    static constexpr int MAX_MEDIA_COUNT = 10000;
     static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 6;
     static const QString Formats[FORMAT_COUNT];
     static const QString MODE_TIPS[MODE_COUNT];
@@ -29,9 +28,9 @@ public:
     PlayMode mode = SIGNLE;
     explicit PlayerCore(QObject *parent = nullptr);
     ///获取当前媒体
-    QString getMedia();
+    QUrl getMedia();
     ///获取指定编号的媒体目录
-    QString getMedia(int i);
+    const QUrl &getMedia(int i);
     ///获取媒体详细信息
     Music getMediaDetail(int i);
     ///获取以秒为单位的时间

@@ -1,4 +1,5 @@
 #include "playerbutton.h"
+#include <QDebug>
 PlayerButton::PlayerButton(QWidget *parent):QLabel(parent) {
     setScaledContents(true);
     setCursor(Qt::PointingHandCursor);
@@ -7,9 +8,9 @@ PlayerButton::PlayerButton(QWidget *parent):QLabel(parent) {
 void PlayerButton::setReplyClick(bool f) {replyClick = f;}
 
 void PlayerButton::mousePressEvent(QMouseEvent *e) {
+    w = width(),h = height();
     if(e->button() == Qt::LeftButton&&replyClick) {
         int wi = width(),he = height();
-        w = wi,h = he;
         wi = wi - (wi >> 3);
         he = he - (he >> 3);
         resize(wi,he);

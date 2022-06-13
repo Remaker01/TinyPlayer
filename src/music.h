@@ -8,7 +8,7 @@
 #include <VLCQtCore/Media.h>
 #include <VLCQtCore/Common.h>
 #include <VLCQtCore/Instance.h>
-class Music{
+class Music {
 private:
     QString formattedTime;
     const QUrl url;
