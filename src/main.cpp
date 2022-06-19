@@ -14,5 +14,7 @@ int main(int argc, char *argv[]) {
         w.show();
         return a.exec();
     }
+    else
+        QMessageBox::warning(nullptr,"警告","TinyPlayer已在运行");
     return 0;
 }

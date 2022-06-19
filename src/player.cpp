@@ -3,7 +3,10 @@
 #include <QDebug>
 #endif
 #define RESET setMedia(list[current].toString())
-const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".wav",".aiff",".flac",".aac",".wma"};
+const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG Audio
+                                                   ".wav",".wma",   //Windows Audio
+                                                   ".flac",".aac",  //Other
+                                                   ".aif",".aiff",".aifc"};   //Aiff
 const QString PlayerCore::MODE_TIPS[MODE_COUNT] = {"单曲播放","顺序播放","单曲循环","列表循环"};
 VlcInstance PlayerCore::ins(VlcCommon::args());
 PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
@@ -46,7 +49,6 @@ inline void PlayerCore::connectSlots() {
 
 inline void PlayerCore::setMedia(const QString &media) {
     Vlc::State sta = VlcMediaPlayer::state();
-    qDebug () << curMedia->currentLocation() << ':' << sta;
     delete curMedia;
     curMedia = new VlcMedia(media,&ins);
     curMedia->parse();
@@ -60,16 +62,17 @@ inline void PlayerCore::setMedia(const QString &media) {
 }
 
 QUrl PlayerCore::getMedia() {
-    QUrl url(curMedia->currentLocation());
-    return url;
+    if(curMedia == nullptr)
+        return QUrl();
+    return QUrl(curMedia->currentLocation());
 }
 
-const QUrl &PlayerCore::getMedia(int i) {
-    return list[i];
-}
+const QUrl &PlayerCore::getMedia(int i) {return list[i];}
 
-Music PlayerCore::getMediaDetail(int i) {
-    return Music(list[i]);
+Music PlayerCore::getMediaDetail(int i) {return Music(list[i]);}
+
+Music PlayerCore::getMediaDetail() {
+    return (current >= 0)? Music(getMedia()):Music();
 }
 
 int PlayerCore::getPosInSecond() {

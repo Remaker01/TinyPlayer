@@ -16,8 +16,7 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     initUi();
     initConfiguration();
     connectSlots();
-    QDir().mkdir("playlists");
-    openList("./playlists/default.lst");
+    openList("default.lst");
 }
 
 inline void PlayerWindow::initUi() {
@@ -25,7 +24,6 @@ inline void PlayerWindow::initUi() {
     ui->modeButton->setReplyClick(true);
     ui->delButton->setEnabled(false);
     ui->playView->setOpacity(0.6);
-    ui->listsView->setOpacity(0.6);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
@@ -36,15 +34,21 @@ inline void PlayerWindow::initSystemtray() {
     tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.ico"),this);
     tray->setToolTip("TinyPlayer");
     trayMenu = new QMenu(this);
-    trayMenu->addAction("打开窗口",this,&QMainWindow::showNormal);
-    trayMenu->addAction("退出",qApp,&QApplication::quit);
+    trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QMainWindow::showNormal);
+    trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
     tray->show();
 }
 
 inline void PlayerWindow::setBackground(const QPixmap &img) {
+    constexpr int MIN_HEIGHT = 100,MIN_WIDTH = 200;
+    if(img.height() < MIN_HEIGHT||img.width() < MIN_WIDTH) {
+        QMessageBox::warning(this,"警告",QString("图片尺寸不能小于%1x%2像素").arg(MIN_WIDTH).arg(MIN_HEIGHT));
+        return;
+    }
     QPalette pl;
-    pl.setBrush(backgroundRole(),QBrush(img));
+    int w = std::max(width(),img.width()),h = std::max(height(),img.height());
+    pl.setBrush(backgroundRole(),QBrush(img.scaled(w,h)));
     setPalette(pl);
     setAutoFillBackground(true);
 }
@@ -105,6 +109,12 @@ inline void PlayerWindow::connectSlots() {
         ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
         //重置进度条（好像不加也可以？）
         ui->progressSlider->setValue(0);
+        //改变专辑图片
+        QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
+        if(albumPic.isEmpty())
+            ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
+        else
+            ui->albumLabel->setPixmap(QPixmap(albumPic).scaled(150,150));
     });
     connect(player,&PlayerCore::timeChanged,this,[this](int t) {
         ui->progressSlider->setValue(qRound(t / 1000.0));
@@ -132,7 +142,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.2  2.2.220608");
+                                                        "版本号:2.10 Beta  2.10.220619");
         box.addButton("确定",QMessageBox::AcceptRole);
         box.addButton("项目地址",QMessageBox::RejectRole);
         connect(&box,&QMessageBox::rejected,this,[]{
@@ -141,13 +151,7 @@ inline void PlayerWindow::connectUiSlots() {
         box.exec();
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
-        QString filiter = "所有支持的音频文件(";
-        for(const QString &f : PlayerCore::Formats)
-            filiter.append('*' + f + ';');
-        filiter.append(')');
-        for(const QString &f : PlayerCore::Formats)
-            filiter.append(";;*" + f);
-        QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件",lastPath,filiter));
+        QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件(将自动筛选合法格式，支持格式请查看帮助)",lastPath));
         if(!medias.isEmpty())
             doAddMedia(medias);
     });
@@ -160,7 +164,8 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->actionLoadImg,&QAction::triggered,this,[this]() {
         QString back = QFileDialog::getOpenFileName(this,"选择文件","","图片文件(*.jpg;*.jpeg;*.png;*.jfif)");
-        setBackground(QPixmap(back));
+        if(!back.isEmpty())
+            setBackground(QPixmap(back));
     });
     connect(ui->actionToDefault,&QAction::triggered,this,[this](){
         setBackground(QPixmap(":/Icons/images/back.jpg"));
@@ -231,7 +236,7 @@ SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     if(medias.isEmpty())
         return;
-    bool f = true;
+    static bool f = true;
     ui->waitingLabel->show();
     ui->cancelButton->show();
     connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
@@ -250,9 +255,10 @@ void PlayerWindow::doAddMedia(QStringList medias) {
         ui->delButton->setEnabled(true);
     if(player->getCurrentMediaIndex() < 0)
         player->setCurrentMediaIndex(0);
-    //这里一定要隐藏按钮，防止函数退出后继续调用上面的lambda表达式
+    f = true;
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
+
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
@@ -353,6 +359,6 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
-    saveList("./playlists/default.lst");
+    saveList("default.lst");
     delete ui;
 }

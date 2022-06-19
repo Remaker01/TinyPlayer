@@ -50,12 +50,6 @@
       <layout class="QGridLayout" name="gridLayout">
        <item row="2" column="2">
         <widget class="QLabel" name="waitingLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="text">
           <string>正在打开...</string>
          </property>
@@ -95,6 +89,12 @@
     </item>
     <item row="0" column="1">
      <widget class="QLabel" name="curlistLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>当前播放列表</string>
       </property>
@@ -182,12 +182,6 @@
        </item>
        <item>
         <widget class="PlayerButton" name="playButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="toolTip">
           <string>开始</string>
          </property>
@@ -198,12 +192,6 @@
        </item>
        <item>
         <widget class="PlayerButton" name="stopButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="toolTip">
           <string>停止</string>
          </property>
@@ -273,7 +261,7 @@
     <item row="8" column="1">
      <widget class="QLabel" name="mediaLabel">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -288,12 +276,18 @@
     </item>
     <item row="8" column="0">
      <widget class="QLabel" name="mediaLabel0">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>当前媒体:</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="2" column="0" rowspan="2">
      <widget class="QWidget" name="leftWidget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
@@ -320,16 +314,10 @@
           <property name="spacing">
            <number>14</number>
           </property>
-          <property name="leftMargin">
-           <number>40</number>
-          </property>
-          <property name="rightMargin">
-           <number>40</number>
-          </property>
           <item>
            <widget class="QPushButton" name="addButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -401,19 +389,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="listsLabel">
-         <property name="text">
-          <string>播放列表</string>
+        <widget class="QLabel" name="albumLabel">
+         <property name="pixmap">
+          <pixmap resource="../resource.qrc">:/Icons/images/non-music.png</pixmap>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="PlayListView" name="listsView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="scaledContents">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -466,6 +447,10 @@
    <addaction name="menu_2"/>
   </widget>
   <action name="actionopenFile">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/Icons/images/open.png</normaloff>:/Icons/images/open.png</iconset>
+   </property>
    <property name="text">
     <string>打开文件...</string>
    </property>
@@ -474,6 +459,10 @@
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/Icons/images/exit.png</normaloff>:/Icons/images/exit.png</iconset>
+   </property>
    <property name="text">
     <string>退出</string>
    </property>

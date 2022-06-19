@@ -17,5 +17,8 @@
         <file>images/3.png</file>
         <file>images/next.png</file>
         <file>images/prev.png</file>
+        <file>images/non-music.png</file>
+        <file>images/exit.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

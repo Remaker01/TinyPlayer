@@ -4,17 +4,15 @@
     return (CONDITION);\
 }
 //判断方式：头部为"ID3"，或倒数128字节起为"TAG"，或头11位为1
-bool Music::isMP3(QFile *media,QDataStream &reader) {
+bool Music::isMPEG(QFile *media,QDataStream &reader) {
     reader.setByteOrder(QDataStream::BigEndian);
     char head[5];
     head[4] = 0;
     reader.readRawData(head,4);
-    QString str(head);
-    if(str.left(3) == "ID3")   RETURN(str[3] >= '\02'&&str[3] <= '\04')
+    if(strncmp(head,"ID3",3) == 0)    RETURN(head[3] >= '\02'&&head[3] <= '\04')
     media->seek(media->size() - 128);
     reader.readRawData(head,3);
-    str = head;
-    if(str == "TAG")   RETURN(true)
+    if(strcmp(head,"TAG") == 0)   RETURN(true)
     //若以上均不满足,则应满足：头11位为1,即第一字节为FF，第二字节不小于E0
     media->seek(0ll);
     uint16_t first_2B;
@@ -31,15 +29,13 @@ bool Music::isWav(QFile *media,QDataStream &reader) {
     uint32_t sizePart;
     //头4个字节
     reader.readRawData(head,4);
-    QString str(head);
-    if(str != "RIFF")   RETURN(false)
+    if(strncmp(head,"RIFF",4) != 0)   RETURN(false)
     //接下来4字节
     reader >> sizePart;
     if(sizePart != media->size() - 8)   RETURN(false)
     //接下来8字节
     reader.readRawData(head,8);
-    str = head;
-    RETURN(str == "WAVEfmt ")
+    RETURN(strcmp(head,"WAVEfmt ") == 0)
 }
 //头部：46 4F 52 4D，即"FORM";大端序
 bool Music::isAiff(QFile *media,QDataStream &reader) {
@@ -50,21 +46,19 @@ bool Music::isAiff(QFile *media,QDataStream &reader) {
     uint32_t sizePart;
     //0~3字节
     reader.readRawData(head,4);
-    QString str(head);
-    if(str != "FORM")   RETURN(false)
+    if(strcmp(head,"FORM") != 0)   RETURN(false)
     reader >> sizePart;
     if(sizePart != size - 8)   RETURN(false)
     //8~11字节
     reader.readRawData(head,4);
-    str = head;
-    RETURN(str == "AIFF"||str == "AIFC")
+    RETURN(strcmp(head,"AIFF") == 0||strcmp(head,"AIFC") == 0);
 }
 //头部fLaC
 bool Music::isFlac(QFile *media, QDataStream &reader) {
     char head[5];
     head[4] = 0;
     reader.readRawData(head,4);
-    if(QString(head) != "fLaC")    RETURN(false)
+    if(strcmp(head,"fLaC") != 0)    RETURN(false)
     uint8_t t;
     reader >> t;
     t &= 0x7f;  //最高位清0,BLOCK_TYPE∈[0,6]
@@ -77,7 +71,7 @@ bool Music::isAAC(QFile *media, QDataStream &reader) {
     head[4] = 0;
     reader.readRawData(head,4);
     //ADIF
-    if(QString(head) == "ADIF")    RETURN(true)
+    if(strcmp(head,"ADIF") == 0)    RETURN(true)
     //ADTS
     uint16_t x;
     reader >> x;

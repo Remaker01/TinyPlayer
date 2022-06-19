@@ -10,6 +10,7 @@ Music::Music(const QUrl &uri):url(uri) {
     title = tmp.title() + "\t\t";
     description = tmp.description();
     album = tmp.album();
+    albumImage = tmp.artwork();
 }
 
 QString Music::toString() {
@@ -24,6 +25,8 @@ bool Music::equals(const Music &a) const {
 }
 
 const QUrl &Music::getUrl() const {return url;}
+
+const QUrl &Music::getAlbumImage() {return albumImage;}
 
 QString Music::formatTime() {
     if(!formattedTime.isEmpty())
@@ -41,7 +44,7 @@ Music Music::getMediaDetail(const QString &fileName) {
 
 bool Music::isLegal(QString media) {
     static bool (*checkers[6])(QFile *,QDataStream &) = {
-        &Music::isMP3,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma
+        &Music::isMPEG,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma
     };
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
