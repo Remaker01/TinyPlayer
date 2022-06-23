@@ -22,6 +22,7 @@ private:
     static bool isAiff(QFile *media,QDataStream &reader);
     static bool isFlac(QFile *media,QDataStream &reader);
     static bool isAAC(QFile *media,QDataStream &reader);
+    static bool isM4A(QFile *media,QDataStream &reader);
 public:
     /**
      * 根据指定的URL建立音乐对象

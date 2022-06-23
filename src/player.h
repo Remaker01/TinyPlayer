@@ -20,7 +20,7 @@ private:
     void setMedia(const QString &media);
 public:
     static constexpr int MAX_MEDIA_COUNT = 10000;
-    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 10;
+    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 11;
     static const QString Formats[FORMAT_COUNT];
     static const QString MODE_TIPS[MODE_COUNT];
     /// 播放模式
@@ -47,9 +47,6 @@ public:
     bool removeFromList(int loc);
     ///清空播放列表
     void clear();
-    /// 设定播放列表
-//    void setPlayList(const QStringList &a);
-    QString getFilters();
     ~PlayerCore();
 public slots:
     void play();

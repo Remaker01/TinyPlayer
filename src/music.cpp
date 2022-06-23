@@ -43,8 +43,8 @@ Music Music::getMediaDetail(const QString &fileName) {
 }
 
 bool Music::isLegal(QString media) {
-    static bool (*checkers[6])(QFile *,QDataStream &) = {
-        &Music::isMPEG,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma
+    static auto checkers = {
+        &Music::isMPEG,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma,&Music::isM4A
     };
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)

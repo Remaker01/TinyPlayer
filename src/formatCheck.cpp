@@ -89,4 +89,16 @@ bool Music::isWma(QFile *media,QDataStream &reader) {
     }
     RETURN(true)
 }
+//m4a为box格式
+bool Music::isM4A(QFile *media, QDataStream &reader) {
+    reader.setByteOrder(QDataStream::BigEndian);
+    uint32_t fytp_size;
+    reader >> fytp_size;
+    if(fytp_size >= media->size())    RETURN(false)
+    media->seek(4ll);
+    char head[8];
+    head[7] = 0;
+    reader.readRawData(head,7);
+    RETURN(strcmp(head,"ftypM4A") == 0);
+}
 #undef RETURN

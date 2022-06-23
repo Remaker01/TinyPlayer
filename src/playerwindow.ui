@@ -390,6 +390,9 @@
        </item>
        <item>
         <widget class="QLabel" name="albumLabel">
+         <property name="toolTip">
+          <string>专辑图片</string>
+         </property>
          <property name="pixmap">
           <pixmap resource="../resource.qrc">:/Icons/images/non-music.png</pixmap>
          </property>

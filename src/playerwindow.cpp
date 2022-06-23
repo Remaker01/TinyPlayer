@@ -258,7 +258,6 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     f = true;
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
-
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {

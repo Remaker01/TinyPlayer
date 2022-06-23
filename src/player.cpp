@@ -6,7 +6,8 @@
 const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG Audio
                                                    ".wav",".wma",   //Windows Audio
                                                    ".flac",".aac",  //Other
-                                                   ".aif",".aiff",".aifc"};   //Aiff
+                                                   ".aif",".aiff",".aifc",  //Aiff
+                                                   ".m4a"};   //m4a
 const QString PlayerCore::MODE_TIPS[MODE_COUNT] = {"单曲播放","顺序播放","单曲循环","列表循环"};
 VlcInstance PlayerCore::ins(VlcCommon::args());
 PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
@@ -109,12 +110,10 @@ bool PlayerCore::addToList(const QString &media) {
         }
     }
     QUrl tmp = QUrl::fromLocalFile(media);
-    if(!Music::isLegal(media)||!ok||medias.contains(tmp)) {
+    Music music(tmp);
+    if(!Music::isLegal(media)||!ok||medias.contains(music)) {
         return false;
     }
-    Music music(tmp);
-    if(music.getUrl().isEmpty())
-        return false;
     list.append(tmp);
     medias.insert(music);
     return true;
