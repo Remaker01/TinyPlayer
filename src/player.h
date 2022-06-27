@@ -43,7 +43,10 @@ public:
     void setCurrentMediaIndex(int i);
     ///添加到播放列表
     bool addToList(const QString &media);
-    ///从播放列表中移除
+    /**
+     * 从播放列表中移除特定媒体
+     * 若移除的是当前活动媒体，则自动将当前活动媒体设为上一个，如果同时是第一个则设为删除后的第一个(即原来的第二个)
+     */
     bool removeFromList(int loc);
     ///清空播放列表
     void clear();

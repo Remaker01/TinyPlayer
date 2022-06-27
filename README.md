@@ -15,7 +15,7 @@
    2. Windows音频格式(.WAV,.WMA)
    3. 无损音频格式(.FLAC)
    4. AIFF格式(.AIFF,.AIF,.AIFC)
-   5. AAC
+   5. AAC,M4A
 2. 构建平台：
    1. 硬件与系统环境：Intel 第十代酷睿CPU+Windows 10 x64
    2. 软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1
@@ -29,9 +29,8 @@
    7. ~~自动加载上次退出时的播放列表~~(完成)
 4. 目前Bug
    1. 部分文件详细信息中有乱码
-   2. 某些文件(主要是MP3)在少数情况下点击进度条会从头开始
-   3. AAC文件添加进播放列表后无法及时更新信息。
-   4. 个别情况下界面会卡死，具体表现位字符及进度条按钮“重影”。**如遇此问题，请尝试点击文件->更换背景->还原默认**
+   2. AAC文件添加进播放列表后无法及时更新信息。
+   3. 个别情况下界面会卡死，具体表现位字符及进度条按钮“重影”。**如遇此问题，请尝试点击文件->更换背景->还原默认**
    
 
 欢迎提出意见与建议。
@@ -39,5 +38,4 @@
 ### For developers:
 本项目是CMake工程，如果要改成QMake请记得添加QT的Core,Widgets&VLC-qt的Core模块。
 由于gitignore设置，二进制文件无法添加到仓库中，请自行准备VLC-qt：
-VLC-qt下载地址[(Windows-mingw)](https://github.com/vlc-qt/vlc-qt/releases/download/1.1.0/VLC-Qt_1.1.0_win32_mingw.7z)
-[Windows-MSVC]()
+[VLC-qt下载地址](https://vlc-qt.tano.si/#download)

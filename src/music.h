@@ -46,19 +46,22 @@ public:
     friend bool operator!=(const Music &a,const Music &b) {
         return !a.equals(b);
     }
-    /*
-     * hash相同，可能不同，但若hash不同，则认为一定不同
-     * 此处弄一个一定
-     */
+    //hash相同，可能不同，但若hash不同，则认为一定不同
     friend uint qHash(const Music &key,uint seed = 0) {
         return qHash(key.title,seed) ^ qHash(key.length,seed);
     }
     ///获取Url
     const QUrl &getUrl() const;
+    /// 获取专辑图片。注意：可能不准
     const QUrl &getAlbumImage();
     ///获取经格式化后的时间
     QString formatTime();
     static Music getMediaDetail(const QString &fileName);
+    /**
+     * @brief 检查文件是否合法
+     * @param media  被检查的文件名。
+     * @return 当文件>1KB且符合任意一种支持的格式时，返回true，否则返回false
+     */
     static bool isLegal(QString media);
 
 };

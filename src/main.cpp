@@ -1,3 +1,9 @@
+/*
+ * BugFix:
+ * 1. 部分文件暂停后进度条归0
+ * 2. 打开文件目录不正确
+ * 3. 关闭“关于”窗口后自动弹出网页
+ */
 #include "playerwindow.h"
 #include <QSharedMemory>
 int main(int argc, char *argv[]) {

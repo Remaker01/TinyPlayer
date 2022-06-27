@@ -1,8 +1,3 @@
-/*
- * TODO: 利用QStackedWidget添加播放列表
- * 在退出时，需要先保存播放列表的列表(listsView)，再分别保存所有播放列表
- * 可先创建playLists文件夹，将播放列表都保存进文件夹中
- */
 #include "playerwindow.h"
 #define CHANGE_TO_PLAYICON ui->playButton->changeState("开始",PLAY_ICON)
 #define CHANGE_TO_PAUSEICON ui->playButton->changeState("暂停",PAUSE_ICON)
@@ -107,8 +102,7 @@ inline void PlayerWindow::connectSlots() {
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
         ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
-        //重置进度条（好像不加也可以？）
-        ui->progressSlider->setValue(0);
+//        ui->progressSlider->setValue(0);
         //改变专辑图片
         QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
         if(albumPic.isEmpty())
@@ -142,10 +136,10 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.10 Beta  2.10.220619");
+                                                        "版本号:2.10  2.10.220626");
         box.addButton("确定",QMessageBox::AcceptRole);
-        box.addButton("项目地址",QMessageBox::RejectRole);
-        connect(&box,&QMessageBox::rejected,this,[]{
+        QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
+        connect(addr,&QPushButton::clicked,this,[]{
             QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));
         });
         box.exec();
@@ -178,8 +172,10 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->actionLoadList,&QAction::triggered,this,[this]() {
         QString tmp = QFileDialog::getOpenFileName(this,"选择播放列表",lastPath,"播放列表(*.lst)");
-        if(!tmp.isEmpty())
-            openList(tmp);
+        if(!tmp.isEmpty()) {
+            if(!openList(tmp))
+                QMessageBox::warning(this,"警告","播放列表加载失败");
+        }
     });
     connect(ui->volumeButton,&PlayerButton::clicked,this,[this]() {
         static const QPixmap muted(":/Icons/images/muted.png"),unMuted(":/Icons/images/volume.png");
@@ -196,7 +192,7 @@ inline void PlayerWindow::connectUiSlots() {
         }
     });
     connect(ui->playView,&PlayListView::openDirRequirement,this,[this](int row){
-        QFileInfo tmp(player->getMedia().toLocalFile());
+        QFileInfo tmp(player->getMedia(row).toLocalFile());
         QDesktopServices::openUrl(QUrl::fromLocalFile(tmp.absolutePath()));
     });
     connect(ui->actionOpenDir,&QAction::triggered,this,[this]() {
@@ -236,6 +232,9 @@ SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     if(medias.isEmpty())
         return;
+#ifndef NDEBUG
+    long st = clock();
+#endif
     static bool f = true;
     ui->waitingLabel->show();
     ui->cancelButton->show();
@@ -258,6 +257,9 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     f = true;
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
+#ifndef NDEBUG
+    qDebug() << clock() - st;
+#endif
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
@@ -324,7 +326,7 @@ bool PlayerWindow::saveList(const QString &file) {
         return false;
     int tot = ui->playView->currentList().size();
     QDataStream ds(&lstFile);
-    ds.setVersion(QDataStream::Qt_5_0);
+    ds.setVersion(QDataStream::Qt_5_2);
     ds << MAGIC; //magic number
     for(int i = 0; i < tot; i++)
         ds << player->getMedia(i).toLocalFile();
@@ -337,7 +339,7 @@ bool PlayerWindow::openList(const QString &file) {
     if(!lstFile.open(QIODevice::ReadOnly))
         return false;
     QDataStream ds(&lstFile);
-    ds.setVersion(QDataStream::Qt_5_0);
+    ds.setVersion(QDataStream::Qt_5_2);
     uint16_t magic;
     ds >> magic;
     if(magic != MAGIC)

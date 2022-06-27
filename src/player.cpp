@@ -19,7 +19,7 @@ inline void PlayerCore::connectSlots() {
     connect(this,&VlcMediaPlayer::end,this,[this]() {
         switch (mode) {
         case SIGNLE:
-            //去掉这句，会导致结束后无法再次开始,28行同理
+            //去掉这句，会导致结束后无法再次开始
             RESET;
             emit finished();
             break;
@@ -83,6 +83,7 @@ int PlayerCore::getPosInSecond() {
 int PlayerCore::getCurrentMediaIndex() {return current;}
 
 void PlayerCore::setPos(int pos) {
+    //查看源码可知只有playing,paused,buffering三种状态可以设置
     Vlc::State sta = VlcMediaPlayer::state();
     if(sta != Vlc::Playing)
         startLoc = pos * 1000;
@@ -111,9 +112,8 @@ bool PlayerCore::addToList(const QString &media) {
     }
     QUrl tmp = QUrl::fromLocalFile(media);
     Music music(tmp);
-    if(!Music::isLegal(media)||!ok||medias.contains(music)) {
+    if(!Music::isLegal(media)||!ok||medias.contains(music))
         return false;
-    }
     list.append(tmp);
     medias.insert(music);
     return true;
@@ -145,11 +145,13 @@ bool PlayerCore::removeFromList(int loc) {
 }
 
 void PlayerCore::clear() {
+    Vlc::State sta = VlcMediaPlayer::state();
     list.clear();
     medias.clear();
     setMedia("");
     current = -1;
-    emit finished();
+    if(sta != Vlc::Playing&&sta != Vlc::Paused)   //防止重复发送信号
+        emit finished();
 }
 //覆盖play()与pause()用于缓解进度条拖动及未开始播放不能设置时间问题
 void PlayerCore::play() {
@@ -169,9 +171,8 @@ void PlayerCore::play() {
 }
 
 void PlayerCore::pause() {
-    int tme = VlcMediaPlayer::time();
+    startLoc = VlcMediaPlayer::time();
     VlcMediaPlayer::togglePause();
-    startLoc = tme;
 }
 
 void PlayerCore::goNext() {
