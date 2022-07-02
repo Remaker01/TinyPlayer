@@ -53,7 +53,6 @@ public:
     ~PlayerCore();
 public slots:
     void play();
-    void pause();
     void goNext();
     void goPrevious();
 signals:

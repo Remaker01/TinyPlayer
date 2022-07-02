@@ -16,6 +16,7 @@ PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
 }
 
 inline void PlayerCore::connectSlots() {
+    //在setMedia中会将startLoc设为0，无需专门设置
     connect(this,&VlcMediaPlayer::end,this,[this]() {
         switch (mode) {
         case SIGNLE:
@@ -46,6 +47,8 @@ inline void PlayerCore::connectSlots() {
             break;
         }
     });
+    connect(this,&VlcMediaPlayer::paused,this,[this]{startLoc = VlcMediaPlayer::time();});
+    connect(this,&VlcMediaPlayer::stopped,this,[this]{startLoc = 0;});
 }
 
 inline void PlayerCore::setMedia(const QString &media) {
@@ -167,12 +170,6 @@ void PlayerCore::play() {
     while (VlcMediaPlayer::state() != Vlc::Playing)
         QCoreApplication::processEvents();
     VlcMediaPlayer::setTime(startLoc);
-    startLoc = 0;
-}
-
-void PlayerCore::pause() {
-    startLoc = VlcMediaPlayer::time();
-    VlcMediaPlayer::togglePause();
 }
 
 void PlayerCore::goNext() {
