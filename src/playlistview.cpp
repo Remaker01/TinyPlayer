@@ -8,7 +8,7 @@ PlayListView::PlayListView(QWidget *parent):QListView(parent) {
     setAcceptDrops(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setFrameShape(QFrame::Panel);
+    setFrameShape(QFrame::Box);
 }
 
 void PlayListView::dragEnterEvent(QDragEnterEvent *e) {e->accept();}

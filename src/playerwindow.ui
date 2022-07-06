@@ -48,13 +48,13 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="2">
-        <widget class="QLabel" name="waitingLabel">
-         <property name="text">
-          <string>正在打开...</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <item row="0" column="2" colspan="2">
+        <widget class="PlayListView" name="playView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
         </widget>
        </item>
@@ -74,13 +74,13 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2" colspan="2">
-        <widget class="PlayListView" name="playView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="2" column="2">
+        <widget class="QLabel" name="waitingLabel">
+         <property name="text">
+          <string>正在打开...</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -304,8 +304,21 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+         <property name="styleSheet">
+          <string>QPushButton{
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:0px;
+background-position:center center;
+padding:5px,0px;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 255,127);
+}
+QPushButton:pressed{
+background-color: rgb(200, 200,200);
+}
+</string>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
@@ -325,6 +338,22 @@
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:0px;
+background-position:center center;
+padding:0px;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 255,127);
+}
+QPushButton:pressed{
+background-color: rgb(200, 200,200);
+}
+</string>
+            </property>
             <property name="text">
              <string>添加</string>
             </property>
@@ -338,6 +367,16 @@
               <height>35</height>
              </size>
             </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
            </widget>
           </item>
           <item>
@@ -350,6 +389,22 @@
             </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:0px;
+background-position:center center;
+padding:0px;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 255,127);
+}
+QPushButton:pressed{
+background-color: rgb(200, 200,200);
+}
+</string>
             </property>
             <property name="text">
              <string>删除</string>
@@ -367,6 +422,16 @@
             <property name="shortcut">
              <string>Ctrl+D</string>
             </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
            </widget>
           </item>
           <item>
@@ -380,8 +445,27 @@
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:0px;
+background-position:center center;
+padding-bottom:5px;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 255,127);
+}
+QPushButton:pressed{
+background-color: rgb(200,200,200);
+}
+</string>
+            </property>
             <property name="text">
              <string>清空</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -423,6 +507,10 @@
      <property name="title">
       <string>更换背景</string>
      </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/Icons/images/setbg.png</normaloff>:/Icons/images/setbg.png</iconset>
+     </property>
      <addaction name="actionLoadImg"/>
      <addaction name="actionToDefault"/>
     </widget>
@@ -444,6 +532,7 @@
     </property>
     <addaction name="actionLoadList"/>
     <addaction name="actionSaveList"/>
+    <addaction name="actionSet"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_4"/>
@@ -479,6 +568,10 @@
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/Icons/images/about.png</normaloff>:/Icons/images/about.png</iconset>
+   </property>
    <property name="text">
     <string>关于</string>
    </property>
@@ -512,6 +605,11 @@
   <action name="actionSaveList">
    <property name="text">
     <string>保存播放列表</string>
+   </property>
+  </action>
+  <action name="actionSet">
+   <property name="text">
+    <string>设置</string>
    </property>
   </action>
  </widget>

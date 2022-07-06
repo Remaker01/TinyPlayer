@@ -5,7 +5,6 @@
         <file>images/stop.png</file>
         <file>images/back.jpg</file>
         <file>images/icon.ico</file>
-        <file>images/stylesheet.qss</file>
         <file>images/border.png</file>
         <file>images/0.png</file>
         <file>images/1.png</file>
@@ -19,6 +18,8 @@
         <file>images/prev.png</file>
         <file>images/non-music.png</file>
         <file>images/exit.png</file>
+        <file>images/setbg.png</file>
+        <file>images/stylesheet.qss</file>
+        <file>images/about.png</file>
     </qresource>
-    <qresource prefix="/"/>
 </RCC>

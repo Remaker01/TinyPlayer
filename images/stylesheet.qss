@@ -9,7 +9,7 @@ QSlider::handle:horizontal {
 QSlider::groove:horizontal {
     border-radius:6px;
     height:5px;
-    background:#606060;
+    background:#505050;
     margin-top:5px;
     margin-bottom:5px;
 }

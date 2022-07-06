@@ -9,9 +9,11 @@
 #include <QProgressDialog>
 #include <QSystemTrayIcon>
 #include <QKeyEvent>
+#include <QCloseEvent>
 #include "playerbutton.h"
 #include "player.h"
 #include "playlistview.h"
+#include "settingwindow.h"
 #include "./ui_playerwindow.h"
 #ifndef SLOTS
 #define SLOTS
@@ -24,6 +26,7 @@ private:
     const QPixmap PLAY_ICON,PAUSE_ICON;
     Ui::PlayerWindow *ui;
     PlayerCore *player;
+    SettingWindow *settingWind;
     QSystemTrayIcon *tray;
     QMenu *trayMenu;
     QString lastPath;
@@ -37,6 +40,7 @@ private:
     void connectUiSlots();
 protected:
     void keyReleaseEvent(QKeyEvent *e);
+    void closeEvent(QCloseEvent *ev);
 public:
     explicit PlayerWindow(QWidget *parent = nullptr);
     void initConfiguration();

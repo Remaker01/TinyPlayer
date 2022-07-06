@@ -8,10 +8,12 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
     player = new PlayerCore(this);
+    settingWind = new SettingWindow(this);
     initUi();
     initConfiguration();
     connectSlots();
-    openList("default.lst");
+    if(settingWind->getAutoSave())
+        openList("default.lst");
 }
 
 inline void PlayerWindow::initUi() {
@@ -54,9 +56,13 @@ inline void PlayerWindow::initConfiguration() {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
         setting.setValue(LAST_VOL,50);
         setting.setValue(LAST_MODE,0);
+        setting.setValue("AUTOLOAD",settingWind->getAutoSave());
+        setting.setValue("MINONCLOSE",settingWind->getminOnClose());
     }
     lastPath = setting.value(LAST_PATH).toString();
     ui->volumeSlider->setValue(setting.value(LAST_VOL).toInt());
+    settingWind->setAutoSave(setting.value("AUTOLOAD").toBool());
+    settingWind->setminOnClose(setting.value("MINONCLOSE").toBool());
     changeMode((PlayerCore::PlayMode)setting.value(LAST_MODE).toInt());
 }
 
@@ -136,7 +142,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.10  2.10.220626");
+                                                        "版本号:2.20  2.20.220706");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -210,6 +216,9 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
+    connect(ui->actionSet,&QAction::triggered,this,[this]() {
+        settingWind->show();
+    });
 }
 
 inline void PlayerWindow::ensureExit() {
@@ -228,6 +237,21 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
         ui->playButton->click();
     }
 }
+
+void PlayerWindow::closeEvent(QCloseEvent *ev) {
+    if(settingWind->getminOnClose()) {
+        static bool first = true;
+        ev->ignore();
+        if(first)
+            tray->showMessage("提示","TinyPlayer在后台运行");
+        settingWind->close();
+        hide();
+        first = false;
+    }
+    else
+        ev->accept();
+}
+
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     if(medias.isEmpty())
@@ -360,6 +384,8 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
+    setting.setValue("AUTOLOAD",settingWind->getAutoSave());
+    setting.setValue("MINONCLOSE",settingWind->getminOnClose());
     saveList("default.lst");
     delete ui;
 }

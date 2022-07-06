@@ -37,6 +37,9 @@ set(PROJECT_SOURCES
         src/music.h
         src/music.cpp
         src/formatCheck.cpp
+        src/settingwindow.h
+        src/settingwindow.cpp
+        src/settingwindow.ui
         resource.qrc
         ${TS_FILES}
 )

@@ -9,7 +9,9 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QSharedMemory shared("player");
+    QFont font("幼圆",9);
     if(shared.create(1)) {
+        a.setFont(font);
         QFile qss(":/Icons/images/stylesheet.qss");
         if(qss.open(QFile::ReadOnly)) {
             QString style = qss.readAll();
@@ -24,3 +26,4 @@ int main(int argc, char *argv[]) {
         QMessageBox::warning(nullptr,"警告","TinyPlayer已在运行");
     return 0;
 }
+

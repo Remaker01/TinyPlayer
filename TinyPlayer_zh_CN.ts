@@ -24,32 +24,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="384"/>
+        <location filename="src/playerwindow.ui" line="446"/>
         <source>清空</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="355"/>
+        <location filename="src/playerwindow.ui" line="392"/>
         <source>删除</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="368"/>
+        <location filename="src/playerwindow.ui" line="405"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="501"/>
+        <location filename="src/playerwindow.ui" line="575"/>
         <source>打开文件夹...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="504"/>
+        <location filename="src/playerwindow.ui" line="578"/>
         <source>Ctrl+Shift+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="54"/>
+        <location filename="src/playerwindow.ui" line="80"/>
         <source>正在打开...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -59,7 +59,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="329"/>
+        <location filename="src/playerwindow.ui" line="341"/>
         <source>添加</source>
         <translation type="unfinished"></translation>
     </message>
@@ -94,82 +94,87 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="394"/>
+        <location filename="src/playerwindow.ui" line="459"/>
         <source>专辑图片</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="420"/>
+        <location filename="src/playerwindow.ui" line="485"/>
         <source> 文件 </source>
         <oldsource>文件</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="424"/>
+        <location filename="src/playerwindow.ui" line="489"/>
         <source>更换背景</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="436"/>
+        <location filename="src/playerwindow.ui" line="505"/>
         <source> 帮助 </source>
         <oldsource>帮助</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="443"/>
+        <location filename="src/playerwindow.ui" line="512"/>
         <source> 编辑 </source>
         <oldsource>编辑</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="461"/>
+        <location filename="src/playerwindow.ui" line="531"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="470"/>
+        <location filename="src/playerwindow.ui" line="540"/>
         <source>退出</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="475"/>
+        <location filename="src/playerwindow.ui" line="545"/>
         <source>打开帮助</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="478"/>
+        <location filename="src/playerwindow.ui" line="548"/>
         <source>F1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="483"/>
+        <location filename="src/playerwindow.ui" line="557"/>
         <source>关于</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="488"/>
+        <location filename="src/playerwindow.ui" line="562"/>
         <source>还原默认</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="509"/>
+        <location filename="src/playerwindow.ui" line="583"/>
         <source>加载播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="514"/>
+        <location filename="src/playerwindow.ui" line="588"/>
         <source>保存播放列表</source>
         <oldsource>保存当前播放列表</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="458"/>
-        <location filename="src/playerwindow.ui" line="493"/>
+        <location filename="src/playerwindow.ui" line="593"/>
+        <source>设置</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="528"/>
+        <location filename="src/playerwindow.ui" line="567"/>
         <source>打开文件...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="496"/>
+        <location filename="src/playerwindow.ui" line="570"/>
         <source>Alt+O</source>
         <translation type="unfinished"></translation>
     </message>
@@ -177,8 +182,23 @@
 <context>
     <name>SettingWindow</name>
     <message>
-        <location filename="src/settingwindow.ui" line="32"/>
+        <location filename="src/settingwindow.ui" line="26"/>
         <source>设置</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="48"/>
+        <source>关闭时最小化</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="55"/>
+        <source>自动加载上次退出时的播放列表</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="87"/>
+        <source>还原默认</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
