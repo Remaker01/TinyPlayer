@@ -11,7 +11,7 @@
 class Music {
 private:
     QString formattedTime;
-    const QUrl url;
+    QUrl url;
     int length;
     //歌曲名
     QString title,description,album;
@@ -23,6 +23,7 @@ private:
     static bool isFlac(QFile *media,QDataStream &reader);
     static bool isAAC(QFile *media,QDataStream &reader);
     static bool isM4A(QFile *media,QDataStream &reader);
+    static bool isAU(QFile *media,QDataStream &reader);
 public:
     /**
      * 根据指定的URL建立音乐对象
@@ -30,6 +31,7 @@ public:
      * @note 本构造函数**不会**判断URL是否合法
      */
     Music(const QUrl &uri = QUrl());
+    Music(const Music &a) = default;
     ///获取包含标题、时间、唱片集、描述的音乐信息
     QString toString();
     /**
@@ -63,6 +65,7 @@ public:
      * @return 当文件>1KB且符合任意一种支持的格式时，返回true，否则返回false
      */
     static bool isLegal(QString media);
+    static QList<QString> getOnlineMusic(const QString &keyword,int timeout);
 
 };
 #endif // MUSIC_H

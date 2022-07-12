@@ -142,7 +142,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:2.20  2.20.220706");
+                                                        "版本号:3.0 Beta1  3.0.220712");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -216,9 +216,7 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
-    connect(ui->actionSet,&QAction::triggered,this,[this]() {
-        settingWind->show();
-    });
+    connect(ui->actionSet,&QAction::triggered,settingWind,&QWidget::show);
 }
 
 inline void PlayerWindow::ensureExit() {
@@ -248,8 +246,6 @@ void PlayerWindow::closeEvent(QCloseEvent *ev) {
         hide();
         first = false;
     }
-    else
-        ev->accept();
 }
 
 SLOTS
@@ -270,7 +266,7 @@ void PlayerWindow::doAddMedia(QStringList medias) {
         QFileInfo a(fullName);
         ui->waitingLabel->setText("正在打开" + a.fileName());
         if(player->addToList(fullName))
-            playList.append(a.fileName() + '\n' + Music::getMediaDetail(fullName).formatTime());
+            playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(fullName)).formatTime());
     }
     lastPath = QFileInfo(medias.last()).absolutePath();
     ui->playView->commitChange();
@@ -279,6 +275,7 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     if(player->getCurrentMediaIndex() < 0)
         player->setCurrentMediaIndex(0);
     f = true;
+    ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
 #ifndef NDEBUG
@@ -330,6 +327,7 @@ void PlayerWindow::doDelMedia() {
     ui->playView->commitChange();
     ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
     bool f = (playList.size() > 0);
+    ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
     LIST_DEL_ACTION(f)
 }
 
@@ -337,6 +335,7 @@ void PlayerWindow::on_clearButton_clicked() {
     ui->playView->currentList().clear();
     ui->playView->commitChange();
     player->clear();
+    ui->curlistLabel->setText("当前播放列表 共0项");
     LIST_DEL_ACTION(false)
 }
 #undef LIST_DEL_ACTION

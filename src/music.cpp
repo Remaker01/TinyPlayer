@@ -44,7 +44,7 @@ Music Music::getMediaDetail(const QString &fileName) {
 
 bool Music::isLegal(QString media) {
     static auto checkers = {
-        &Music::isMPEG,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma,&Music::isM4A
+        &Music::isMPEG,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma,&Music::isM4A,&Music::isAU
     };
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
@@ -58,4 +58,19 @@ bool Music::isLegal(QString media) {
     }
     rawData.close();
     return false;
+}
+
+QList<QString> Music::getOnlineMusic(const QString &keyword,int timeout) {
+    QProcess p;
+    p.start("net_music.exe",QStringList(keyword));
+    p.waitForFinished(timeout);
+    p.close();
+    QList<QString> urls;
+    QFile result("links.tmp");
+    if(!result.open(QIODevice::ReadOnly))
+        return urls;
+    while (!result.atEnd())
+        urls.append(result.readLine());
+    result.remove();
+    return urls;
 }

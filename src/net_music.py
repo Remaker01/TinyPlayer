@@ -38,7 +38,6 @@ def get_downlink(url:str):
     page_text = requests.get(url=url,headers=head).text
     tree = etree.HTML(page_text)
     result = tree.xpath("/html/body/div/div[2]/div[1]/div[2]/div[1]/div/div[2]/div[1]/a")
-    # print(result[0].xpath("./@href"))
     fp.write(result[0].xpath("./@href")[0] + '\n')
 if __name__ == "__main__":
     if len(sys.argv) < 2:

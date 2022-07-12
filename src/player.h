@@ -20,16 +20,16 @@ private:
     void setMedia(const QString &media);
 public:
     static constexpr int MAX_MEDIA_COUNT = 10000;
-    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 11;
+    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 13;
     static const QString Formats[FORMAT_COUNT];
     static const QString MODE_TIPS[MODE_COUNT];
     /// 播放模式
     enum PlayMode{SIGNLE = 0,SEQUENTIAL,SIGNLE_LOOP,LIST_LOOP};
     PlayMode mode = SIGNLE;
     explicit PlayerCore(QObject *parent = nullptr);
-    ///获取当前媒体
+    ///获取当前媒体url
     QUrl getMedia();
-    ///获取指定编号的媒体目录
+    ///获取指定编号的媒体目录url
     const QUrl &getMedia(int i);
     ///获取媒体详细信息
     Music getMediaDetail(int i);
@@ -59,5 +59,4 @@ signals:
     void finished();
     //void mediaSourceChanged(qint64 newTime);
 };
-
 #endif // PLAY_H

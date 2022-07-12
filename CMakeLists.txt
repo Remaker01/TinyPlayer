@@ -46,8 +46,8 @@ set(PROJECT_SOURCES
 set(HELP_FILES  readme.htm)
 include_directories(vlc-qt_1.1.0/include)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools multimedia REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools multimedia REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network LinguistTools REQUIRED)
 find_package(VLCQt COMPONENTS Core REQUIRED)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -87,6 +87,7 @@ endif()
 
 target_link_libraries(TinyPlayer PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network
     VLCQt::Core
 )
 

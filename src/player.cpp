@@ -1,3 +1,4 @@
+#include <QProcess>
 #include "player.h"
 #ifndef NDEBUG
 #include <QDebug>
@@ -7,7 +8,8 @@ const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG
                                                    ".wav",".wma",   //Windows Audio
                                                    ".flac",".aac",  //Other
                                                    ".aif",".aiff",".aifc",  //Aiff
-                                                   ".m4a"};   //m4a
+                                                   ".m4a", //m4a
+                                                   ".au",".snd"};  //au
 const QString PlayerCore::MODE_TIPS[MODE_COUNT] = {"单曲播放","顺序播放","单曲循环","列表循环"};
 VlcInstance PlayerCore::ins(VlcCommon::args());
 PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
@@ -26,8 +28,7 @@ inline void PlayerCore::connectSlots() {
             break;
         case SEQUENTIAL:
             if(current < list.size() - 1) {
-                current++;
-                setMedia(list[current].toString());
+                goNext();
                 play();
             }
             else {
@@ -41,8 +42,10 @@ inline void PlayerCore::connectSlots() {
             play();
             break;
         case LIST_LOOP:
-            current = (current + 1) % list.size();
-            setMedia(list[current].toString());
+            if(list.size() == 1)
+                RESET;
+            else
+                goNext();
             play();
             break;
         }

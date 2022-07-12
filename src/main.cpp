@@ -1,8 +1,10 @@
 /*
- * BugFix:
- * 1. 部分文件暂停后进度条归0
- * 2. 打开文件目录不正确
- * 3. 关闭“关于”窗口后自动弹出网页
+ * TODO:
+ * 1.支持线上音乐搜索&播放
+ * 2. 用QStackedWidget在两个播放列表间切换
+ *     1. 本地播放列表，即原来的播放列表
+ *     2. 线上音乐播放列表
+ *
  */
 #include "playerwindow.h"
 #include <QSharedMemory>

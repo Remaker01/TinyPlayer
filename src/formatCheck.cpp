@@ -101,4 +101,15 @@ bool Music::isM4A(QFile *media, QDataStream &reader) {
     reader.readRawData(head,7);
     RETURN(strcmp(head,"ftypM4A") == 0);
 }
+
+bool Music::isAU(QFile *media, QDataStream &reader) {
+    reader.setByteOrder(QDataStream::BigEndian);
+    char head[5];
+    head[4] = 0;
+    reader.readRawData(head,4);
+    if(strcmp(head,".snd") != 0)   RETURN(false)
+    uint32_t data_start;
+    reader >> data_start;
+    RETURN(data_start >= 24&&data_start < media->size())
+}
 #undef RETURN
