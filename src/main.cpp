@@ -28,4 +28,3 @@ int main(int argc, char *argv[]) {
         QMessageBox::warning(nullptr,"警告","TinyPlayer已在运行");
     return 0;
 }
-

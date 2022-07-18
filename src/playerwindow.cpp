@@ -9,6 +9,7 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     ui->setupUi(this);
     player = new PlayerCore(this);
     settingWind = new SettingWindow(this);
+    s = new OnlineSeacher(this);
     initUi();
     initConfiguration();
     connectSlots();
@@ -19,6 +20,7 @@ PlayerWindow::PlayerWindow(QWidget *parent):
 inline void PlayerWindow::initUi() {
     ui->volumeButton->setReplyClick(true);
     ui->modeButton->setReplyClick(true);
+    ui->serachLabel->setReplyClick(true);
     ui->delButton->setEnabled(false);
     ui->playView->setOpacity(0.6);
     initSystemtray();
@@ -142,7 +144,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0 Beta1  3.0.220712");
+                                                        "版本号:3.0 Beta1  3.0.220718");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -184,7 +186,7 @@ inline void PlayerWindow::connectUiSlots() {
         }
     });
     connect(ui->volumeButton,&PlayerButton::clicked,this,[this]() {
-        static const QPixmap muted(":/Icons/images/muted.png"),unMuted(":/Icons/images/volume.png");
+        const QPixmap muted(":/Icons/images/muted.png"),unMuted(":/Icons/images/volume.png");
         if(player->audio()->volume() > 0) {
             ui->volumeButton->setPixmap(muted);
             emit ui->volumeSlider->valueChanged(0);
@@ -217,6 +219,21 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
     connect(ui->actionSet,&QAction::triggered,settingWind,&QWidget::show);
+    connect(ui->serachLabel,&PlayerButton::clicked,this,[this]() {
+        if(!QFile::exists("net_music.exe")) {
+            QMessageBox::critical(this,"错误","找不到执行搜索需要的程序");
+            return;
+        }
+        if(res != nullptr&&res->isVisible()) {
+            QMessageBox::warning(this,"警告","请关闭搜索结果窗口后进行新一次搜索");
+            return;
+        }
+        ui->waitingLabel->setText("搜索中");
+        ui->waitingLabel->show();
+        s->setKeyWord(ui->serachOnlineEdit->text());
+        s->doSearch();
+        connect(s,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
+    });
 }
 
 inline void PlayerWindow::ensureExit() {
@@ -230,7 +247,7 @@ inline void PlayerWindow::ensureExit() {
 }
 
 void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
-    if(e->key() == Qt::Key_Space) {
+    if(e->key() == Qt::Key_Space&&!ui->serachOnlineEdit->hasFocus()) {
         e->accept();
         ui->playButton->click();
     }
@@ -355,6 +372,19 @@ bool PlayerWindow::saveList(const QString &file) {
         ds << player->getMedia(i).toLocalFile();
     lstFile.close();
     return true;
+}
+
+void PlayerWindow::on_onlineSearcher_done() {
+    QFile f("links.tmp");
+    if(!f.open(QIODevice::ReadOnly)) {
+        ui->waitingLabel->hide();
+        return;
+    }
+    if(res == nullptr)
+        res = new SearchResultWidget(this);
+    res->setItems(s->analyzeResult());
+    res->show();
+    ui->waitingLabel->hide();
 }
 
 bool PlayerWindow::openList(const QString &file) {

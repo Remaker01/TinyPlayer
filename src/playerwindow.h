@@ -6,7 +6,6 @@
 #include <QPalette>
 #include <QDesktopServices>
 #include <QSettings>
-#include <QProgressDialog>
 #include <QSystemTrayIcon>
 #include <QKeyEvent>
 #include <QCloseEvent>
@@ -15,6 +14,7 @@
 #include "playlistview.h"
 #include "settingwindow.h"
 #include "./ui_playerwindow.h"
+#include "onlineseacher.h"
 #ifndef SLOTS
 #define SLOTS
 #endif
@@ -30,6 +30,8 @@ private:
     QSystemTrayIcon *tray;
     QMenu *trayMenu;
     QString lastPath;
+    OnlineSeacher *s;
+    SearchResultWidget *res = nullptr;
     void initUi();
     void ensureExit();
     void initPlayList();
@@ -50,10 +52,10 @@ private slots:
     void on_volumeSlider_valueChanged(int value);
     void on_progressSlider_valueChanged(int value);
     void on_progressSlider_sliderMoved(int position);
-
     void doDelMedia();
     void on_clearButton_clicked();
     void on_addButton_clicked();
+    void on_onlineSearcher_done();
     bool saveList(const QString &file);
     bool openList(const QString &file);
     void on_playView_doubleClicked(const QModelIndex &index);

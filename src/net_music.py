@@ -24,21 +24,24 @@ def get_downpage_list(name:str):
     page_text = requests.get(uri, headers=head).text
     tree = etree.HTML(page_text)
     # html/body/div/div[2]/div/div[2](截止到这里是"body")/div[1]/div/div[3]/div[1]/div[i]/a
-    result = tree.xpath("/html/body/div/div[2]/div/div[2]//div[@class=\"list_row\"]")
+    result = tree.xpath("//body/div/div[2]/div/div[2]//div[@class=\"list_row\"]")
     #print(result)
     #开始查找urls
     url_list = []
     for each in result:
         location = each.xpath("./div[1]/a/@href")
+        title = each.xpath("./div[1]/a/text()")
+        signer = each.xpath("./div[2]/a/text()")
         if len(location)>0:
-            url_list.append(host+location[0])
+            url_list.append(title[0] + ';' + signer[0] + ';' + host+location[0])
     pool.map(get_downlink,url_list)
 # 第二步：从获取到的URLs中提取实际下载地址,保存在文件中
-def get_downlink(url:str):
-    page_text = requests.get(url=url,headers=head).text
+def get_downlink(info:str):
+    lst = info.split(';')
+    page_text = requests.get(url=lst[2],headers=head).text
     tree = etree.HTML(page_text)
-    result = tree.xpath("/html/body/div/div[2]/div[1]/div[2]/div[1]/div/div[2]/div[1]/a")
-    fp.write(result[0].xpath("./@href")[0] + '\n')
+    result_addr = tree.xpath("//body/div/div[2]/div[1]/div[2]/div[1]/div/div[2]/div[1]/a")
+    fp.write(lst[0] + ';' + lst[1] + ';' +  result_addr[0].xpath("./@href")[0] + '\n')
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         fp.close()

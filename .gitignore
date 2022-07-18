@@ -78,6 +78,3 @@ CMakeLists.txt.user
 # configs
 *.config
 plugins.dat
-
-# Tempoary
-stop.png

@@ -11,10 +11,14 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(VLCQt_DIR vlc-qt_1.1.0/lib/cmake/VLCQt)
-
-set(CMAKE_CXX_FLAGS_RELEASE "-mwindows -O2 -s -DNDEBUG")
-set(CMAKE_CXX_FLAGS_MINSIZEREL "-mwindows -Os -s -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O -g")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS_RELEASE "-mwindows -O2 -s -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "-mwindows -Os -s -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O -g")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "-O1 -DNDEBUG")
+endif()
 set(INCLUDE_DIRECTORIES
     ./qm
     ./images
@@ -39,7 +43,10 @@ set(PROJECT_SOURCES
         src/formatCheck.cpp
         src/settingwindow.h
         src/settingwindow.cpp
+        src/onlineseacher.h
+        src/onlineseacher.cpp
         src/settingwindow.ui
+        src/searchresultwidget.h src/searchresultwidget.cpp src/searchresultwidget.ui
         resource.qrc
         ${TS_FILES}
 )
@@ -87,7 +94,6 @@ endif()
 
 target_link_libraries(TinyPlayer PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
     VLCQt::Core
 )
 

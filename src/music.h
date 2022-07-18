@@ -65,7 +65,6 @@ public:
      * @return 当文件>1KB且符合任意一种支持的格式时，返回true，否则返回false
      */
     static bool isLegal(QString media);
-    static QList<QString> getOnlineMusic(const QString &keyword,int timeout);
 
 };
 #endif // MUSIC_H

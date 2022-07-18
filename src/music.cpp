@@ -59,18 +59,3 @@ bool Music::isLegal(QString media) {
     rawData.close();
     return false;
 }
-
-QList<QString> Music::getOnlineMusic(const QString &keyword,int timeout) {
-    QProcess p;
-    p.start("net_music.exe",QStringList(keyword));
-    p.waitForFinished(timeout);
-    p.close();
-    QList<QString> urls;
-    QFile result("links.tmp");
-    if(!result.open(QIODevice::ReadOnly))
-        return urls;
-    while (!result.atEnd())
-        urls.append(result.readLine());
-    result.remove();
-    return urls;
-}

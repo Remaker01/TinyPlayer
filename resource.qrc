@@ -21,5 +21,6 @@
         <file>images/setbg.png</file>
         <file>images/stylesheet.qss</file>
         <file>images/about.png</file>
+        <file>images/serach.png</file>
     </qresource>
 </RCC>
