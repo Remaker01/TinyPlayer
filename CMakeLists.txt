@@ -26,26 +26,15 @@ set(INCLUDE_DIRECTORIES
 set(TS_FILES TinyPlayer_zh_CN.ts)
 
 set(PROJECT_SOURCES
-        src/playerwindow.cpp
-        src/playerwindow.h
-        src/playerwindow.ui
-        src/player.cpp
-        src/player.h
-        src/playerbutton.cpp
-        src/playerbutton.h
-        src/playerslider.cpp
-        src/playerslider.h
-        src/playlistview.h
-        src/playlistview.cpp
+        src/playerwindow.cpp src/playerwindow.h src/playerwindow.ui
+        src/player.cpp src/player.h
+	src/playerbutton.cpp src/playerbutton.h
+        src/playerslider.cpp src/playerslider.h
+        src/playlistview.h src/playlistview.cpp
         src/main.cpp
-        src/music.h
-        src/music.cpp
-        src/formatCheck.cpp
-        src/settingwindow.h
-        src/settingwindow.cpp
-        src/onlineseacher.h
-        src/onlineseacher.cpp
-        src/settingwindow.ui
+        src/music.h src/music.cpp src/formatCheck.cpp
+        src/settingwindow.h src/settingwindow.cpp src/settingwindow.ui
+        src/onlineseacher.h src/onlineseacher.cpp
         src/searchresultwidget.h src/searchresultwidget.cpp src/searchresultwidget.ui
         resource.qrc
         ${TS_FILES}

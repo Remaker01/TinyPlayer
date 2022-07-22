@@ -251,6 +251,7 @@ background-repeat:no-repeat;
 border:0px;
 background-position:center center;
 padding-bottom:5px;
+padding-top:5px;
 }
 QPushButton:hover{
 background-color: rgba(255, 255, 255,127);

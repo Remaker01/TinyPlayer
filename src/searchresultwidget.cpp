@@ -7,8 +7,6 @@ SearchResultWidget::SearchResultWidget(QWidget *parent) :
     QStringList headers{"标题","歌手","URL"};
     ui->tableWidget->setColumnCount(headers.size());
     ui->tableWidget->setHorizontalHeaderLabels(headers);
-    QList<ResultInfo> infos;
-    setItems(infos);
     connect(ui->insertButton,&QPushButton::clicked,this,&SearchResultWidget::addItemRequirement);
 }
 
@@ -18,7 +16,7 @@ void SearchResultWidget::setItems(QList<ResultInfo> results) {
     for (int i = 0; i < results.size(); i++) {
         QTableWidgetItem *itemTitle = new QTableWidgetItem(results[i].title),
         *itemArtist = new QTableWidgetItem(results[i].artist);
-        QLabel *itemUrl = new QLabel(results[i].url);
+        QLabel *itemUrl = new QLabel(results[i].url.replace('\r',"").replace('\n',""));
         itemUrl->setCursor(Qt::PointingHandCursor);
         itemUrl->setAlignment(Qt::AlignCenter);
         itemUrl->setToolTip("点击打开");
@@ -28,16 +26,38 @@ void SearchResultWidget::setItems(QList<ResultInfo> results) {
     }
 }
 
-SearchResultWidget::~SearchResultWidget() {
-    delete ui;
+ResultInfo SearchResultWidget::getItem(int row) {
+    ResultInfo info;
+    if(row < 0||row >= ui->tableWidget->rowCount())
+        return info;
+    QTableWidgetItem *itemTitle = ui->tableWidget->itemAt(row,0),
+            *itemArtist = ui->tableWidget->item(row,1);
+    QLabel *itemUrl = (QLabel*)ui->tableWidget->cellWidget(row,2);
+    info.title = itemTitle->text();
+    info.artist = itemArtist->text();
+    info.url = itemUrl->text();
+    return info;
 }
 
-void SearchResultWidget::on_tableWidget_cellPressed(int row, int column) {
+void SearchResultWidget::removeItem(int row) {ui->tableWidget->removeRow(row);}
+
+QList<QString> SearchResultWidget::getSelectedURLs() {
+    QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
+    QList<QString> result;
+    result.reserve(itemSelected.size());
+    for(int i = 0; i < itemSelected.size(); i++) {
+        int p = itemSelected[i]->row();
+        result.append(getItem(p).url);
+    }
+    return result;
+}
+
+void SearchResultWidget::on_tableWidget_cellClicked(int row, int column) {
     if(column != 2)
         return;
-    QLabel *textlabel = dynamic_cast<QLabel*>(ui->tableWidget->cellWidget(row,column));
-    if(textlabel == nullptr)
-        return;
-    QString text = textlabel->text();
-    QDesktopServices::openUrl(QUrl(text));
+    QLabel *textlabel = (QLabel*)(ui->tableWidget->cellWidget(row,column));
+    QDesktopServices::openUrl(QUrl(textlabel->text()));
+}
+SearchResultWidget::~SearchResultWidget() {
+    delete ui;
 }

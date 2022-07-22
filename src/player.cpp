@@ -104,7 +104,7 @@ void PlayerCore::setCurrentMediaIndex(int i) {
     setMedia(list[current].toString());
 }
 
-bool PlayerCore::addToList(const QString &media) {
+bool PlayerCore::addToList(const QString &media, bool local) {
    if(list.size() == MAX_MEDIA_COUNT) {
         QMessageBox::warning(nullptr,"警告","已达到音乐数上限" + QString::number(MAX_MEDIA_COUNT));
         return false;
@@ -116,9 +116,9 @@ bool PlayerCore::addToList(const QString &media) {
             break;
         }
     }
-    QUrl tmp = QUrl::fromLocalFile(media);
+    QUrl tmp = (local)?QUrl::fromLocalFile(media):QUrl(media);
     Music music(tmp);
-    if(!Music::isLegal(media)||!ok||medias.contains(music))
+    if((local&&!Music::isLegal(media))||!ok||medias.contains(music))
         return false;
     list.append(tmp);
     medias.insert(music);
@@ -159,7 +159,7 @@ void PlayerCore::clear() {
     if(sta != Vlc::Playing&&sta != Vlc::Paused)   //防止重复发送信号
         emit finished();
 }
-//覆盖play()与pause()用于缓解进度条拖动及未开始播放不能设置时间问题
+//覆盖play()用于缓解进度条拖动及未开始播放不能设置时间问题
 void PlayerCore::play() {
     Vlc::State sta = VlcMediaPlayer::state();  //获取初始播放状态
     if(sta == Vlc::Playing)
@@ -170,8 +170,13 @@ void PlayerCore::play() {
     //停止
     else
         VlcMediaPlayer::play();
-    while (VlcMediaPlayer::state() != Vlc::Playing)
+    while (VlcMediaPlayer::state() != Vlc::Playing) {
+        if(VlcMediaPlayer::state() == Vlc::Error) {
+            QMessageBox::critical(nullptr,"错误","播放失败,无法访问指定的媒体");
+            return;
+        }
         QCoreApplication::processEvents();
+    }
     VlcMediaPlayer::setTime(startLoc);
 }
 

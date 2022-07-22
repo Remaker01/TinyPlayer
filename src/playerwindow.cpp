@@ -10,6 +10,7 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     player = new PlayerCore(this);
     settingWind = new SettingWindow(this);
     s = new OnlineSeacher(this);
+    res = new SearchResultWidget(this);
     initUi();
     initConfiguration();
     connectSlots();
@@ -78,20 +79,16 @@ inline void PlayerWindow::changeMode(PlayerCore::PlayMode m) {
 inline void PlayerWindow::connectSlots() {
     connectUiSlots();
     connect(ui->playButton,&PlayerButton::clicked,this,[this](){
-         Vlc::State state = player->state();
-         if(state != Vlc::Error) {
-             ui->stopButton->setReplyClick(true);
-             if(player->state() != Vlc::Playing) {
-                 player->play();
-                 CHANGE_TO_PAUSEICON;
-             }
-             else {
-                 player->pause();
-                 CHANGE_TO_PLAYICON;
-             }
+         ui->stopButton->setReplyClick(true);
+         if(player->state() != Vlc::Playing) {
+             player->play();
+             if(player->state() == Vlc::Playing)
+                CHANGE_TO_PAUSEICON;
          }
-         else
-             QMessageBox::critical(this,"播放失败","文件可能已损坏");
+         else {
+             player->pause();
+             CHANGE_TO_PLAYICON;
+         }
     });
     connect(ui->stopButton,&PlayerButton::clicked,this,[this]() {
         if(player->state() != Vlc::Stopped) {
@@ -110,7 +107,6 @@ inline void PlayerWindow::connectSlots() {
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
         ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
-//        ui->progressSlider->setValue(0);
         //改变专辑图片
         QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
         if(albumPic.isEmpty())
@@ -144,7 +140,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0 Beta1  3.0.220718");
+                                                        "版本号:3.0 Beta1  3.0.220722");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -224,7 +220,7 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::critical(this,"错误","找不到执行搜索需要的程序");
             return;
         }
-        if(res != nullptr&&res->isVisible()) {
+        if(res->isVisible()) {
             QMessageBox::warning(this,"警告","请关闭搜索结果窗口后进行新一次搜索");
             return;
         }
@@ -233,6 +229,13 @@ inline void PlayerWindow::connectUiSlots() {
         s->setKeyWord(ui->serachOnlineEdit->text());
         s->doSearch();
         connect(s,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
+        ui->serachOnlineEdit->clearFocus();
+    });
+    connect(res,&SearchResultWidget::addItemRequirement,this,[this]() {
+        QStringList selected = res->getSelectedURLs();
+        if(selected.isEmpty())
+            return ;
+        doAddMedia(selected);
     });
 }
 
@@ -264,7 +267,6 @@ void PlayerWindow::closeEvent(QCloseEvent *ev) {
         first = false;
     }
 }
-
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     if(medias.isEmpty())
@@ -280,12 +282,20 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     for(QString &fullName:medias) {
         if(!f)
             break;
-        QFileInfo a(fullName);
-        ui->waitingLabel->setText("正在打开" + a.fileName());
-        if(player->addToList(fullName))
-            playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(fullName)).formatTime());
+        if(!fullName.startsWith("http",Qt::CaseInsensitive)) {  //本地
+            QFileInfo a(fullName);
+            ui->waitingLabel->setText("正在打开" + a.fileName());
+            if(player->addToList(fullName))
+                playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(fullName)).formatTime());
+            lastPath = a.absolutePath();
+        }
+        else {
+            QUrl url(fullName);
+            ui->waitingLabel->setText("正在插入" + url.fileName());
+            if(player->addToList(fullName,false))
+                playList.append(url.fileName() + "\n[线上音乐]");
+        }
     }
-    lastPath = QFileInfo(medias.last()).absolutePath();
     ui->playView->commitChange();
     if(playList.size() > 0)
         ui->delButton->setEnabled(true);
@@ -364,12 +374,14 @@ bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
     if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
         return false;
-    int tot = ui->playView->currentList().size();
+    const QStringList &list = ui->playView->currentList();
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_2);
     ds << MAGIC; //magic number
-    for(int i = 0; i < tot; i++)
-        ds << player->getMedia(i).toLocalFile();
+    for(int i = 0; i < list.size(); i++) {
+        if(!list[i].contains("[线上音乐]"))
+            ds << player->getMedia(i).toLocalFile();
+    }
     lstFile.close();
     return true;
 }
@@ -380,8 +392,6 @@ void PlayerWindow::on_onlineSearcher_done() {
         ui->waitingLabel->hide();
         return;
     }
-    if(res == nullptr)
-        res = new SearchResultWidget(this);
     res->setItems(s->analyzeResult());
     res->show();
     ui->waitingLabel->hide();

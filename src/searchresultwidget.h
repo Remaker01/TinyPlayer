@@ -6,6 +6,10 @@
 #include <QUrl>
 #include "ui_searchresultwidget.h"
 namespace Ui {class SearchResultWidget;}
+/**
+ * @brief The ResultInfo struct:
+ * 结果信息结构体，在SearchResultWidget中添加的条目必须符合此结构体格式
+ */
 struct ResultInfo {
     QString title,artist,url;
     ResultInfo() = default;
@@ -20,11 +24,14 @@ class SearchResultWidget : public QWidget{
 public:
     explicit SearchResultWidget(QWidget *parent = nullptr);
     void setItems(QList<ResultInfo> results);
+    void removeItem(int row);
+    ResultInfo getItem(int row);
+    QList<QString> getSelectedURLs();
     ~SearchResultWidget();
 signals:
     void addItemRequirement();
 private slots:
-    void on_tableWidget_cellPressed(int row, int column);
+    void on_tableWidget_cellClicked(int row, int column);
 
 private:
     Ui::SearchResultWidget *ui;

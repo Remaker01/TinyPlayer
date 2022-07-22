@@ -31,7 +31,7 @@ private:
     QMenu *trayMenu;
     QString lastPath;
     OnlineSeacher *s;
-    SearchResultWidget *res = nullptr;
+    SearchResultWidget *res;
     void initUi();
     void ensureExit();
     void initPlayList();

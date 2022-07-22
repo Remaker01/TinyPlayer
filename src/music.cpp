@@ -26,7 +26,7 @@ bool Music::equals(const Music &a) const {
 
 const QUrl &Music::getUrl() const {return url;}
 
-const QUrl &Music::getAlbumImage() {return albumImage;}
+const QUrl &Music::getAlbumImage() const {return albumImage;}
 
 QString Music::formatTime() {
     if(!formattedTime.isEmpty())

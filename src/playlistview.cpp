@@ -36,6 +36,8 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
         connect(del,&QAction::triggered,this,&PlayListView::itemDelRequirement);
         if(tmp.size() == 1) {
             QAction *open = menu.addAction("打开目录"),*showDetail = menu.addAction("详细信息");
+            if(playList[tmp[0].row()].contains("[线上音乐]"))
+                open->setEnabled(false);
             connect(open,&QAction::triggered,this,[&,this]() {
                emit openDirRequirement(tmp[0].row());
             });

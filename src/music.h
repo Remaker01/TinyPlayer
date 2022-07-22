@@ -55,7 +55,7 @@ public:
     ///获取Url
     const QUrl &getUrl() const;
     /// 获取专辑图片。注意：可能不准
-    const QUrl &getAlbumImage();
+    const QUrl &getAlbumImage() const;
     ///获取经格式化后的时间
     QString formatTime();
     static Music getMediaDetail(const QString &fileName);
