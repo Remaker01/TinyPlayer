@@ -12,10 +12,10 @@ class Music {
 private:
     QString formattedTime;
     QUrl url;
-    int length;
     //歌曲名
     QString title,description,album;
     QUrl albumImage;
+    int length;
     static bool isMPEG(QFile *media,QDataStream &reader);
     static bool isWav(QFile *media,QDataStream &reader);
     static bool isWma(QFile *media,QDataStream &reader);
@@ -52,13 +52,18 @@ public:
     friend uint qHash(const Music &key,uint seed = 0) {
         return qHash(key.title,seed) ^ qHash(key.length,seed);
     }
+    //getters
     ///获取Url
     const QUrl &getUrl() const;
-    /// 获取专辑图片。注意：可能不准
+    /// 获取标题
+    const QString &getTitle() const;
+    /// 获取介绍
+    const QString &getDcrp() const;
+    /// 获取专辑图片 注意：可能不准
     const QUrl &getAlbumImage() const;
     ///获取经格式化后的时间
     QString formatTime();
-    static Music getMediaDetail(const QString &fileName);
+//    static Music getMediaDetail(const QString &fileName);
     /**
      * @brief 检查文件是否合法
      * @param media  被检查的文件名。

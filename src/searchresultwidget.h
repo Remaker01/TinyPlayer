@@ -24,9 +24,10 @@ class SearchResultWidget : public QWidget{
 public:
     explicit SearchResultWidget(QWidget *parent = nullptr);
     void setItems(QList<ResultInfo> results);
-    void removeItem(int row);
     ResultInfo getItem(int row);
+    QList<ResultInfo> getSelectedItems();
     QList<QString> getSelectedURLs();
+    void removeSelected();
     ~SearchResultWidget();
 signals:
     void addItemRequirement();

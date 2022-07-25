@@ -8,6 +8,8 @@ Music::Music(const QUrl &uri):url(uri) {
     length = m.duration();
     VlcMetaManager tmp(&m);
     title = tmp.title() + "\t\t";
+    if(QString::compare(title,url.toString() + "\t\t",Qt::CaseInsensitive) == 0)
+        title = url.fileName();
     description = tmp.description();
     album = tmp.album();
     albumImage = tmp.artwork();
@@ -26,6 +28,10 @@ bool Music::equals(const Music &a) const {
 
 const QUrl &Music::getUrl() const {return url;}
 
+const QString &Music::getTitle() const {return title;}
+
+const QString &Music::getDcrp() const {return description;}
+
 const QUrl &Music::getAlbumImage() const {return albumImage;}
 
 QString Music::formatTime() {
@@ -35,12 +41,11 @@ QString Music::formatTime() {
     return formattedTime = QString::number(len / 60)
             + ':' + QString::number(len % 60);
 }
-
-Music Music::getMediaDetail(const QString &fileName) {
-    if(!isLegal(fileName))
-        return Music();
-    return Music(QUrl::fromLocalFile(fileName));
-}
+//Music Music::getMediaDetail(const QString &fileName) {
+//    if(!isLegal(fileName))
+//        return Music();
+//    return Music(QUrl::fromLocalFile(fileName));
+//}
 
 bool Music::isLegal(QString media) {
     static auto checkers = {

@@ -103,12 +103,13 @@ inline void PlayerWindow::connectSlots() {
         ui->nextButton->setReplyClick(true);
         ui->prevButton->setReplyClick(true);
         totTime = qRound(totTime / 1000.0);
+        Music m = player->getMediaDetail();
         //改变总时间
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
-        ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
+        ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + m.getTitle());
         //改变专辑图片
-        QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
+        QString albumPic = m.getAlbumImage().toLocalFile();
         if(albumPic.isEmpty())
             ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
         else
@@ -140,7 +141,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0 Beta1  3.0.220722");
+                                                        "版本号:3.0 Beta  3.0.220724");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -285,8 +286,9 @@ void PlayerWindow::doAddMedia(QStringList medias) {
         if(!fullName.startsWith("http",Qt::CaseInsensitive)) {  //本地
             QFileInfo a(fullName);
             ui->waitingLabel->setText("正在打开" + a.fileName());
-            if(player->addToList(fullName))
+            if(player->addToList(fullName)) {
                 playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(fullName)).formatTime());
+            }
             lastPath = a.absolutePath();
         }
         else {

@@ -39,15 +39,33 @@ ResultInfo SearchResultWidget::getItem(int row) {
     return info;
 }
 
-void SearchResultWidget::removeItem(int row) {ui->tableWidget->removeRow(row);}
-
 QList<QString> SearchResultWidget::getSelectedURLs() {
-    QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
+    QList<ResultInfo> itemSelected = getSelectedItems();
     QList<QString> result;
     result.reserve(itemSelected.size());
     for(int i = 0; i < itemSelected.size(); i++) {
+        result.append(itemSelected[i].url);
+    }
+    return result;
+}
+
+void SearchResultWidget::removeSelected() {
+    QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
+    QList<int> rows;
+    for (QTableWidgetItem *i:itemSelected)
+        rows.append(i->row());
+    std::sort(rows.begin(),rows.end(),std::greater<int>());
+    for (int i:rows)
+        ui->tableWidget->removeRow(i);
+}
+
+QList<ResultInfo> SearchResultWidget::getSelectedItems() {
+    QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
+    QList<ResultInfo> result;
+    result.reserve(itemSelected.size());
+    for(int i = 0; i < itemSelected.size(); i++) {
         int p = itemSelected[i]->row();
-        result.append(getItem(p).url);
+        result.append(getItem(p));
     }
     return result;
 }
