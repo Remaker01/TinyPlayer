@@ -44,7 +44,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *e);
     void closeEvent(QCloseEvent *ev);
 public:
-    explicit PlayerWindow(QWidget *parent = nullptr);
+    explicit PlayerWindow(const QString &arg = QString(),QWidget *parent = nullptr);
     void initConfiguration();
     ~PlayerWindow();
 private slots:
@@ -58,6 +58,7 @@ private slots:
     void on_onlineSearcher_done();
     bool saveList(const QString &file);
     bool openList(const QString &file);
+    void moveItem(bool moveUp);
     void on_playView_doubleClicked(const QModelIndex &index);
 };
 #endif // PLAYERWINDOW_H

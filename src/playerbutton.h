@@ -1,6 +1,8 @@
 #ifndef PLAYERBUTTON_H
 #define PLAYERBUTTON_H
 #include <QLabel>
+#include <QMovie>
+#include <QPixmap>
 #include <QMouseEvent>
 /**
  * 播放器按钮类

@@ -23,9 +23,6 @@ public:
     void setOpacity(double value);
     void commitChange();
     QStringList &currentList();
-//    void append(const QString &str);
-//    void removeAt(int i);
-//    void clear();
     ~PlayListView();
 signals:
     void mediaDropin(const QStringList &medias);

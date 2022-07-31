@@ -11,6 +11,7 @@ private:
     QString keyword;
     QProcess p;
 public:
+    static const QString PROGRAM;
     explicit OnlineSeacher(QObject *parent = nullptr);
     OnlineSeacher(const QString &kwd,QObject *parent = nullptr);
     void setKeyWord(const QString &kwd);

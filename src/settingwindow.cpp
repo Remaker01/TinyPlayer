@@ -36,7 +36,6 @@ void SettingWindow::on_autoSaveBox_stateChanged(int arg1) {
         autoSave = false;
 }
 
-
 void SettingWindow::on_pushButton_clicked() {
     ui->minOnCloseBox->setChecked(false);
     ui->autoSaveBox->setChecked(true);

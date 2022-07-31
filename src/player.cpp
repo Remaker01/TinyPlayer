@@ -190,6 +190,30 @@ void PlayerCore::goPrevious() {
         setCurrentMediaIndex((current == 0) ? list.size() - 1 : current - 1);
 }
 
+bool PlayerCore::moveUp(int i,int k) {
+    if(k > 0&&i >= k&&i < list.size()) {
+        list.move(i,i - k);
+        if(current == i)
+            current -= k;
+        else if (current < i&&current >= i - k) //[i-k,i-1]范围内的项目序号受影响
+            current++;
+        return true;
+    }
+    return false;
+}
+
+bool PlayerCore::moveDown(int i,int k) {
+    if(k > 0&&i >= 0&&i + k < list.size()) {
+        list.move(i,i + k);
+        if(current == i)
+            current += k;
+        else if (current > i&&current <= i + k)
+            current--;
+        return true;
+    }
+    return false;
+}
+
 PlayerCore::~PlayerCore() {
     delete curMedia;
     curMedia = nullptr;

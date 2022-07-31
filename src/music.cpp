@@ -41,11 +41,6 @@ QString Music::formatTime() {
     return formattedTime = QString::number(len / 60)
             + ':' + QString::number(len % 60);
 }
-//Music Music::getMediaDetail(const QString &fileName) {
-//    if(!isLegal(fileName))
-//        return Music();
-//    return Music(QUrl::fromLocalFile(fileName));
-//}
 
 bool Music::isLegal(QString media) {
     static auto checkers = {

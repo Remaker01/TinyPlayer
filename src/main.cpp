@@ -18,10 +18,11 @@ int main(int argc, char *argv[]) {
         if(qss.open(QFile::ReadOnly)) {
             QString style = qss.readAll();
             a.setStyleSheet(style);
-            qss.close();
         }
-        PlayerWindow w;
+        QStringList args = a.arguments();
+        PlayerWindow w(args.size()>1?args[1]:"");
         w.show();
+        qss.close();
         return a.exec();
     }
     else

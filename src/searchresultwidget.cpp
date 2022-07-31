@@ -52,7 +52,7 @@ QList<QString> SearchResultWidget::getSelectedURLs() {
 void SearchResultWidget::removeSelected() {
     QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
     QList<int> rows;
-    for (QTableWidgetItem *i:itemSelected)
+    for (QTableWidgetItem *i:qAsConst(itemSelected))
         rows.append(i->row());
     std::sort(rows.begin(),rows.end(),std::greater<int>());
     for (int i:rows)

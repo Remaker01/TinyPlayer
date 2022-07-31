@@ -22,5 +22,8 @@
         <file>images/stylesheet.qss</file>
         <file>images/about.png</file>
         <file>images/serach.png</file>
+        <file>images/movedown.png</file>
+        <file>images/moveup.png</file>
+        <file>images/waiting.gif</file>
     </qresource>
 </RCC>

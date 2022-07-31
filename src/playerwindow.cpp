@@ -1,10 +1,11 @@
 #include "playerwindow.h"
 #define CHANGE_TO_PLAYICON ui->playButton->changeState("开始",PLAY_ICON)
 #define CHANGE_TO_PAUSEICON ui->playButton->changeState("暂停",PAUSE_ICON)
+#define RESET_LABEL ui->mediaLabel->setText(player->getMediaDetail().getTitle())
 const QString PlayerWindow::CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
 static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
-PlayerWindow::PlayerWindow(QWidget *parent):
+PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),QMainWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
     player = new PlayerCore(this);
@@ -14,15 +15,24 @@ PlayerWindow::PlayerWindow(QWidget *parent):
     initUi();
     initConfiguration();
     connectSlots();
-    if(settingWind->getAutoSave())
+    if(!arg.isEmpty()) {
+        if(Music::isLegal(arg)) {
+            doAddMedia(QStringList(arg));
+            ui->playButton->click();
+        }
+        else if(!openList(arg))
+            QMessageBox::warning(this,"警告","参数错误:不是合法的音频格式或播放列表");
+    }
+    else if(settingWind->getAutoSave())
         openList("default.lst");
 }
 
 inline void PlayerWindow::initUi() {
     ui->volumeButton->setReplyClick(true);
     ui->modeButton->setReplyClick(true);
-    ui->serachLabel->setReplyClick(true);
-    ui->delButton->setEnabled(false);
+    ui->searchLabel->setReplyClick(true);
+    ui->mupbutton->setReplyClick(true);
+    ui->mdownButton->setReplyClick(true);
     ui->playView->setOpacity(0.6);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
@@ -103,13 +113,12 @@ inline void PlayerWindow::connectSlots() {
         ui->nextButton->setReplyClick(true);
         ui->prevButton->setReplyClick(true);
         totTime = qRound(totTime / 1000.0);
-        Music m = player->getMediaDetail();
         //改变总时间
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
         ui->progressSlider->setMaximum(totTime);
-        ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + m.getTitle());
+        RESET_LABEL;
         //改变专辑图片
-        QString albumPic = m.getAlbumImage().toLocalFile();
+        QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
         if(albumPic.isEmpty())
             ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
         else
@@ -141,7 +150,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0 Beta  3.0.220724");
+                                                        "版本号:3.0 Beta2  3.0.220801");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -151,8 +160,7 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
         QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件(将自动筛选合法格式，支持格式请查看帮助)",lastPath));
-        if(!medias.isEmpty())
-            doAddMedia(medias);
+        doAddMedia(medias);
     });
     connect(ui->modeButton,&PlayerButton::clicked,this,[this]() {
         int now = (int)player->mode;
@@ -216,8 +224,8 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
     connect(ui->actionSet,&QAction::triggered,settingWind,&QWidget::show);
-    connect(ui->serachLabel,&PlayerButton::clicked,this,[this]() {
-        if(!QFile::exists("net_music.exe")) {
+    connect(ui->searchLabel,&PlayerButton::clicked,this,[this]() {
+        if(!QFile::exists(OnlineSeacher::PROGRAM)) {
             QMessageBox::critical(this,"错误","找不到执行搜索需要的程序");
             return;
         }
@@ -225,18 +233,25 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::warning(this,"警告","请关闭搜索结果窗口后进行新一次搜索");
             return;
         }
-        ui->waitingLabel->setText("搜索中");
-        ui->waitingLabel->show();
+        static QMovie gif(":/Icons/images/waiting.gif");
+        gif.setScaledSize(ui->searchLabel->size());
+        ui->searchLabel->setMovie(&gif);
+        gif.start();
         s->setKeyWord(ui->serachOnlineEdit->text());
         s->doSearch();
         connect(s,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
+        connect(s,&OnlineSeacher::done,&gif,&QMovie::stop);
         ui->serachOnlineEdit->clearFocus();
     });
     connect(res,&SearchResultWidget::addItemRequirement,this,[this]() {
         QStringList selected = res->getSelectedURLs();
-        if(selected.isEmpty())
-            return ;
         doAddMedia(selected);
+    });
+    connect(ui->mupbutton,&PlayerButton::clicked,this,[this]() {
+        moveItem(true);
+    });
+    connect(ui->mdownButton,&PlayerButton::clicked,this,[this]() {
+        moveItem(false);
     });
 }
 
@@ -259,22 +274,16 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
 
 void PlayerWindow::closeEvent(QCloseEvent *ev) {
     if(settingWind->getminOnClose()) {
-        static bool first = true;
         ev->ignore();
-        if(first)
-            tray->showMessage("提示","TinyPlayer在后台运行");
+        tray->showMessage("提示","TinyPlayer在后台运行");
         settingWind->close();
         hide();
-        first = false;
     }
 }
 SLOTS
 void PlayerWindow::doAddMedia(QStringList medias) {
     if(medias.isEmpty())
         return;
-#ifndef NDEBUG
-    long st = clock();
-#endif
     static bool f = true;
     ui->waitingLabel->show();
     ui->cancelButton->show();
@@ -307,9 +316,6 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
     ui->cancelButton->hide();
     ui->waitingLabel->hide();
-#ifndef NDEBUG
-    qDebug() << clock() - st;
-#endif
 }
 
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
@@ -329,9 +335,6 @@ void PlayerWindow::on_progressSlider_sliderMoved(int position) {
     player->setPos(position);
 }
 
-void PlayerWindow::on_playView_doubleClicked(const QModelIndex &index) {
-    player->setCurrentMediaIndex(index.row());
-}
 #define LIST_DEL_ACTION(RPYCLICK_CONDITION) ui->playButton->setReplyClick(RPYCLICK_CONDITION);\
     ui->delButton->setEnabled(RPYCLICK_CONDITION);\
     ui->prevButton->setReplyClick(RPYCLICK_CONDITION);\
@@ -354,7 +357,6 @@ void PlayerWindow::doDelMedia() {
             playList.removeAt(i);
     }
     ui->playView->commitChange();
-    ui->mediaLabel->setText(QString::number(1+player->getCurrentMediaIndex()) + " - " + player->getMedia().fileName());
     bool f = (playList.size() > 0);
     ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
     LIST_DEL_ACTION(f)
@@ -371,6 +373,13 @@ void PlayerWindow::on_clearButton_clicked() {
 void PlayerWindow::on_addButton_clicked() {
     ui->actionopenFile->trigger();
 }
+void PlayerWindow::on_onlineSearcher_done() {
+    if(QFile("links.tmp").open(QIODevice::ReadOnly)) {
+        res->setItems(s->analyzeResult());
+        res->show();
+        ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
+    }
+}
 static constexpr uint16_t MAGIC = (uint16_t)0x0102;
 bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
@@ -386,17 +395,6 @@ bool PlayerWindow::saveList(const QString &file) {
     }
     lstFile.close();
     return true;
-}
-
-void PlayerWindow::on_onlineSearcher_done() {
-    QFile f("links.tmp");
-    if(!f.open(QIODevice::ReadOnly)) {
-        ui->waitingLabel->hide();
-        return;
-    }
-    res->setItems(s->analyzeResult());
-    res->show();
-    ui->waitingLabel->hide();
 }
 
 bool PlayerWindow::openList(const QString &file) {
@@ -418,6 +416,27 @@ bool PlayerWindow::openList(const QString &file) {
     doAddMedia(tmp);
     lstFile.close();
     return true;
+}
+
+void PlayerWindow::on_playView_doubleClicked(const QModelIndex &index) {
+    player->setCurrentMediaIndex(index.row());
+}
+
+void PlayerWindow::moveItem(bool moveUp) {
+    QModelIndexList selected = ui->playView->getSelections();
+    if(selected.isEmpty()||selected.size() > 1)
+        return;
+    int row = selected[0].row();
+    if(!moveUp) {
+        if(player->moveDown(row))
+            ui->playView->currentList().move(row,row + 1);
+    }
+    else {
+        if(player->moveUp(row))
+            ui->playView->currentList().move(row,row - 1);
+    }
+    RESET_LABEL;
+    ui->playView->commitChange();
 }
 
 PlayerWindow::~PlayerWindow() {

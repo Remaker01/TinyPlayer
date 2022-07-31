@@ -1,7 +1,14 @@
 #include "onlineseacher.h"
 #include <QDebug>
+#ifdef Q_OS_WIN
+const QString OnlineSeacher::PROGRAM = "net_music.exe";
+#elif defined Q_OS_MACOS
+const QString OnlineSeacher::PROGRAM = "net_music.app";
+#else
+const QString OnlineSeacher::PROGRAM = "net_music";
+#endif
 OnlineSeacher::OnlineSeacher(QObject *parent) : QObject(parent){
-    p.setProgram("net_music.exe");
+    p.setProgram(PROGRAM);
 }
 
 OnlineSeacher::OnlineSeacher(const QString &kwd,QObject *parent):OnlineSeacher(parent) {

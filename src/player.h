@@ -55,6 +55,8 @@ public slots:
     void play();
     void goNext();
     void goPrevious();
+    bool moveUp(int i,int k = 1);
+    bool moveDown(int i, int k = 1);
 signals:
     void finished();
     //void mediaSourceChanged(qint64 newTime);
