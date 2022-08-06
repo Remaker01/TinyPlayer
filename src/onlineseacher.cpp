@@ -26,7 +26,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
         QStringList now = line.split(";");
         info.title = now[0].replace("下载","").replace("mp3","");
         info.artist = now[1];
-        info.url = now[2];
+        info.url = now[2].replace('\r',"").replace('\n',"");
         result.append(info);
     }
     f.remove();

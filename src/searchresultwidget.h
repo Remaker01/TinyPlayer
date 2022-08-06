@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QDesktopServices>
 #include <QUrl>
+#include <set>
 #include "ui_searchresultwidget.h"
 namespace Ui {class SearchResultWidget;}
 /**
@@ -30,7 +31,7 @@ public:
     void removeSelected();
     ~SearchResultWidget();
 signals:
-    void addItemRequirement();
+    void addItemRequirement(bool autoDelete);
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
 

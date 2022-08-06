@@ -7,7 +7,7 @@ SearchResultWidget::SearchResultWidget(QWidget *parent) :
     QStringList headers{"标题","歌手","URL"};
     ui->tableWidget->setColumnCount(headers.size());
     ui->tableWidget->setHorizontalHeaderLabels(headers);
-    connect(ui->insertButton,&QPushButton::clicked,this,&SearchResultWidget::addItemRequirement);
+    connect(ui->insertButton,&QPushButton::clicked,this,[this] {emit addItemRequirement(ui->autoDelBox->isChecked());});
 }
 
 void SearchResultWidget::setItems(QList<ResultInfo> results) {
@@ -16,7 +16,7 @@ void SearchResultWidget::setItems(QList<ResultInfo> results) {
     for (int i = 0; i < results.size(); i++) {
         QTableWidgetItem *itemTitle = new QTableWidgetItem(results[i].title),
         *itemArtist = new QTableWidgetItem(results[i].artist);
-        QLabel *itemUrl = new QLabel(results[i].url.replace('\r',"").replace('\n',""));
+        QLabel *itemUrl = new QLabel(results[i].url);
         itemUrl->setCursor(Qt::PointingHandCursor);
         itemUrl->setAlignment(Qt::AlignCenter);
         itemUrl->setToolTip("点击打开");
@@ -51,12 +51,13 @@ QList<QString> SearchResultWidget::getSelectedURLs() {
 
 void SearchResultWidget::removeSelected() {
     QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
-    QList<int> rows;
+    std::set<int,std::greater<int> > rows;
     for (QTableWidgetItem *i:qAsConst(itemSelected))
-        rows.append(i->row());
-    std::sort(rows.begin(),rows.end(),std::greater<int>());
-    for (int i:rows)
+        rows.insert(i->row());
+    for (int i:rows) {
         ui->tableWidget->removeRow(i);
+    }
+    ui->tableWidget->clearSelection();
 }
 
 QList<ResultInfo> SearchResultWidget::getSelectedItems() {
@@ -76,6 +77,7 @@ void SearchResultWidget::on_tableWidget_cellClicked(int row, int column) {
     QLabel *textlabel = (QLabel*)(ui->tableWidget->cellWidget(row,column));
     QDesktopServices::openUrl(QUrl(textlabel->text()));
 }
+
 SearchResultWidget::~SearchResultWidget() {
     delete ui;
 }

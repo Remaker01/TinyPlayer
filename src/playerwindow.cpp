@@ -57,7 +57,7 @@ inline void PlayerWindow::setBackground(const QPixmap &img) {
         return;
     }
     QPalette pl;
-    int w = std::max(width(),img.width()),h = std::max(height(),img.height());
+    int w = std::max(maximumWidth(),img.width()),h = std::max(maximumHeight(),img.height());
     pl.setBrush(backgroundRole(),QBrush(img.scaled(w,h)));
     setPalette(pl);
     setAutoFillBackground(true);
@@ -239,13 +239,15 @@ inline void PlayerWindow::connectUiSlots() {
         gif.start();
         s->setKeyWord(ui->serachOnlineEdit->text());
         s->doSearch();
-        connect(s,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
         connect(s,&OnlineSeacher::done,&gif,&QMovie::stop);
         ui->serachOnlineEdit->clearFocus();
     });
-    connect(res,&SearchResultWidget::addItemRequirement,this,[this]() {
+    connect(s,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
+    connect(res,&SearchResultWidget::addItemRequirement,this,[this](bool autoDel) {
         QStringList selected = res->getSelectedURLs();
         doAddMedia(selected);
+        if(autoDel)
+            res->removeSelected();
     });
     connect(ui->mupbutton,&PlayerButton::clicked,this,[this]() {
         moveItem(true);

@@ -10,11 +10,12 @@ import sys
 from lxml import etree
 # import time
 from multiprocessing.dummy import Pool
+host = "https://www.xzmp3.com"
 head = {
     "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/90.0",
-    "Accept-Language" : "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"
+    "Accept-Language" : "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
+    "Referer":host
 }
-host = "https://www.xzmp3.com"
 pool = Pool(20)
 fp = open("links.tmp","w",encoding="utf-8")
 # 第一步：获取下载页面的URLs
