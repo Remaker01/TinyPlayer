@@ -22,7 +22,7 @@ public:
     QModelIndexList getSelections();
     void setOpacity(double value);
     void commitChange();
-    QStringList &currentList();
+    QStringList &list();
     ~PlayListView();
 signals:
     void mediaDropin(const QStringList &medias);

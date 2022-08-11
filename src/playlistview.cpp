@@ -61,6 +61,6 @@ void PlayListView::setOpacity(double value) {
 
 void PlayListView::commitChange() {model->setStringList(playList);}
 
-QStringList &PlayListView::currentList() {return playList;}
+QStringList &PlayListView::list() {return playList;}
 
 PlayListView::~PlayListView() {}

@@ -216,12 +216,17 @@ background-color: rgb(200, 200,200);
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/searchresultwidget.ui" line="58"/>
+        <location filename="src/searchresultwidget.ui" line="45"/>
+        <source>插入后自动删除</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/searchresultwidget.ui" line="65"/>
         <source>插入播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/searchresultwidget.ui" line="68"/>
+        <location filename="src/searchresultwidget.ui" line="75"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;以下为搜索结果：&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;注：不保证链接有效，信息仅供参考&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>

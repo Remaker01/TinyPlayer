@@ -16,6 +16,7 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     initConfiguration();
     connectSlots();
     if(!arg.isEmpty()) {
+        showNormal();  //提前显示，避免列表过大导致加载缓慢
         if(Music::isLegal(arg)) {
             doAddMedia(QStringList(arg));
             ui->playButton->click();
@@ -23,8 +24,10 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
         else if(!openList(arg))
             QMessageBox::warning(this,"警告","参数错误:不是合法的音频格式或播放列表");
     }
-    else if(settingWind->getAutoSave())
+    else if(settingWind->getAutoSave()) {
+        showNormal();
         openList("default.lst");
+    }
 }
 
 inline void PlayerWindow::initUi() {
@@ -275,11 +278,13 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
 }
 
 void PlayerWindow::closeEvent(QCloseEvent *ev) {
-    if(settingWind->getminOnClose()) {
+    static bool first = true;
+    if(settingWind->getminOnClose()&&first) {
         ev->ignore();
         tray->showMessage("提示","TinyPlayer在后台运行");
         settingWind->close();
         hide();
+        first = false;
     }
 }
 SLOTS
@@ -290,7 +295,7 @@ void PlayerWindow::doAddMedia(QStringList medias) {
     ui->waitingLabel->show();
     ui->cancelButton->show();
     connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
-    QStringList &playList = ui->playView->currentList();
+    QStringList &playList = ui->playView->list();
     for(QString &fullName:medias) {
         if(!f)
             break;
@@ -348,7 +353,7 @@ void PlayerWindow::on_progressSlider_sliderMoved(int position) {
 void PlayerWindow::doDelMedia() {
     QModelIndexList tmp = ui->playView->getSelections();
     QList<int> selections;
-    QStringList &playList = ui->playView->currentList();
+    QStringList &playList = ui->playView->list();
     for (QModelIndex &i:tmp)
         selections.append(i.row());
     std::sort(selections.begin(),selections.end(),std::greater<int>());
@@ -365,7 +370,7 @@ void PlayerWindow::doDelMedia() {
 }
 
 void PlayerWindow::on_clearButton_clicked() {
-    ui->playView->currentList().clear();
+    ui->playView->list().clear();
     ui->playView->commitChange();
     player->clear();
     ui->curlistLabel->setText("当前播放列表 共0项");
@@ -387,7 +392,7 @@ bool PlayerWindow::saveList(const QString &file) {
     QFile lstFile(file);
     if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
         return false;
-    const QStringList &list = ui->playView->currentList();
+    const QStringList &list = ui->playView->list();
     QDataStream ds(&lstFile);
     ds.setVersion(QDataStream::Qt_5_2);
     ds << MAGIC; //magic number
@@ -431,11 +436,11 @@ void PlayerWindow::moveItem(bool moveUp) {
     int row = selected[0].row();
     if(!moveUp) {
         if(player->moveDown(row))
-            ui->playView->currentList().move(row,row + 1);
+            ui->playView->list().move(row,row + 1);
     }
     else {
         if(player->moveUp(row))
-            ui->playView->currentList().move(row,row - 1);
+            ui->playView->list().move(row,row - 1);
     }
     RESET_LABEL;
     ui->playView->commitChange();

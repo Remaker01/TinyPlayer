@@ -21,7 +21,8 @@ int main(int argc, char *argv[]) {
         }
         QStringList args = a.arguments();
         PlayerWindow w(args.size()>1?args[1]:"");
-        w.show();
+        if(!w.isVisible())
+            w.show();
         qss.close();
         return a.exec();
     }
