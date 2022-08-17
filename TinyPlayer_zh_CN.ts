@@ -239,18 +239,63 @@ background-color: rgb(200, 200,200);
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="48"/>
+        <location filename="src/settingwindow.ui" line="38"/>
         <source>关闭时最小化</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="55"/>
+        <location filename="src/settingwindow.ui" line="51"/>
         <source>自动加载上次退出时的播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="87"/>
+        <location filename="src/settingwindow.ui" line="89"/>
         <source>还原默认</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="121"/>
+        <source>音效</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="129"/>
+        <source>平缓</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="134"/>
+        <source>经典</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="139"/>
+        <source>舞会</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="144"/>
+        <source>低音</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="149"/>
+        <source>高音</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="154"/>
+        <source>流行乐</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="159"/>
+        <source>摇滚</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="164"/>
+        <source>慢摇滚</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

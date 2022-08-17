@@ -15,6 +15,9 @@ VlcInstance PlayerCore::ins(VlcCommon::args());
 PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
     curMedia = new VlcMedia("",true,&ins);
     connectSlots();
+    equ = new VlcEqualizer(this);
+    equ->setEnabled(true);
+    equ->loadFromPreset(0u);
 }
 
 inline void PlayerCore::connectSlots() {
@@ -212,6 +215,10 @@ bool PlayerCore::moveDown(int i,int k) {
         return true;
     }
     return false;
+}
+
+void PlayerCore::setSoundEffect(uint index) {
+    equ->loadFromPreset(index);
 }
 
 PlayerCore::~PlayerCore() {

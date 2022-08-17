@@ -8,8 +8,9 @@ class SettingWindow : public QWidget {
     Q_OBJECT
     bool autoSave;
     bool minOnClose;
+private:
+    Ui::SettingWindow *ui;
 public:
-
     explicit SettingWindow(QWidget *parent = nullptr);
     void setAutoSave(bool f);
     void setminOnClose(bool f);
@@ -20,11 +21,9 @@ public:
 private slots:
     void on_minOnCloseBox_stateChanged(int arg1);
     void on_autoSaveBox_stateChanged(int arg1);
-
     void on_pushButton_clicked();
-
-private:
-    Ui::SettingWindow *ui;
+signals:
+    void changeEffectRequirement(int index);
 };
 
 #endif // SETTINGWINDOW_H

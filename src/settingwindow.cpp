@@ -8,6 +8,7 @@ SettingWindow::SettingWindow(QWidget *parent) :
     ui->minOnCloseBox->setTristate(false);
     autoSave = ui->autoSaveBox->isChecked();
     minOnClose = ui->minOnCloseBox->isChecked();
+    connect(ui->comboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
 }
 
 void SettingWindow::setAutoSave(bool f) {ui->autoSaveBox->setChecked(f);}

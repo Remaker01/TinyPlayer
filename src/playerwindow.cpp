@@ -140,6 +140,10 @@ inline void PlayerWindow::connectSlots() {
         if(r == QSystemTrayIcon::Trigger)
             QMainWindow::showNormal();
     });
+    connect(settingWind,&SettingWindow::changeEffectRequirement,this,[this](int i) {
+        static const uint map[] = {0u,1u,4u,5u,7u,11u,13u,16u};
+        player->setSoundEffect(map[i]);
+    });
 }
 
 inline void PlayerWindow::connectUiSlots() {
@@ -153,7 +157,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0 Beta2  3.0.220801");
+                                                        "版本号:3.0 Gamma  3.0.220816");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{

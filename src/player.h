@@ -3,6 +3,7 @@
 #include <QFile>
 #include <VLCQtCore/MediaPlayer.h>
 #include <VLCQtCore/Audio.h>
+#include <VLCQtCore/Equalizer.h>
 #include "music.h"
 /**
  * 播放器核心类，对VlcMediaPlayer进行了一些封装与扩展
@@ -11,6 +12,7 @@ class PlayerCore : public VlcMediaPlayer{
     Q_OBJECT
 private:
     static VlcInstance ins;
+    VlcEqualizer *equ;
     VlcMedia *curMedia;
     QSet<Music> medias;
     QList<QUrl> list;
@@ -57,6 +59,7 @@ public slots:
     void goPrevious();
     bool moveUp(int i,int k = 1);
     bool moveDown(int i, int k = 1);
+    void setSoundEffect(uint index);
 signals:
     void finished();
     //void mediaSourceChanged(qint64 newTime);

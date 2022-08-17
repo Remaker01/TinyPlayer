@@ -42,4 +42,4 @@
 pip install lxml
 pip install pyinstaller
 ```
-使用 ```pyinstaller -F ./src/net_music.py``` 命令生成可执行文件，并将此文件放在编译后的文件同一目录下
+使用 ```pyinstaller -F ./src/net_music.py```或```pyinstaller ./src/net_music.spec``` 命令生成可执行文件，并将此文件放在编译后的文件同一目录下
