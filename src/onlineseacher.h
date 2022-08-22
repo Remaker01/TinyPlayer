@@ -15,9 +15,14 @@ public:
     explicit OnlineSeacher(QObject *parent = nullptr);
     OnlineSeacher(const QString &kwd,QObject *parent = nullptr);
     void setKeyWord(const QString &kwd);
+    /**
+     * 分析结果，返回搜索结果的列表
+     * @note 必须在done()信号调用后使用
+     */
     QList<ResultInfo> analyzeResult();
-    bool doSearch();
+    void doSearch();
 signals:
+    /// doSearch()结束后调用
     void done();
 };
 

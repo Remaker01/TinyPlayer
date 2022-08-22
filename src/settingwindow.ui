@@ -110,7 +110,7 @@
     <rect>
      <x>10</x>
      <y>110</y>
-     <width>141</width>
+     <width>341</width>
      <height>43</height>
     </rect>
    </property>
@@ -118,7 +118,7 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>音效</string>
+       <string>音效:</string>
       </property>
      </widget>
     </item>
@@ -164,6 +164,29 @@
         <string>慢摇滚</string>
        </property>
       </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>工具条不透明度:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBox">
+      <property name="suffix">
+       <string>%</string>
+      </property>
+      <property name="minimum">
+       <number>30</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>70</number>
+      </property>
      </widget>
     </item>
    </layout>

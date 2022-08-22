@@ -24,6 +24,7 @@ public:
     static constexpr int MAX_MEDIA_COUNT = 10000;
     static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 13;
     static const QString Formats[FORMAT_COUNT];
+    /// 各模式的提示文字
     static const QString MODE_TIPS[MODE_COUNT];
     /// 播放模式
     enum PlayMode{SIGNLE = 0,SEQUENTIAL,SIGNLE_LOOP,LIST_LOOP};

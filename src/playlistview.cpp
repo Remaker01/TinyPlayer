@@ -35,14 +35,15 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
         del = menu.addAction("删除");
         connect(del,&QAction::triggered,this,&PlayListView::itemDelRequirement);
         if(tmp.size() == 1) {
+            int row = tmp[0].row();
             QAction *open = menu.addAction("打开目录"),*showDetail = menu.addAction("详细信息");
-            if(playList[tmp[0].row()].contains("[线上音乐]"))
+            if(playList[row].contains("[线上音乐]"))
                 open->setEnabled(false);
             connect(open,&QAction::triggered,this,[&,this]() {
-               emit openDirRequirement(tmp[0].row());
+               emit openDirRequirement(row);
             });
             connect(showDetail,&QAction::triggered,this,[&,this](){
-               emit showDetailRequirement(tmp[0].row());
+               emit showDetailRequirement(row);
             });
             open->deleteLater();
             showDetail->deleteLater();

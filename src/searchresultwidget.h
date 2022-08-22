@@ -24,10 +24,13 @@ class SearchResultWidget : public QWidget{
     Q_OBJECT
 public:
     explicit SearchResultWidget(QWidget *parent = nullptr);
+    /// 设置条目，原有条目将被清除
     void setItems(QList<ResultInfo> results);
+    /// 获取特定行的条目
     ResultInfo getItem(int row);
+    /// 获取选中的条目
     QList<ResultInfo> getSelectedItems();
-    QList<QString> getSelectedURLs();
+    Q_DECL_DEPRECATED_X("Use getSelectedItems instead") QList<QString> getSelectedURLs();
     void removeSelected();
     ~SearchResultWidget();
 signals:

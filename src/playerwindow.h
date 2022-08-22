@@ -9,6 +9,7 @@
 #include <QSystemTrayIcon>
 #include <QKeyEvent>
 #include <QCloseEvent>
+#include <QToolButton>
 #include "playerbutton.h"
 #include "player.h"
 #include "playlistview.h"
@@ -30,16 +31,16 @@ private:
     QSystemTrayIcon *tray;
     QMenu *trayMenu;
     QString lastPath;
-    OnlineSeacher *s;
+    OnlineSeacher *scher;
     SearchResultWidget *res;
     void initUi();
-    void ensureExit();
-    void initPlayList();
     void initSystemtray();
+    void setToolBar(double opacity);
     void setBackground(const QPixmap &img);
     void changeMode(PlayerCore::PlayMode m);
     void connectSlots();
     void connectUiSlots();
+    void ensureExit();
 protected:
     void keyReleaseEvent(QKeyEvent *e);
     void closeEvent(QCloseEvent *ev);
@@ -49,6 +50,7 @@ public:
     ~PlayerWindow();
 private slots:
     void doAddMedia(QStringList medias);
+    void doAddOnlineMedia(const QList<ResultInfo> &medias);
     void on_volumeSlider_valueChanged(int value);
     void on_progressSlider_valueChanged(int value);
     void on_progressSlider_sliderMoved(int position);

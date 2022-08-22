@@ -25,5 +25,6 @@
         <file>images/movedown.png</file>
         <file>images/moveup.png</file>
         <file>images/waiting.gif</file>
+        <file>images/setting.png</file>
     </qresource>
 </RCC>

@@ -30,7 +30,7 @@ ResultInfo SearchResultWidget::getItem(int row) {
     ResultInfo info;
     if(row < 0||row >= ui->tableWidget->rowCount())
         return info;
-    QTableWidgetItem *itemTitle = ui->tableWidget->itemAt(row,0),
+    QTableWidgetItem *itemTitle = ui->tableWidget->item(row,0),  //itemAt是根据坐标选
             *itemArtist = ui->tableWidget->item(row,1);
     QLabel *itemUrl = (QLabel*)ui->tableWidget->cellWidget(row,2);
     info.title = itemTitle->text();

@@ -10,7 +10,7 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     ui->setupUi(this);
     player = new PlayerCore(this);
     settingWind = new SettingWindow(this);
-    s = new OnlineSeacher(this);
+    scher = new OnlineSeacher(this);
     res = new SearchResultWidget(this);
     initUi();
     initConfiguration();
@@ -41,6 +41,13 @@ inline void PlayerWindow::initUi() {
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
+    ui->toolBar->setMovable(false);
+    setToolBar(settingWind->opacity);
+    QList<QAction*> actions{ui->actionLoadList,ui->actionOpenDir,ui->actionSaveList,ui->actionToDefault,ui->actionOpenHelp};
+    for (QAction *action:actions) {
+        ui->toolBar->widgetForAction(action)->setStyleSheet("padding:6px 0px;");
+        ui->toolBar->widgetForAction(action)->setToolTip("");
+    }
 }
 
 inline void PlayerWindow::initSystemtray() {
@@ -51,6 +58,15 @@ inline void PlayerWindow::initSystemtray() {
     trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
     tray->show();
+}
+
+inline void PlayerWindow::setToolBar(double opacity) {
+    int val = std::min(255,qRound(255*opacity));
+    QString color_st = "rgba(255,255,255," + QString::number(val) + "), ",color_end = "rgba(190,190,190," + QString::number(val) + ") ";
+    ui->toolBar->setStyleSheet("QToolBar {"
+                               "background-color: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 " + color_st +
+                               "stop:1 " + color_end + ");border:none;}"
+                               );
 }
 
 inline void PlayerWindow::setBackground(const QPixmap &img) {
@@ -72,8 +88,8 @@ inline void PlayerWindow::initConfiguration() {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
         setting.setValue(LAST_VOL,50);
         setting.setValue(LAST_MODE,0);
-        setting.setValue("AUTOLOAD",settingWind->getAutoSave());
-        setting.setValue("MINONCLOSE",settingWind->getminOnClose());
+        setting.setValue("AUTOLOAD",settingWind->autoSave);
+        setting.setValue("MINONCLOSE",settingWind->minOnClose);
     }
     lastPath = setting.value(LAST_PATH).toString();
     ui->volumeSlider->setValue(setting.value(LAST_VOL).toInt());
@@ -140,10 +156,7 @@ inline void PlayerWindow::connectSlots() {
         if(r == QSystemTrayIcon::Trigger)
             QMainWindow::showNormal();
     });
-    connect(settingWind,&SettingWindow::changeEffectRequirement,this,[this](int i) {
-        static const uint map[] = {0u,1u,4u,5u,7u,11u,13u,16u};
-        player->setSoundEffect(map[i]);
-    });
+    connect(scher,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
 }
 
 inline void PlayerWindow::connectUiSlots() {
@@ -157,7 +170,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0 Gamma  3.0.220816");
+                                                        "版本号:3.0  3.0.220816");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -244,15 +257,18 @@ inline void PlayerWindow::connectUiSlots() {
         gif.setScaledSize(ui->searchLabel->size());
         ui->searchLabel->setMovie(&gif);
         gif.start();
-        s->setKeyWord(ui->serachOnlineEdit->text());
-        s->doSearch();
-        connect(s,&OnlineSeacher::done,&gif,&QMovie::stop);
-        ui->serachOnlineEdit->clearFocus();
+        scher->setKeyWord(ui->searchEdit->text());
+        scher->doSearch();
+        ui->searchLabel->setReplyClick(false);
+        connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
+        ui->searchEdit->clearFocus();
     });
-    connect(s,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
+    connect(settingWind,&SettingWindow::changeEffectRequirement,this,[this](int i) {
+        static const uint map[] = {0u,1u,4u,5u,7u,11u,13u,16u};
+        player->setSoundEffect(map[i]);
+    });
     connect(res,&SearchResultWidget::addItemRequirement,this,[this](bool autoDel) {
-        QStringList selected = res->getSelectedURLs();
-        doAddMedia(selected);
+        doAddOnlineMedia(res->getSelectedItems());
         if(autoDel)
             res->removeSelected();
     });
@@ -262,6 +278,7 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->mdownButton,&PlayerButton::clicked,this,[this]() {
         moveItem(false);
     });
+    connect(settingWind,&SettingWindow::changeOpacityRequirement,this,&PlayerWindow::setToolBar);
 }
 
 inline void PlayerWindow::ensureExit() {
@@ -275,7 +292,7 @@ inline void PlayerWindow::ensureExit() {
 }
 
 void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
-    if(e->key() == Qt::Key_Space&&!ui->serachOnlineEdit->hasFocus()) {
+    if(e->key() == Qt::Key_Space&&!ui->searchEdit->hasFocus()) {
         e->accept();
         ui->playButton->click();
     }
@@ -283,23 +300,34 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
 
 void PlayerWindow::closeEvent(QCloseEvent *ev) {
     static bool first = true;
-    if(settingWind->getminOnClose()&&first) {
+    if(settingWind->getminOnClose()) {
         ev->ignore();
-        tray->showMessage("提示","TinyPlayer在后台运行");
+        if(first)
+            tray->showMessage("提示","TinyPlayer在后台运行");
         settingWind->close();
         hide();
         first = false;
     }
 }
 SLOTS
+#define BEFORE_ADD  static bool f = true;\
+    ui->waitingLabel->show();\
+    ui->cancelButton->show();\
+    connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});\
+    QStringList &playList = ui->playView->list();
+#define AFTER_ADD   ui->playView->commitChange();\
+    if(playList.size() > 0)\
+        ui->delButton->setEnabled(true);\
+    if(player->getCurrentMediaIndex() < 0)\
+        player->setCurrentMediaIndex(0);\
+    f = true;\
+    ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");\
+    ui->cancelButton->hide();\
+    ui->waitingLabel->hide();
 void PlayerWindow::doAddMedia(QStringList medias) {
     if(medias.isEmpty())
         return;
-    static bool f = true;
-    ui->waitingLabel->show();
-    ui->cancelButton->show();
-    connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});
-    QStringList &playList = ui->playView->list();
+    BEFORE_ADD
     for(QString &fullName:medias) {
         if(!f)
             break;
@@ -311,24 +339,25 @@ void PlayerWindow::doAddMedia(QStringList medias) {
             }
             lastPath = a.absolutePath();
         }
-        else {
-            QUrl url(fullName);
-            ui->waitingLabel->setText("正在插入" + url.fileName());
-            if(player->addToList(fullName,false))
-                playList.append(url.fileName() + "\n[线上音乐]");
-        }
     }
-    ui->playView->commitChange();
-    if(playList.size() > 0)
-        ui->delButton->setEnabled(true);
-    if(player->getCurrentMediaIndex() < 0)
-        player->setCurrentMediaIndex(0);
-    f = true;
-    ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
-    ui->cancelButton->hide();
-    ui->waitingLabel->hide();
+    AFTER_ADD
 }
 
+void PlayerWindow::doAddOnlineMedia(const QList<ResultInfo> &medias) {
+    if(medias.isEmpty())
+        return;
+    BEFORE_ADD
+    for(const ResultInfo &item:medias) {
+        if(!f)
+            break;
+        ui->waitingLabel->setText("正在插入" + item.title);
+        if(player->addToList(item.url,false))
+            playList.append(item.title + " - " + item.artist + "\n[线上音乐]");
+    }
+    AFTER_ADD
+}
+#undef BEFORE_ADD
+#undef AFTER_ADD
 void PlayerWindow::on_volumeSlider_valueChanged(int value) {
     if(value > 0)
         ui->volumeButton->setPixmap(QPixmap(":/Icons/images/volume.png"));
@@ -342,11 +371,9 @@ void PlayerWindow::on_progressSlider_valueChanged(int value) {
     ui->currentLabel->setText(QString("%1:%2").arg(value / 60,2,10,zero).arg(value % 60,2,10,zero));
 }
 
-void PlayerWindow::on_progressSlider_sliderMoved(int position) {
-    player->setPos(position);
-}
+void PlayerWindow::on_progressSlider_sliderMoved(int position) {player->setPos(position);}
 
-#define LIST_DEL_ACTION(RPYCLICK_CONDITION) ui->playButton->setReplyClick(RPYCLICK_CONDITION);\
+#define AFTER_DEL(RPYCLICK_CONDITION) ui->playButton->setReplyClick(RPYCLICK_CONDITION);\
     ui->delButton->setEnabled(RPYCLICK_CONDITION);\
     ui->prevButton->setReplyClick(RPYCLICK_CONDITION);\
     ui->nextButton->setReplyClick(RPYCLICK_CONDITION);\
@@ -370,7 +397,7 @@ void PlayerWindow::doDelMedia() {
     ui->playView->commitChange();
     bool f = (playList.size() > 0);
     ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
-    LIST_DEL_ACTION(f)
+    AFTER_DEL(f)
 }
 
 void PlayerWindow::on_clearButton_clicked() {
@@ -378,18 +405,20 @@ void PlayerWindow::on_clearButton_clicked() {
     ui->playView->commitChange();
     player->clear();
     ui->curlistLabel->setText("当前播放列表 共0项");
-    LIST_DEL_ACTION(false)
+    AFTER_DEL(false)
 }
-#undef LIST_DEL_ACTION
+#undef AFTER_DEL
 void PlayerWindow::on_addButton_clicked() {
     ui->actionopenFile->trigger();
 }
+
 void PlayerWindow::on_onlineSearcher_done() {
     if(QFile("links.tmp").open(QIODevice::ReadOnly)) {
-        res->setItems(s->analyzeResult());
+        res->setItems(scher->analyzeResult());
         res->show();
         ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
     }
+    ui->searchLabel->setReplyClick(true);
 }
 static constexpr uint16_t MAGIC = (uint16_t)0x0102;
 bool PlayerWindow::saveList(const QString &file) {
@@ -455,8 +484,8 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
-    setting.setValue("AUTOLOAD",settingWind->getAutoSave());
-    setting.setValue("MINONCLOSE",settingWind->getminOnClose());
+    setting.setValue("AUTOLOAD",settingWind->autoSave);
+    setting.setValue("MINONCLOSE",settingWind->minOnClose);
     saveList("default.lst");
     delete ui;
 }

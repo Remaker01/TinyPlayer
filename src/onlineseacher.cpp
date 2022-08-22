@@ -35,10 +35,9 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
-bool OnlineSeacher::doSearch() {
+void OnlineSeacher::doSearch() {
     p.setArguments(QStringList(keyword));
     p.start();
     //这个信号可能多次发出，可在第一次响应后删除文件，并判断文件是否存在即可
     connect(&p,QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this,&OnlineSeacher::done);
-    return true;
 }
