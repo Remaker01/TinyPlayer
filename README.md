@@ -37,9 +37,14 @@
 1. 本项目是CMake工程，如果要改成QMake请记得添加QT的Core,Widgets&VLC-qt的Core模块。
 由于gitignore设置，二进制文件无法添加到仓库中，请自行准备VLC-qt：
 [VLC-qt下载地址](https://vlc-qt.tano.si/#download)
-2. 本项目使用Python爬虫实现网络音乐检索功能，请安装Python 3环境及lxml,pyinstaller库。可使用以下命令：
+2. 本项目使用Python爬虫实现网络音乐检索、下载功能，请安装Python 3环境及lxml,pyinstaller库。可使用以下命令：
 ```
 pip install lxml
 pip install pyinstaller
 ```
-使用 ```pyinstaller -F ./src/net_music.py```或```pyinstaller ./src/net_music.spec``` 命令生成可执行文件，并将此文件放在编译后的文件同一目录下
+使用 
+```
+pyinstaller -F ./src/net_music.py(or pyinstaller ./src/net_music.spec)
+pyinstaller -F ./src/down.py
+```
+命令生成可执行文件，并将文件放在编译后的文件同一目录下

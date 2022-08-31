@@ -27,6 +27,13 @@ bool SettingWindow::getAutoSave() {return autoSave;}
 
 bool SettingWindow::getminOnClose() {return minOnClose;}
 
+QString SettingWindow::getDownLoc() {
+    QString text = ui->locEdit->text();
+    if(text == "音乐文件夹")
+        return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    return text;
+}
+
 SettingWindow::~SettingWindow() {
     delete ui;
 }
@@ -49,10 +56,35 @@ void SettingWindow::on_pushButton_clicked() {
     ui->minOnCloseBox->setChecked(false);
     ui->autoSaveBox->setChecked(true);
     ui->spinBox->setValue(70);
+    ui->locEdit->setText("音乐文件夹");
 }
 
 void SettingWindow::on_spinBox_valueChanged(int value) {
     opacity = value / 100.0;
     emit changeOpacityRequirement(value/100.0);
+}
+
+void SettingWindow::on_locButton_clicked() {
+#ifdef Q_OS_WIN
+    extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#endif
+    QFileDialog d(this);
+    d.setViewMode(QFileDialog::List);
+    d.setFileMode(QFileDialog::Directory);
+    if(d.exec()) {
+        if(!d.selectedFiles().isEmpty()) {
+#ifdef Q_OS_WIN
+            qt_ntfs_permission_lookup++;
+#endif
+            QString loc = d.selectedFiles().constFirst();
+            if(QFileInfo(loc).isWritable())
+                ui->locEdit->setText(loc);
+            else
+                QMessageBox::warning(this,"警告","指定目录不可写，请重新选择");
+#ifdef Q_OS_WIN
+            qt_ntfs_permission_lookup--;
+#endif
+        }
+    }
 }
 

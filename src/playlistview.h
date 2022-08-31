@@ -28,7 +28,8 @@ public:
 signals:
     void mediaDropin(const QStringList &medias);
     void itemDelRequirement();
-    void openDirRequirement(int row);
+    void openRequirement(int row);
+    void downloadRequirement(const QModelIndexList &medias);
     void showDetailRequirement(int row);
 };
 

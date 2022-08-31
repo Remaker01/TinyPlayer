@@ -2,6 +2,10 @@
 #define SETTINGWINDOW_H
 
 #include <QWidget>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QTemporaryFile>
+#include <QMessageBox>
 namespace Ui {class SettingWindow;}
 
 class SettingWindow : public QWidget {
@@ -18,12 +22,15 @@ public:
     void setminOnClose(bool f);
     bool getAutoSave();
     bool getminOnClose();
+    QString getDownLoc();
     ~SettingWindow();
 private slots:
     void on_minOnCloseBox_stateChanged(int arg1);
     void on_autoSaveBox_stateChanged(int arg1);
     void on_pushButton_clicked();
     void on_spinBox_valueChanged(int value);
+
+    void on_locButton_clicked();
 
 signals:
     void changeEffectRequirement(int index);

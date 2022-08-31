@@ -2,13 +2,17 @@
 #include <QDebug>
 #ifdef Q_OS_WIN
 const QString OnlineSeacher::PROGRAM = "net_music.exe";
+const QString OnlineSeacher::DOWN_PROGRAM = "down.exe";
 #elif defined Q_OS_MACOS
 const QString OnlineSeacher::PROGRAM = "net_music.app";
+const QString OnlineSeacher::DOWN_PROGRAM = "down.app";
 #else
 const QString OnlineSeacher::PROGRAM = "net_music";
+const QString OnlineSeacher::DOWN_PROGRAM = "down";
 #endif
 OnlineSeacher::OnlineSeacher(QObject *parent) : QObject(parent){
-    p.setProgram(PROGRAM);
+    prog.setProgram(PROGRAM);
+    down_prog.setProgram(DOWN_PROGRAM);
 }
 
 OnlineSeacher::OnlineSeacher(const QString &kwd,QObject *parent):OnlineSeacher(parent) {
@@ -36,8 +40,15 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
 void OnlineSeacher::doSearch() {
-    p.setArguments(QStringList(keyword));
-    p.start();
+    prog.setArguments(QStringList(keyword));
+    prog.start();
     //这个信号可能多次发出，可在第一次响应后删除文件，并判断文件是否存在即可
-    connect(&p,QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this,&OnlineSeacher::done);
+    connect(&prog,QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this,&OnlineSeacher::done);
+}
+
+void OnlineSeacher::download(QStringList uri, const QString &path) {
+    uri.prepend(path);
+    down_prog.setArguments(uri);
+    down_prog.start();
+    connect(&down_prog,QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this,&OnlineSeacher::downloaded);
 }

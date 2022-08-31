@@ -44,7 +44,11 @@ def get_downlink(info:str):
     page_text = response.read().decode("utf-8")
     tree = etree.HTML(page_text)
     result_addr = tree.xpath("//body/div/div[2]/div[1]/div[2]/div[1]/div/div[2]/div[1]/a")
-    fp.write(lst[0] + ';' + lst[1] + ';' +  result_addr[0].xpath("./@href")[0] + '\n')
+    # fp.write(result_addr[0].xpath("./@href")[0])
+    response = request.urlopen(request.Request(url=result_addr[0].xpath("./@href")[0],headers=head,method="GET"))
+    true_url = response.geturl()
+    if(true_url.find(host) < 0 and (not true_url.endswith("/404"))):
+        fp.write(lst[0] + ';' + lst[1] + ';' +  true_url + '\n')
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         fp.close()

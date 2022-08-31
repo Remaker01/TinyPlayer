@@ -76,10 +76,9 @@ inline void PlayerWindow::setBackground(const QPixmap &img) {
         return;
     }
     QPalette pl;
-    int w = std::max(maximumWidth(),img.width()),h = std::max(maximumHeight(),img.height());
+    int w = std::max(maximumWidth(),img.width()/2),h = std::max(maximumHeight(),img.height()/2);
     pl.setBrush(backgroundRole(),QBrush(img.scaled(w,h)));
     setPalette(pl);
-    setAutoFillBackground(true);
 }
 
 inline void PlayerWindow::initConfiguration() {
@@ -157,6 +156,10 @@ inline void PlayerWindow::connectSlots() {
             QMainWindow::showNormal();
     });
     connect(scher,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
+    connect(scher,&OnlineSeacher::downloaded,this,[this]{
+        QDesktopServices::openUrl(settingWind->getDownLoc());
+        ui->waitingLabel->hide();
+    });
 }
 
 inline void PlayerWindow::connectUiSlots() {
@@ -224,9 +227,17 @@ inline void PlayerWindow::connectUiSlots() {
             }
         }
     });
-    connect(ui->playView,&PlayListView::openDirRequirement,this,[this](int row){
+    connect(ui->playView,&PlayListView::openRequirement,this,[this](int row){
         QFileInfo tmp(player->getMedia(row).toLocalFile());
         QDesktopServices::openUrl(QUrl::fromLocalFile(tmp.absolutePath()));
+    });
+    connect(ui->playView,&PlayListView::downloadRequirement,this,[this](const QModelIndexList &indexes) {
+        QStringList urlsToDown;
+        for (const QModelIndex &i:indexes)
+            urlsToDown.append(player->getMedia(i.row()).toString());
+        scher->download(urlsToDown,settingWind->getDownLoc());
+        ui->waitingLabel->setText("正在下载");
+        ui->waitingLabel->show();
     });
     connect(ui->actionOpenDir,&QAction::triggered,this,[this]() {
         QString s = QFileDialog::getExistingDirectory(this,"选择文件夹",lastPath);

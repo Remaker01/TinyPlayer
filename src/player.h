@@ -5,6 +5,7 @@
 #include <VLCQtCore/Audio.h>
 #include <VLCQtCore/Equalizer.h>
 #include "music.h"
+#include "onlineseacher.h"
 /**
  * 播放器核心类，对VlcMediaPlayer进行了一些封装与扩展
  */
@@ -53,6 +54,7 @@ public:
     bool removeFromList(int loc);
     ///清空播放列表
     void clear();
+    bool isLocal(int i);
     ~PlayerCore();
 public slots:
     void play();
