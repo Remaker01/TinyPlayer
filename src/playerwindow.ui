@@ -579,6 +579,9 @@ background-color: rgb(200,200,200);
    </layout>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="movable">
+    <bool>false</bool>
+   </property>
    <property name="iconSize">
     <size>
      <width>30</width>

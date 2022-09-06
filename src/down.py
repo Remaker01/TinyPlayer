@@ -13,12 +13,23 @@ head = {
     "Referer":host
 }
 pool = ThreadPool(20)
-def do_download(url:str):
+argc = len(sys.argv)
+ILLEGAL_CHARS=['/','\\',':','*','?','\"','<','>','|']
+def _get_url_fname(urls:str):
+    tmp=urls.split(';')
+    if len(tmp)==1:
+        url,fname = tmp[0],urls[urls.rfind('/')+1:]
+    else:
+        url,fname=tmp[0],tmp[1]
+        fname = ''.join(x for x in fname if x.isprintable() and (x not in ILLEGAL_CHARS))
+    return url,fname
+def do_download(urls:str):
     '''
     为指定url进行下载
     '''
-    loc=url.rfind('/')
-    fp = open(url[loc+1:],"wb")
+    url,fname = _get_url_fname(urls)
+    print(fname)
+    fp = open(fname,"wb")
     respo = request.urlopen(request.Request(url,headers=head,method="GET"))
     # size = float(respo.headers['content-length'])
     # print("正在下载" + url[loc+1:] + ",大小为%.2fKB"%(size/1024))
@@ -27,13 +38,15 @@ def do_download(url:str):
     fp.close()
 if __name__ == "__main__":
     # st = time.time()
-    if len(sys.argv)<3:
+    if argc<3:
         raise Exception("参数个数不足")
     loc = sys.argv[1]
     if not os.path.exists(loc):
         os.makedirs(loc)
-    os.chdir(sys.argv[1])
-    pool.map(do_download,set(sys.argv[2:]))
+    os.chdir(loc)
+    for i in range(2,argc,10):
+        urls=set(sys.argv[i:min(argc,i+10)])
+        pool.map(do_download,urls)
     pool.close()
     pool.join()
     # print(time.time()-st)

@@ -1,6 +1,7 @@
 #include "settingwindow.h"
 #include "ui_settingwindow.h"
 #include <QDebug>
+#include <QStorageInfo>
 SettingWindow::SettingWindow(QWidget *parent) :
     QWidget(parent),ui(new Ui::SettingWindow) {
     ui->setupUi(this);
@@ -68,23 +69,17 @@ void SettingWindow::on_locButton_clicked() {
 #ifdef Q_OS_WIN
     extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 #endif
-    QFileDialog d(this);
-    d.setViewMode(QFileDialog::List);
-    d.setFileMode(QFileDialog::Directory);
-    if(d.exec()) {
-        if(!d.selectedFiles().isEmpty()) {
+    QString loc = QFileDialog::getExistingDirectory(this,"选择文件夹");
+    if(!loc.isEmpty()) {
 #ifdef Q_OS_WIN
-            qt_ntfs_permission_lookup++;
+        qt_ntfs_permission_lookup++;
 #endif
-            QString loc = d.selectedFiles().constFirst();
-            if(QFileInfo(loc).isWritable())
-                ui->locEdit->setText(loc);
-            else
-                QMessageBox::warning(this,"警告","指定目录不可写，请重新选择");
+        if(QFileInfo(loc).isWritable()&&QStorageInfo(loc).bytesAvailable() > 0)
+            ui->locEdit->setText(loc);
+        else
+            QMessageBox::warning(this,"警告","指定目录不可写，请重新选择");
 #ifdef Q_OS_WIN
-            qt_ntfs_permission_lookup--;
+        qt_ntfs_permission_lookup--;
 #endif
-        }
     }
 }
-

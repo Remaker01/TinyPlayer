@@ -9,14 +9,14 @@ from urllib import request,parse
 import sys
 from lxml import etree
 # import time
-from multiprocessing.dummy import Pool
+from multiprocessing.pool import ThreadPool
 host = "https://www.xzmp3.com"
 head = {
     "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/90.0",
     "Accept-Language" : "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
     "Referer":host
 }
-pool = Pool(20)
+pool = ThreadPool(20)
 fp = open("links.tmp","w",encoding="utf-8")
 # 第一步：获取下载页面的URLs
 def get_downpage_list(name:str):
@@ -36,7 +36,8 @@ def get_downpage_list(name:str):
         singer = each.xpath("./div[2]/a/text()")
         if len(location)>0:
             url_list.append(title[0] + ';' + singer[0] + ';' + host+location[0])
-    pool.map(get_downlink,url_list)
+    for i in range(0,len(url_list),10):
+        pool.map(get_downlink,url_list[i,min(len(url_list),i+10)])
 # 第二步：从获取到的URLs中提取实际下载地址,保存在文件中
 def get_downlink(info:str):
     lst = info.split(';')

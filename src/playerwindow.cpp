@@ -41,7 +41,6 @@ inline void PlayerWindow::initUi() {
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
-    ui->toolBar->setMovable(false);
     setToolBar(settingWind->opacity);
     QList<QAction*> actions{ui->actionLoadList,ui->actionOpenDir,ui->actionSaveList,ui->actionToDefault,ui->actionOpenHelp};
     for (QAction *action:actions) {
@@ -157,7 +156,7 @@ inline void PlayerWindow::connectSlots() {
     });
     connect(scher,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
     connect(scher,&OnlineSeacher::downloaded,this,[this]{
-        QDesktopServices::openUrl(settingWind->getDownLoc());
+        QDesktopServices::openUrl(QUrl::fromLocalFile(settingWind->getDownLoc()));
         ui->waitingLabel->hide();
     });
 }
@@ -173,7 +172,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.0  3.0.220816");
+                                                        "版本号:3.5Beta  3.5.220903");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -232,12 +231,15 @@ inline void PlayerWindow::connectUiSlots() {
         QDesktopServices::openUrl(QUrl::fromLocalFile(tmp.absolutePath()));
     });
     connect(ui->playView,&PlayListView::downloadRequirement,this,[this](const QModelIndexList &indexes) {
-        QStringList urlsToDown;
-        for (const QModelIndex &i:indexes)
+        QStringList urlsToDown,names;
+        for (const QModelIndex &i:indexes) {
+            QString name = ui->playView->list().at(i.row());
+            names.append(name.replace("\n[线上音乐]",""));
             urlsToDown.append(player->getMedia(i.row()).toString());
-        scher->download(urlsToDown,settingWind->getDownLoc());
+        }
         ui->waitingLabel->setText("正在下载");
         ui->waitingLabel->show();
+        scher->download(urlsToDown,settingWind->getDownLoc(),names);
     });
     connect(ui->actionOpenDir,&QAction::triggered,this,[this]() {
         QString s = QFileDialog::getExistingDirectory(this,"选择文件夹",lastPath);
@@ -245,8 +247,8 @@ inline void PlayerWindow::connectUiSlots() {
             return;
         QDir dir(s);
         QStringList files = dir.entryList();
-        for (QString &s : files)
-            s = dir.absolutePath() + '/' + s;
+        for (QString &str : files)
+            str = dir.absolutePath() + '/' + s;
         doAddMedia(files);
     });
     connect(ui->playView,&PlayListView::showDetailRequirement,this,[this](int row) {
@@ -256,10 +258,6 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
     connect(ui->actionSet,&QAction::triggered,settingWind,&QWidget::show);
     connect(ui->searchLabel,&PlayerButton::clicked,this,[this]() {
-        if(!QFile::exists(OnlineSeacher::PROGRAM)) {
-            QMessageBox::critical(this,"错误","找不到执行搜索需要的程序");
-            return;
-        }
         if(res->isVisible()) {
             QMessageBox::warning(this,"警告","请关闭搜索结果窗口后进行新一次搜索");
             return;
@@ -345,9 +343,8 @@ void PlayerWindow::doAddMedia(QStringList medias) {
         if(!fullName.startsWith("http",Qt::CaseInsensitive)) {  //本地
             QFileInfo a(fullName);
             ui->waitingLabel->setText("正在打开" + a.fileName());
-            if(player->addToList(fullName)) {
+            if(player->addToList(fullName))
                 playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(fullName)).formatTime());
-            }
             lastPath = a.absolutePath();
         }
     }
@@ -424,7 +421,7 @@ void PlayerWindow::on_addButton_clicked() {
 }
 
 void PlayerWindow::on_onlineSearcher_done() {
-    if(QFile("links.tmp").open(QIODevice::ReadOnly)) {
+    if(QFile("links.tmp").exists()) {
         res->setItems(scher->analyzeResult());
         res->show();
         ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));

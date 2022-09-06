@@ -10,14 +10,17 @@
 class PlayListView : public QListView {
     Q_OBJECT
 private:
-    QAction *del;
+    QAction *del,*open,*showDetail;
+    QMenu *menu;
     QStringListModel *model;
     QStringList playList;
-public:
-    explicit PlayListView(QWidget *parent = nullptr);
+    void initMenu();
+protected:
     void dragEnterEvent(QDragEnterEvent *e);
     void dragMoveEvent(QDragMoveEvent *e);
     void dropEvent(QDropEvent *e);
+public:
+    explicit PlayListView(QWidget *parent = nullptr);
     void contextMenuEvent ( QContextMenuEvent *e);
     QModelIndexList getSelections();
     void setOpacity(double value);

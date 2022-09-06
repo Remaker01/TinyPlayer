@@ -25,7 +25,7 @@ class SearchResultWidget : public QWidget{
 public:
     explicit SearchResultWidget(QWidget *parent = nullptr);
     /// 设置条目，原有条目将被清除
-    void setItems(QList<ResultInfo> results);
+    void setItems(const QList<ResultInfo> &results);
     /// 获取特定行的条目
     ResultInfo getItem(int row);
     /// 获取选中的条目

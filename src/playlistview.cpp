@@ -9,7 +9,16 @@ PlayListView::PlayListView(QWidget *parent):QListView(parent) {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setFrameShape(QFrame::Box);
+    initMenu();
+}
 
+inline void PlayListView::initMenu() {
+    menu = new QMenu(this);
+    open = new QAction("打开目录",this);
+    del = new QAction("删除",this);
+    showDetail = new QAction("详细信息",this);
+    menu->addActions({del,open,showDetail});
+    connect(del,&QAction::triggered,this,&PlayListView::itemDelRequirement);
 }
 
 void PlayListView::dragEnterEvent(QDragEnterEvent *e) {e->accept();}
@@ -28,44 +37,49 @@ void PlayListView::dropEvent(QDropEvent *e) {
     e->accept();
     QListView::dropEvent(e);
 }
-#define CONNECT_DOWNLOAD(open) {\
-    (open)->setText("下载");\
-    connect((open),&QAction::triggered,this,[&,this](){\
-        emit downloadRequirement(tmp);\
-    });\
-}
+#define CONNECT_DOWNLOAD connect(open,&QAction::triggered,this,[&,this](){emit downloadRequirement(tmp);})
 void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
-    QModelIndexList tmp = QListView::selectedIndexes();
+    //逻辑：选中多个时，如果选中的条目中存在本地音乐，则只有删除有效，否则下载也有效。其余项目均无效
+    const QModelIndexList tmp = QListView::selectedIndexes();
     if(!tmp.empty()) {
-        QMenu menu(this);
-        del = menu.addAction("删除");
-        QAction *open = menu.addAction("打开目录");
-        connect(del,&QAction::triggered,this,&PlayListView::itemDelRequirement);
-        if(tmp.size() == 1) {
-            int row = tmp[0].row();
-            QAction *showDetail = menu.addAction("详细信息");
-            if(!playList[row].contains("[线上音乐]")) {
-                connect(open,&QAction::triggered,this,[&,this]() {
-                   emit openRequirement(row);
-                });
-            }
-            else    CONNECT_DOWNLOAD(open)
-            connect(showDetail,&QAction::triggered,this,[&,this](){
-               emit showDetailRequirement(row);
-            });
-        }
-        else {
+        int first = tmp[0].row();
+        if(tmp.size() > 1) {
+            showDetail->setEnabled(false);
             bool hasLocal = false;
-            for (QModelIndex &index:tmp) {
-                if(!playList[index.row()].contains("[线上音乐]")) {
+            for (const QModelIndex &idx:tmp) {
+                if(!playList[idx.row()].contains("[线上音乐]")) {
                     hasLocal = true;
+                    open->setText("打开目录");
+                    open->setEnabled(false);
                     break;
                 }
             }
-            if(!hasLocal)    CONNECT_DOWNLOAD(open)
+            if(!hasLocal) {
+                open->setText("下载");
+                CONNECT_DOWNLOAD;
+            }
         }
-        menu.exec(QCursor::pos());
+        else {
+            if(playList[first].contains("[线上音乐]")) {
+                open->setText("下载");
+                CONNECT_DOWNLOAD;
+            }
+            else {
+                 open->setText("打开目录");
+                 connect(open,&QAction::triggered,this,[&,this](){
+                     emit openRequirement(first);
+                 });
+            }
+        }
+        connect(showDetail,&QAction::triggered,this,[&,this]() {
+            emit showDetailRequirement(first);
+        });
+        menu->exec(QCursor::pos());
     }
+    disconnect(showDetail,&QAction::triggered,this,nullptr);
+    disconnect(open,&QAction::triggered,this,nullptr);
+    showDetail->setEnabled(true);
+    open->setEnabled(true);
     QListView::contextMenuEvent(e);
 }
 #undef CONNECT_DOWNLOAD

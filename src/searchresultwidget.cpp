@@ -10,7 +10,7 @@ SearchResultWidget::SearchResultWidget(QWidget *parent) :
     connect(ui->insertButton,&QPushButton::clicked,this,[this] {emit addItemRequirement(ui->autoDelBox->isChecked());});
 }
 
-void SearchResultWidget::setItems(QList<ResultInfo> results) {
+void SearchResultWidget::setItems(const QList<ResultInfo> &results) {
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(results.size());
     for (int i = 0; i < results.size(); i++) {

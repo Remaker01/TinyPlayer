@@ -1,7 +1,7 @@
 #ifndef ONLINESEACHER_H
 #define ONLINESEACHER_H
 
-#include <QObject>
+#include <QMessageBox>
 #include <QProcess>
 #include <QFile>
 #include "searchresultwidget.h"
@@ -21,7 +21,7 @@ public:
      */
     QList<ResultInfo> analyzeResult();
     void doSearch();
-    void download(QStringList uri,const QString &path = QStandardPaths::writableLocation(QStandardPaths::MusicLocation));
+    void download(QStringList uri, const QString &path, const QStringList &names);
 signals:
     /// doSearch()结束后调用
     void done();
