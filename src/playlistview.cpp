@@ -9,6 +9,7 @@ PlayListView::PlayListView(QWidget *parent):QListView(parent) {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setFrameShape(QFrame::Box);
+    setFont(QFont("微软雅黑",9));
     initMenu();
 }
 

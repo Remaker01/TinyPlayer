@@ -41,7 +41,6 @@ inline void PlayerWindow::initUi() {
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
-    setToolBar(settingWind->opacity);
     QList<QAction*> actions{ui->actionLoadList,ui->actionOpenDir,ui->actionSaveList,ui->actionToDefault,ui->actionOpenHelp};
     for (QAction *action:actions) {
         ui->toolBar->widgetForAction(action)->setStyleSheet("padding:6px 0px;");
@@ -86,13 +85,16 @@ inline void PlayerWindow::initConfiguration() {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
         setting.setValue(LAST_VOL,50);
         setting.setValue(LAST_MODE,0);
+        setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
         setting.setValue("AUTOLOAD",settingWind->autoSave);
-        setting.setValue("MINONCLOSE",settingWind->minOnClose);
+        setting.setValue("MIN_ONCLOSE",settingWind->minOnClose);
     }
     lastPath = setting.value(LAST_PATH).toString();
     ui->volumeSlider->setValue(setting.value(LAST_VOL).toInt());
+    setToolBar(setting.value("TOOLBAR_OPAC").toDouble());
+    settingWind->setOpacityValue(setting.value("TOOLBAR_OPAC").toDouble());
     settingWind->setAutoSave(setting.value("AUTOLOAD").toBool());
-    settingWind->setminOnClose(setting.value("MINONCLOSE").toBool());
+    settingWind->setminOnClose(setting.value("MIN_ONCLOSE").toBool());
     changeMode((PlayerCore::PlayMode)setting.value(LAST_MODE).toInt());
 }
 
@@ -172,7 +174,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.5Beta  3.5.220903");
+                                                        "版本号:3.5Beta  3.5.220911");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -248,7 +250,7 @@ inline void PlayerWindow::connectUiSlots() {
         QDir dir(s);
         QStringList files = dir.entryList();
         for (QString &str : files)
-            str = dir.absolutePath() + '/' + s;
+            str = dir.absolutePath() + '/' + str;
         doAddMedia(files);
     });
     connect(ui->playView,&PlayListView::showDetailRequirement,this,[this](int row) {
@@ -493,7 +495,8 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
     setting.setValue("AUTOLOAD",settingWind->autoSave);
-    setting.setValue("MINONCLOSE",settingWind->minOnClose);
+    setting.setValue("MIN_ONCLOSE",settingWind->minOnClose);
+    setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
     saveList("default.lst");
     delete ui;
 }

@@ -24,6 +24,11 @@ void SettingWindow::setminOnClose(bool f) {
     minOnClose = f;
 }
 
+void SettingWindow::setOpacityValue(double opac) {
+    ui->spinBox->setValue((int)(0.5 + opac * 100.0)); //防止浮点数误差
+    opacity = opac;
+}
+
 bool SettingWindow::getAutoSave() {return autoSave;}
 
 bool SettingWindow::getminOnClose() {return minOnClose;}

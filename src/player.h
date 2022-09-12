@@ -23,7 +23,7 @@ private:
     void setMedia(const QString &media);
 public:
     static constexpr int MAX_MEDIA_COUNT = 10000;
-    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 13;
+    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 16;
     static const QString Formats[FORMAT_COUNT];
     /// 各模式的提示文字
     static const QString MODE_TIPS[MODE_COUNT];
@@ -60,6 +60,13 @@ public slots:
     void play();
     void goNext();
     void goPrevious();
+    /**
+     * @brief moveUp 将指定媒体上移
+     * @param i 要移动哪个媒体
+     * @param k 移动多少个单位
+     * @return 当i位置合法且移动后的位置仍合法，返回true，否则返回false
+     * @note moveDown类似
+     */
     bool moveUp(int i,int k = 1);
     bool moveDown(int i, int k = 1);
     void setSoundEffect(uint index);

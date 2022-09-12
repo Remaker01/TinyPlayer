@@ -1,6 +1,6 @@
 #ifndef MUSIC_H
 #define MUSIC_H
-#include <QtCore>
+#include <QCoreApplication>
 #include <QHash>
 #include <QMessageBox>
 #include <QFile>
@@ -20,9 +20,11 @@ private:
     static bool isWav(QFile *media,QDataStream &reader);
     static bool isWma(QFile *media,QDataStream &reader);
     static bool isAiff(QFile *media,QDataStream &reader);
-    static bool isFlac(QFile *media,QDataStream &reader);
+    static bool isFlac(QFile *media,QDataStream &reader); 
     static bool isAAC(QFile *media,QDataStream &reader);
     static bool isM4A(QFile *media,QDataStream &reader);
+    static bool isAPE(QFile *media,QDataStream &reader);
+    static bool isVorbis(QFile *media,QDataStream &reader);
     static bool isAU(QFile *media,QDataStream &reader);
 public:
     /**

@@ -44,7 +44,8 @@ QString Music::formatTime() {
 
 bool Music::isLegal(QString media) {
     static auto checkers = {
-        &Music::isMPEG,&Music::isWav,&Music::isAiff,&Music::isFlac,&Music::isAAC,&Music::isWma,&Music::isM4A,&Music::isAU
+        &Music::isMPEG,&Music::isWav,&Music::isFlac,&Music::isAAC,&Music::isAiff,
+        &Music::isWma,&Music::isM4A,&Music::isAPE,&Music::isVorbis,&Music::isAU
     };
     QFile rawData(media);
     if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)

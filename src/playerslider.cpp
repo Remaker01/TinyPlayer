@@ -5,6 +5,12 @@
 PlayerSlider::PlayerSlider(QWidget *parent):QSlider(parent) {
     setCursor(Qt::PointingHandCursor);
     setPageStep(0);
+    QFile qss(":/Icons/images/stylesheet.qss");
+    if(qss.open(QFile::ReadOnly)) {
+        QString style = qss.readAll();
+        setStyleSheet(style);
+    }
+    qss.close();
 }
 
 void PlayerSlider::mousePressEvent(QMouseEvent *e) {

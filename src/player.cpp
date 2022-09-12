@@ -6,7 +6,9 @@
 #define RESET setMedia(list[current].toString())
 const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG Audio
                                                    ".wav",".wma",   //Windows Audio
-                                                   ".flac",".aac",  //Other
+                                                   ".flac",".ape",  //Lossless
+                                                   ".aac",  //aac
+                                                   ".ogg",".oga" // OggVorbis
                                                    ".aif",".aiff",".aifc",  //Aiff
                                                    ".m4a", //m4a
                                                    ".au",".snd"};  //au

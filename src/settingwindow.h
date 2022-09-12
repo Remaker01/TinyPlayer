@@ -20,6 +20,7 @@ public:
     explicit SettingWindow(QWidget *parent = nullptr);
     void setAutoSave(bool f);
     void setminOnClose(bool f);
+    void setOpacityValue(double opac);
     bool getAutoSave();
     bool getminOnClose();
     QString getDownLoc();

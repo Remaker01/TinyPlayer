@@ -1,11 +1,3 @@
-/*
- * TODO:
- * 1.支持线上音乐搜索&播放
- * 2. 用QStackedWidget在两个播放列表间切换
- *     1. 本地播放列表，即原来的播放列表
- *     2. 线上音乐播放列表
- *
- */
 #include "playerwindow.h"
 #include <QSharedMemory>
 int main(int argc, char *argv[]) {
@@ -14,16 +6,12 @@ int main(int argc, char *argv[]) {
     QFont font("幼圆",9);
     if(shared.create(1)) {
         a.setFont(font);
-        QFile qss(":/Icons/images/stylesheet.qss");
-        if(qss.open(QFile::ReadOnly)) {
-            QString style = qss.readAll();
-            a.setStyleSheet(style);
-        }
+        QDir::setCurrent(a.applicationDirPath());
+        QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,a.applicationDirPath());
         QStringList args = a.arguments();
         PlayerWindow w(args.size()>1?args[1]:"");
         if(!w.isVisible())
             w.show();
-        qss.close();
         return a.exec();
     }
     else

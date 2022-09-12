@@ -13,10 +13,12 @@
 2022.4更新：自2.0版改用VLC-qt，支持:
    1. MPEG音频格式(.MP3,.MP2,.MP1)
    2. Windows音频格式(.WAV,.WMA)
-   3. 无损音频格式(.FLAC)
+   3. 无损音频格式(.FLAC,.APE)
    4. AIFF格式(.AIFF,.AIF,.AIFC)
    5. AAC,M4A
-   6. AU格式(.au,.snd)
+   6. OggVorbis(.OGG,.OGA)*
+   7. AU格式(.au,.snd)
+*:注：Ogg为容器格式，播放器不能确定封装的是音频还是视频，如果是视频，那么也只能播放音频部分。
 2. 构建平台：
    1. 硬件与系统环境：Intel 第十代酷睿CPU+Windows 10 x64
    2. 软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1
