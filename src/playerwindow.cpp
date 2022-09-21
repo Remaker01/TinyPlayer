@@ -53,6 +53,7 @@ inline void PlayerWindow::initSystemtray() {
     tray->setToolTip("TinyPlayer");
     trayMenu = new QMenu(this);
     trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QMainWindow::showNormal);
+    trayMenu->addAction("添加歌曲",ui->actionopenFile,&QAction::trigger);
     trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
     tray->show();
@@ -174,7 +175,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.5Beta  3.5.220911");
+                                                        "版本号:3.5  3.5.220911");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -234,6 +235,10 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->playView,&PlayListView::downloadRequirement,this,[this](const QModelIndexList &indexes) {
         QStringList urlsToDown,names;
+        if(indexes.size() > 20) {
+            QMessageBox::warning(this,"警告","一次最多下载20首");
+            return;
+        }
         for (const QModelIndex &i:indexes) {
             QString name = ui->playView->list().at(i.row());
             names.append(name.replace("\n[线上音乐]",""));
@@ -418,9 +423,7 @@ void PlayerWindow::on_clearButton_clicked() {
     AFTER_DEL(false)
 }
 #undef AFTER_DEL
-void PlayerWindow::on_addButton_clicked() {
-    ui->actionopenFile->trigger();
-}
+void PlayerWindow::on_addButton_clicked() {ui->actionopenFile->trigger();}
 
 void PlayerWindow::on_onlineSearcher_done() {
     if(QFile("links.tmp").exists()) {

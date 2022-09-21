@@ -7,14 +7,13 @@ from multiprocessing.pool import ThreadPool
 import sys
 import os
 # import time
-host = "https://www.xzmp3.com/down/"
 head = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0",
-    "Referer":host
+    "Accept":"gzip, deflate"
 }
 pool = ThreadPool(20)
 argc = len(sys.argv)
-ILLEGAL_CHARS=['/','\\',':','*','?','\"','<','>','|']
+ILLEGAL_CHARS=[':','*','?','\"','<','>','|']
 def _get_url_fname(urls:str):
     tmp=urls.split(';')
     if len(tmp)==1:

@@ -28,6 +28,11 @@
     <height>864</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <family>幼圆</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>TinyPlayer</string>
   </property>
@@ -90,6 +95,11 @@ background-color: rgb(200, 200,200);
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <family>幼圆</family>
+             </font>
+            </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
@@ -145,6 +155,11 @@ background-color: rgb(200,200,200);
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <family>幼圆</family>
+             </font>
+            </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
@@ -199,6 +214,11 @@ background-color: rgb(200,200,200);
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>幼圆</family>
+             </font>
             </property>
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
