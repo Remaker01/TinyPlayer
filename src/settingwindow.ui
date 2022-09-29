@@ -213,9 +213,6 @@
       <property name="text">
        <string>音乐文件夹</string>
       </property>
-      <property name="echoMode">
-       <enum>QLineEdit::Normal</enum>
-      </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
