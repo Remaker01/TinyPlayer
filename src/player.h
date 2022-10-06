@@ -54,7 +54,6 @@ public:
     bool removeFromList(int loc);
     ///清空播放列表
     void clear();
-    bool isLocal(int i);
     ~PlayerCore();
 public slots:
     void play();

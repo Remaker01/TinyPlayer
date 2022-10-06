@@ -20,7 +20,7 @@ public:
      * @note 必须在done()信号调用后使用
      */
     QList<ResultInfo> analyzeResult();
-    void doSearch();
+    void doSearch(int method = 1);
     void download(QStringList uri, const QString &path, const QStringList &names);
 signals:
     /// doSearch()结束后调用

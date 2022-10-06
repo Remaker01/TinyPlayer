@@ -30,7 +30,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
         QStringList now = line.split(";");
         info.title = now[0].replace("下载","").replace("mp3","");
         info.artist = now[1];
-        info.url = now[2].replace('\r',"").replace('\n',"");
+        info.url = now[2].replace('\r',"").replace('\n',"").replace("&amp;","&");
         result.append(info);
     }
     f.remove();
@@ -39,13 +39,14 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
-void OnlineSeacher::doSearch() {
+void OnlineSeacher::doSearch(int method) {
     if(!QFile::exists(PROGRAM)) {
         QMessageBox::critical(nullptr,"错误","找不到执行搜索需要的程序");
         emit done();
         return;
     }
-    prog.setArguments(QStringList(keyword));
+    QString methodStr = (method == 1) ? "1" : (method == 2 ? "2" : "");
+    prog.setArguments(QStringList({methodStr,keyword}));
     prog.start();
     //这个信号可能多次发出，可在第一次响应后删除文件，并判断文件是否存在即可
     connect(&prog,QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this,&OnlineSeacher::done);

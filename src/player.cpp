@@ -1,4 +1,3 @@
-#include <QProcess>
 #include "player.h"
 #ifndef NDEBUG
 #include <QDebug>
@@ -164,8 +163,6 @@ void PlayerCore::clear() {
     if(sta != Vlc::Playing&&sta != Vlc::Paused)   //防止重复发送信号
         emit finished();
 }
-
-bool PlayerCore::isLocal(int i) {return list[i].isLocalFile();}
 //覆盖play()用于缓解进度条拖动及未开始播放不能设置时间问题
 void PlayerCore::play() {
     Vlc::State sta = VlcMediaPlayer::state();  //获取初始播放状态
