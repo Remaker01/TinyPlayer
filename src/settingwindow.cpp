@@ -8,20 +8,20 @@ SettingWindow::SettingWindow(QWidget *parent) :
     setWindowFlag(Qt::Window);
     ui->autoSaveBox->setTristate(false);
     ui->minOnCloseBox->setTristate(false);
-    autoSave = ui->autoSaveBox->isChecked();
-    minOnClose = ui->minOnCloseBox->isChecked();
+    //autoSave = ui->autoSaveBox->isChecked();
+    //minOnClose = ui->minOnCloseBox->isChecked();
     opacity = ui->spinBox->value() / 100.0;
     connect(ui->comboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
 }
 
 void SettingWindow::setAutoSave(bool f) {
     ui->autoSaveBox->setChecked(f);
-    autoSave = f;
+    //autoSave = f;
 }
 
 void SettingWindow::setminOnClose(bool f) {
     ui->minOnCloseBox->setChecked(f);
-    minOnClose = f;
+    //minOnClose = f;
 }
 
 void SettingWindow::setOpacityValue(double opac) {
@@ -29,9 +29,9 @@ void SettingWindow::setOpacityValue(double opac) {
     opacity = opac;
 }
 
-bool SettingWindow::getAutoSave() {return autoSave;}
+bool SettingWindow::getAutoSave() {return ui->autoSaveBox->isChecked();}
 
-bool SettingWindow::getminOnClose() {return minOnClose;}
+bool SettingWindow::getminOnClose() {return ui->minOnCloseBox->isChecked();}
 
 QString SettingWindow::getDownLoc() {
     QString text = ui->locEdit->text();
@@ -40,23 +40,25 @@ QString SettingWindow::getDownLoc() {
     return text;
 }
 
+int SettingWindow::getSrchMethod() {return ui->methodBox->currentIndex()+1;}
+
 SettingWindow::~SettingWindow() {
     delete ui;
 }
 
-void SettingWindow::on_minOnCloseBox_stateChanged(int arg1) {
-    if(arg1 == Qt::Checked)
-        minOnClose = true;
-    else
-        minOnClose = false;
-}
+//void SettingWindow::on_minOnCloseBox_stateChanged(int arg1) {
+//    if(arg1 == Qt::Checked)
+//        minOnClose = true;
+//    else
+//        minOnClose = false;
+//}
 
-void SettingWindow::on_autoSaveBox_stateChanged(int arg1) {
-    if(arg1 == Qt::Checked)
-        autoSave = true;
-    else
-        autoSave = false;
-}
+//void SettingWindow::on_autoSaveBox_stateChanged(int arg1) {
+//    if(arg1 == Qt::Checked)
+//        autoSave = true;
+//    else
+//        autoSave = false;
+//}
 
 void SettingWindow::on_pushButton_clicked() {
     ui->minOnCloseBox->setChecked(false);

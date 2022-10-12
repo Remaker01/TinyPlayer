@@ -7,8 +7,8 @@ Music::Music(const QUrl &uri):url(uri) {
         QCoreApplication::processEvents();
     length = m.duration();
     VlcMetaManager tmp(&m);
-    title = tmp.title() + "\t\t";
-    if(QString::compare(title,url.toString() + "\t\t",Qt::CaseInsensitive) == 0)
+    title = tmp.title();
+    if(!url.isLocalFile())
         title = url.fileName();
     description = tmp.description();
     album = tmp.album();
@@ -16,14 +16,16 @@ Music::Music(const QUrl &uri):url(uri) {
 }
 
 QString Music::toString() {
-    return "标题：" + title + '\n' +
+    return "标题：" + title + "\t\t\n" +
             "时长：" + formatTime() + '\n' +
             "唱片集：" + album + '\n' +
             "描述：" + description;
 }
 
 bool Music::equals(const Music &a) const {
-    return url == a.url||(length == a.length&&title == a.title);
+    if(url.isLocalFile())
+        return url == a.url||(length == a.length&&title == a.title);
+    return url == a.url;
 }
 
 const QUrl &Music::getUrl() const {return url;}

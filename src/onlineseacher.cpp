@@ -40,6 +40,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
 void OnlineSeacher::doSearch(int method) {
+    assert(method == 1||method == 2);
     if(!QFile::exists(PROGRAM)) {
         QMessageBox::critical(nullptr,"错误","找不到执行搜索需要的程序");
         emit done();

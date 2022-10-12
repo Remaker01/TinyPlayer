@@ -58,9 +58,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>220</y>
+     <y>260</y>
      <width>571</width>
-     <height>121</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -196,32 +196,53 @@
     <rect>
      <x>10</x>
      <y>160</y>
-     <width>341</width>
-     <height>43</height>
+     <width>441</width>
+     <height>91</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QLabel" name="methodLabel">
+      <property name="text">
+       <string>搜索引擎</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QComboBox" name="methodBox">
+      <item>
+       <property name="text">
+        <string>引擎1(速度较快，结果较少)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>引擎2(速度较慢且可靠性稍差，结果较多)</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="0">
      <widget class="QLabel" name="locLabel">
       <property name="text">
        <string>下载位置</string>
       </property>
      </widget>
     </item>
-    <item>
+    <item row="0" column="3">
+     <widget class="QToolButton" name="locButton">
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
      <widget class="QLineEdit" name="locEdit">
       <property name="text">
        <string>音乐文件夹</string>
       </property>
       <property name="readOnly">
        <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QToolButton" name="locButton">
-      <property name="text">
-       <string>...</string>
       </property>
      </widget>
     </item>

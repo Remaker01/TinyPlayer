@@ -297,16 +297,31 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="207"/>
-        <source>下载位置</source>
+        <source>下载方式</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="214"/>
+        <source>下载位置</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="228"/>
         <source>音乐文件夹</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="224"/>
+        <location filename="src/settingwindow.ui" line="239"/>
+        <source>方式1(速度较快，结果较少)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="244"/>
+        <source>方式2(速度较慢，结果较多且可靠性稍差)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="221"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>

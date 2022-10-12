@@ -10,8 +10,8 @@ namespace Ui {class SettingWindow;}
 class SettingWindow : public QWidget {
     Q_OBJECT
 private:
-    bool autoSave;
-    bool minOnClose;
+//    bool autoSave;
+//    bool minOnClose;
     double opacity;
     friend class PlayerWindow;
     Ui::SettingWindow *ui;
@@ -23,10 +23,12 @@ public:
     bool getAutoSave();
     bool getminOnClose();
     QString getDownLoc();
+    int getSrchMethod();
+    void setSrchMethod(int m);
     ~SettingWindow();
 private slots:
-    void on_minOnCloseBox_stateChanged(int arg1);
-    void on_autoSaveBox_stateChanged(int arg1);
+//    void on_minOnCloseBox_stateChanged(int arg1);
+//    void on_autoSaveBox_stateChanged(int arg1);
     void on_pushButton_clicked();
     void on_spinBox_valueChanged(int value);
     void on_locButton_clicked();

@@ -87,8 +87,8 @@ inline void PlayerWindow::initConfiguration() {
         setting.setValue(LAST_VOL,50);
         setting.setValue(LAST_MODE,0);
         setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
-        setting.setValue("AUTOLOAD",settingWind->autoSave);
-        setting.setValue("MIN_ONCLOSE",settingWind->minOnClose);
+        setting.setValue("AUTOLOAD",settingWind->getAutoSave());
+        setting.setValue("MIN_ONCLOSE",settingWind->getminOnClose());
     }
     lastPath = setting.value(LAST_PATH).toString();
     ui->volumeSlider->setValue(setting.value(LAST_VOL).toInt());
@@ -274,7 +274,7 @@ inline void PlayerWindow::connectUiSlots() {
         ui->searchLabel->setMovie(&gif);
         gif.start();
         scher->setKeyWord(ui->searchEdit->text());
-        scher->doSearch();
+        scher->doSearch(settingWind->getSrchMethod());
         ui->searchLabel->setReplyClick(false);
         connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
         ui->searchEdit->clearFocus();
@@ -497,8 +497,8 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOL,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
-    setting.setValue("AUTOLOAD",settingWind->autoSave);
-    setting.setValue("MIN_ONCLOSE",settingWind->minOnClose);
+    setting.setValue("AUTOLOAD",settingWind->getAutoSave());
+    setting.setValue("MIN_ONCLOSE",settingWind->getminOnClose());
     setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
     saveList("default.lst");
     delete ui;
