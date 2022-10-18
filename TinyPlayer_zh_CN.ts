@@ -297,31 +297,32 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="207"/>
-        <source>下载方式</source>
+        <source>搜索引擎</source>
+        <oldsource>下载方式</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="214"/>
-        <source>下载位置</source>
+        <location filename="src/settingwindow.ui" line="215"/>
+        <source>引擎1(速度较快，结果较少)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="220"/>
+        <source>引擎2(速度较慢且可靠性稍差，结果较多)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="228"/>
+        <source>下载位置</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="242"/>
         <source>音乐文件夹</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="239"/>
-        <source>方式1(速度较快，结果较少)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/settingwindow.ui" line="244"/>
-        <source>方式2(速度较慢，结果较多且可靠性稍差)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/settingwindow.ui" line="221"/>
+        <location filename="src/settingwindow.ui" line="235"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>

@@ -27,7 +27,6 @@ def do_download(urls:str):
     为指定url进行下载
     '''
     url,fname = _get_url_fname(urls)
-    print(fname)
     fp = open(fname,"wb")
     respo = request.urlopen(request.Request(url,headers=head,method="GET"))
     # size = float(respo.headers['content-length'])

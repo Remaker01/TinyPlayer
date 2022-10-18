@@ -22,7 +22,7 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
             ui->playButton->click();
         }
         else if(!openList(arg))
-            QMessageBox::warning(this,"警告","参数错误:不是合法的音频格式或播放列表");
+            QMessageBox::warning(this,"提示","您打开的文件不是合法的音频格式或播放列表");
     }
     else if(settingWind->getAutoSave()) {
         showNormal();
@@ -71,7 +71,7 @@ inline void PlayerWindow::setToolBar(double opacity) {
 inline void PlayerWindow::setBackground(const QPixmap &img) {
     constexpr int MIN_HEIGHT = 100,MIN_WIDTH = 200;
     if(img.height() < MIN_HEIGHT||img.width() < MIN_WIDTH) {
-        QMessageBox::warning(this,"警告",QString("图片尺寸不能小于%1x%2像素").arg(MIN_WIDTH).arg(MIN_HEIGHT));
+        QMessageBox::warning(this,"提示",QString("图片尺寸不能小于%1x%2像素").arg(MIN_WIDTH).arg(MIN_HEIGHT));
         return;
     }
     QPalette pl;
@@ -175,7 +175,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.5  3.5.220929");
+                                                        "版本号:3.6  3.5.221018");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -206,13 +206,13 @@ inline void PlayerWindow::connectUiSlots() {
         QString tmp = QFileDialog::getSaveFileName(this,"选择保存目录",lastPath,"播放列表(*.lst)");
         if(tmp.isEmpty())   return;
         if(!saveList(tmp))
-            QMessageBox::warning(this,"警告","无法保存，请检查文件路径和文件名");
+            QMessageBox::warning(this,"提示","无法保存，请检查文件路径和文件名");
     });
     connect(ui->actionLoadList,&QAction::triggered,this,[this]() {
         QString tmp = QFileDialog::getOpenFileName(this,"选择播放列表",lastPath,"播放列表(*.lst)");
         if(!tmp.isEmpty()) {
             if(!openList(tmp))
-                QMessageBox::warning(this,"警告","播放列表加载失败");
+                QMessageBox::warning(this,"提示","播放列表加载失败");
         }
     });
     connect(ui->volumeButton,&PlayerButton::clicked,this,[this]() {
@@ -234,8 +234,8 @@ inline void PlayerWindow::connectUiSlots() {
         QDesktopServices::openUrl(QUrl::fromLocalFile(tmp.absolutePath()));
     });
     connect(ui->playView,&PlayListView::downloadRequirement,this,[this](const QModelIndexList &indexes) {
-        if(indexes.size() > 20) {
-            QMessageBox::warning(this,"警告","一次最多下载20首");
+        if(indexes.size() > 15) {
+            QMessageBox::warning(this,"提示","一次最多下载15首哦~");
             return;
         }
         QStringList urlsToDown,names;
@@ -259,14 +259,15 @@ inline void PlayerWindow::connectUiSlots() {
         doAddMedia(files);
     });
     connect(ui->playView,&PlayListView::showDetailRequirement,this,[this](int row) {
-        QMessageBox::information(this,"信息",player->getMediaDetail(row).toString());
+        Music detail = player->getMediaDetail(row);
+        QMessageBox::information(this,detail.getTitle() + "详细信息",detail.toString());
     });
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
     connect(ui->actionSet,&QAction::triggered,settingWind,&QWidget::show);
     connect(ui->searchLabel,&PlayerButton::clicked,this,[this]() {
         if(res->isVisible()) {
-            QMessageBox::warning(this,"警告","请关闭搜索结果窗口后进行新一次搜索");
+            QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
             return;
         }
         static QMovie gif(":/Icons/images/waiting.gif");
@@ -298,7 +299,7 @@ inline void PlayerWindow::connectUiSlots() {
 }
 
 inline void PlayerWindow::ensureExit() {
-    QMessageBox box(QMessageBox::Question,"退出确认","确认退出?");
+    QMessageBox box(QMessageBox::Question,"提示","确认退出吗?");
     box.addButton("最小化",QMessageBox::AcceptRole);
     QPushButton *yes = box.addButton("是",QMessageBox::NoRole);
     box.addButton("否",QMessageBox::RejectRole);
