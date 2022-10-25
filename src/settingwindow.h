@@ -10,8 +10,6 @@ namespace Ui {class SettingWindow;}
 class SettingWindow : public QWidget {
     Q_OBJECT
 private:
-//    bool autoSave;
-//    bool minOnClose;
     double opacity;
     friend class PlayerWindow;
     Ui::SettingWindow *ui;
@@ -32,6 +30,7 @@ private slots:
     void on_pushButton_clicked();
     void on_spinBox_valueChanged(int value);
     void on_locButton_clicked();
+
 signals:
     void changeEffectRequirement(int index);
     void changeOpacityRequirement(double opac);

@@ -258,61 +258,9 @@ background-color: rgb(200,200,200);
          <property name="pixmap">
           <pixmap resource="../resource.qrc">:/Icons/images/non-music.png</pixmap>
          </property>
-         <property name="scaledContents">
-          <bool>false</bool>
-         </property>
         </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item row="9" column="0" colspan="7">
-     <widget class="QWidget" name="middleWidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="PlayerSlider" name="progressSlider">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximum">
-          <number>0</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="currentLabel">
-         <property name="text">
-          <string>00:00</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="timeLable">
-         <property name="text">
-          <string>/00:00</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="8" column="0">
-     <widget class="QLabel" name="mediaLabel0">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>当前歌曲:</string>
-      </property>
      </widget>
     </item>
     <item row="0" column="6" colspan="2">
@@ -377,7 +325,7 @@ background-color: rgb(200,200,200);
           <number>256</number>
          </property>
          <property name="placeholderText">
-          <string>搜索线上音乐(Beta)...</string>
+          <string>在线搜索音乐...</string>
          </property>
         </widget>
        </item>
@@ -400,19 +348,19 @@ background-color: rgb(200,200,200);
       </layout>
      </widget>
     </item>
-    <item row="9" column="7">
-     <widget class="PlayerButton" name="modeButton">
+    <item row="8" column="1">
+     <widget class="QLabel" name="mediaLabel">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="toolTip">
-       <string>单曲播放</string>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
-      <property name="pixmap">
-       <pixmap resource="../resource.qrc">:/Icons/images/0.png</pixmap>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
      </widget>
     </item>
@@ -435,6 +383,16 @@ background-color: rgb(200,200,200);
          </property>
         </widget>
        </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="waitingLabel">
+         <property name="text">
+          <string>正在打开...</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="3">
         <widget class="QPushButton" name="cancelButton">
          <property name="sizePolicy">
@@ -451,17 +409,27 @@ background-color: rgb(200,200,200);
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="waitingLabel">
-         <property name="text">
-          <string>正在打开...</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="curlistLabel">
+      <property name="text">
+       <string>当前播放列表 共0项</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLabel" name="mediaLabel0">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>当前歌曲:</string>
+      </property>
      </widget>
     </item>
     <item row="11" column="0" colspan="8">
@@ -532,7 +500,7 @@ background-color: rgb(200,200,200);
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
+        <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -573,26 +541,55 @@ background-color: rgb(200,200,200);
       </layout>
      </widget>
     </item>
-    <item row="8" column="1">
-     <widget class="QLabel" name="mediaLabel">
+    <item row="9" column="0" colspan="7">
+     <widget class="QWidget" name="middleWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="PlayerSlider" name="progressSlider">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximum">
+          <number>0</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="currentLabel">
+         <property name="text">
+          <string>00:00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="timeLable">
+         <property name="text">
+          <string>/00:00</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="9" column="7">
+     <widget class="PlayerButton" name="modeButton">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
+      <property name="toolTip">
+       <string>单曲播放</string>
       </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLabel" name="curlistLabel">
-      <property name="text">
-       <string>当前播放列表 共0项</string>
+      <property name="pixmap">
+       <pixmap resource="../resource.qrc">:/Icons/images/0.png</pixmap>
       </property>
      </widget>
     </item>

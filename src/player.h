@@ -69,6 +69,8 @@ public slots:
     bool moveUp(int i,int k = 1);
     bool moveDown(int i, int k = 1);
     void setSoundEffect(uint index);
+    /// 播放/暂停状态互相切换
+    void switchState();
 signals:
     void finished();
     //void mediaSourceChanged(qint64 newTime);

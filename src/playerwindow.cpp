@@ -53,7 +53,7 @@ inline void PlayerWindow::initSystemtray() {
     tray->setToolTip("TinyPlayer");
     trayMenu = new QMenu(this);
     trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QMainWindow::showNormal);
-    trayMenu->addAction("添加歌曲",ui->actionopenFile,&QAction::trigger);
+    trayMenu->addAction(QIcon(),"播放/暂停",ui->playButton,&PlayerButton::click);
     trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
     tray->show();
@@ -153,6 +153,12 @@ inline void PlayerWindow::connectSlots() {
         CHANGE_TO_PLAYICON;
         ui->stopButton->setReplyClick(false);
     });
+    connect(player,&VlcMediaPlayer::opening,this,[this] {
+        ui->waitingLabel->setText("正在缓冲");
+        ui->waitingLabel->show();
+    });
+    connect(player,&VlcMediaPlayer::playing,ui->waitingLabel,&QWidget::hide);
+    connect(player,&VlcMediaPlayer::error,ui->waitingLabel,&QWidget::hide);  //播放出错也要隐藏
     connect(tray,&QSystemTrayIcon::activated,this,[this](QSystemTrayIcon::ActivationReason r){
         if(r == QSystemTrayIcon::Trigger)
             QMainWindow::showNormal();
@@ -175,14 +181,14 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.6  3.5.221018");
+                                                        "版本号:3.6  3.6.221018");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
             QDesktopServices::openUrl(QUrl("https://github.com/Remaker01/TinyPlayer"));
         });
         box.exec();
-    });
+    }); 
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
         QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件(将自动筛选合法格式，支持格式请查看帮助)",lastPath));
         doAddMedia(medias);
@@ -260,7 +266,7 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->playView,&PlayListView::showDetailRequirement,this,[this](int row) {
         Music detail = player->getMediaDetail(row);
-        QMessageBox::information(this,detail.getTitle() + "详细信息",detail.toString());
+        QMessageBox::information(this,detail.getTitle() + " 详细信息",detail.toString());
     });
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
@@ -270,11 +276,11 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
             return;
         }
-        static QMovie gif(":/Icons/images/waiting.gif");
+        static QMovie gif(":/Icons/images/waiting.gif");  //282-285设置gif
         gif.setScaledSize(ui->searchLabel->size());
         ui->searchLabel->setMovie(&gif);
         gif.start();
-        scher->setKeyWord(ui->searchEdit->text());
+        scher->setKeyWord( ui->searchEdit->text().replace(';',""));
         scher->doSearch(settingWind->getSrchMethod());
         ui->searchLabel->setReplyClick(false);
         connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
@@ -316,7 +322,7 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
 }
 
 void PlayerWindow::closeEvent(QCloseEvent *ev) {
-    static bool first = true;
+    static bool first = true;  //仅第一次最小化时显示提示信息
     if(settingWind->getminOnClose()) {
         ev->ignore();
         if(first)
@@ -406,7 +412,7 @@ void PlayerWindow::doDelMedia() {
     std::sort(selections.begin(),selections.end(),std::greater<int>());
     for (int i:selections) {
         if(!player->removeFromList(i))
-            QMessageBox::critical(this,"错误","删除失败。");
+            QMessageBox::critical(this,"出错了!","删除失败。");
         else
             playList.removeAt(i);
     }

@@ -26,5 +26,7 @@
         <file>images/moveup.png</file>
         <file>images/waiting.gif</file>
         <file>images/setting.png</file>
+        <file>images/checked.png</file>
+        <file>images/unchecked.png</file>
     </qresource>
 </RCC>

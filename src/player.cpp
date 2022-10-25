@@ -17,8 +17,6 @@ PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
     curMedia = new VlcMedia("",true,&ins);
     connectSlots();
     equ = new VlcEqualizer(this);
-    equ->setEnabled(true);
-    equ->loadFromPreset(0u);
 }
 
 inline void PlayerCore::connectSlots() {
@@ -176,7 +174,7 @@ void PlayerCore::play() {
         VlcMediaPlayer::play();
     while (VlcMediaPlayer::state() != Vlc::Playing) {
         if(VlcMediaPlayer::state() == Vlc::Error) {
-            QMessageBox::critical(nullptr,"错误","播放失败,无法访问指定的媒体");
+            QMessageBox::critical(nullptr,"出错了!","播放失败,无法访问指定的媒体");
             return;
         }
         QCoreApplication::processEvents();
@@ -220,6 +218,20 @@ bool PlayerCore::moveDown(int i,int k) {
 
 void PlayerCore::setSoundEffect(uint index) {
     equ->loadFromPreset(index);
+    equ->setEnabled(true);
+}
+
+void PlayerCore::switchState() {
+    switch (VlcMediaPlayer::state()) {
+    case Vlc::Playing:
+        pause();
+        break;
+    case Vlc::Paused:
+        play();
+        break;
+    default:
+        break;
+    }
 }
 
 PlayerCore::~PlayerCore() {

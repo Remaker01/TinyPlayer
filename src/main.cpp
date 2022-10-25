@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     QFont font("幼圆",9);
     if(shared.create(1)) {
         if(!font.exactMatch())
-            QMessageBox::warning(nullptr,"警告","字体缺失，请下载幼圆字体");
+            QMessageBox::warning(nullptr,"提示","字体缺失，请下载幼圆字体");
         QDir::setCurrent(a.applicationDirPath());
         QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,a.applicationDirPath());
         QStringList args = a.arguments();

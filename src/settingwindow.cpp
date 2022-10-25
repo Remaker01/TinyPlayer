@@ -8,8 +8,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
     setWindowFlag(Qt::Window);
     ui->autoSaveBox->setTristate(false);
     ui->minOnCloseBox->setTristate(false);
-    //autoSave = ui->autoSaveBox->isChecked();
-    //minOnClose = ui->minOnCloseBox->isChecked();
     opacity = ui->spinBox->value() / 100.0;
     connect(ui->comboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
 }
@@ -46,20 +44,6 @@ SettingWindow::~SettingWindow() {
     delete ui;
 }
 
-//void SettingWindow::on_minOnCloseBox_stateChanged(int arg1) {
-//    if(arg1 == Qt::Checked)
-//        minOnClose = true;
-//    else
-//        minOnClose = false;
-//}
-
-//void SettingWindow::on_autoSaveBox_stateChanged(int arg1) {
-//    if(arg1 == Qt::Checked)
-//        autoSave = true;
-//    else
-//        autoSave = false;
-//}
-
 void SettingWindow::on_pushButton_clicked() {
     ui->minOnCloseBox->setChecked(false);
     ui->autoSaveBox->setChecked(true);
@@ -69,7 +53,7 @@ void SettingWindow::on_pushButton_clicked() {
 
 void SettingWindow::on_spinBox_valueChanged(int value) {
     opacity = value / 100.0;
-    emit changeOpacityRequirement(value/100.0);
+    emit changeOpacityRequirement(opacity);
 }
 
 void SettingWindow::on_locButton_clicked() {

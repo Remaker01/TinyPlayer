@@ -25,11 +25,29 @@
   <property name="windowTitle">
    <string>设置</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{
+font: 9pt &quot;幼圆&quot;;
+}
+QCheckBox::indicator {
+width:26px;
+height:26px;
+}
+QCheckBox::indicator:checked{
+background-image: url(:/Icons/images/checked.png);
+}
+QCheckBox::indicator:unchecked{
+background-image: url(:/Icons/images/unchecked.png);
+}
+QSpinBox,QLineEdit{
+padding:1px 2px;
+}</string>
+  </property>
   <widget class="QCheckBox" name="minOnCloseBox">
    <property name="geometry">
     <rect>
-     <x>11</x>
-     <y>58</y>
+     <x>10</x>
+     <y>60</y>
      <width>151</width>
      <height>19</height>
     </rect>
@@ -196,7 +214,7 @@
     <rect>
      <x>10</x>
      <y>160</y>
-     <width>441</width>
+     <width>451</width>
      <height>91</height>
     </rect>
    </property>
@@ -206,20 +224,6 @@
       <property name="text">
        <string>搜索引擎</string>
       </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QComboBox" name="methodBox">
-      <item>
-       <property name="text">
-        <string>引擎1(速度较快，结果较少)</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>引擎2(速度较慢且可靠性稍差，结果较多)</string>
-       </property>
-      </item>
      </widget>
     </item>
     <item row="0" column="0">
@@ -244,6 +248,20 @@
       <property name="readOnly">
        <bool>true</bool>
       </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QComboBox" name="methodBox">
+      <item>
+       <property name="text">
+        <string>引擎1(速度较快，结果较少)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>引擎2(速度较慢且可靠性稍差，结果较多)</string>
+       </property>
+      </item>
      </widget>
     </item>
    </layout>

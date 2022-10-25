@@ -9,58 +9,67 @@
     </style>
 </head>
 <body background="images/help_background.jpg">
-<h2 id="-tinyplayer">简易播放器TinyPlayer</h2>
-<p>采用QT构建的音频播放器</p>
-<p>快捷键</p>
-<ul>
-<li>Ctrl+O：打开音乐文件</li>
-<li>Ctrl+Shift+O：打开目录，自动添加并扫描目录下的合法文件</li>
-<li>Alt+O：打开背景图片文件</li>
-<li>Ctrl+D：删除乐曲</li>
-<li>F1：打开此帮助</li>
-<li>空格：播放/暂停</li>
-</ul>
-<hr>
-<li>支持格式：<del>采用QT自带的QMediaPlayer，支持格式与平台有关。</del><br>
-2022.4更新：自2.0版改用VLC-qt，支持:
-<ol>
-	<li> MPEG音频格式(.MP3,.MP2,.MP1)</li>
-	<li> Windows音频格式(.WAV,.WMA)</li>
-	<li> 无损音频格式(.FLAC)</li>
-	<li> AIFF格式(.AIFF,.AIF,.AIFC)</li>
-    <li> AAC,M4A</li>
-    <li> AU格式(.au,.snd)</li>
-</ol></li>
-<li>构建平台：<ol>
-<li>硬件与系统环境：Intel 第十代酷睿CPU+Windows 10 x64</li>
-<li>软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1</li>
-</ol>
-</li>
-<li>功能展望<ol>
-<li class="half_done">采用更加好看的界面。(部分完成)</li>
-<li class="half_done">设置界面(部分完成)</li>
-<li><del>支持更多格式</del>(完成)</li>
-<li>关联文件</li>
-<li class="half_done">支持播放线上音乐</li>
-</ol>
-</li>
-<li>目前Bug<ol>
-<li>部分文件详细信息中有乱码</li>
-<li>AAC文件添加进播放列表后无法及时更新信息。</li>
-<li>个别情况下界面会卡死，具体表现位字符及进度条按钮“重影”。<strong>如遇此问题，请尝试点击文件-&gt;更换背景-&gt;还原默认</strong></li>
-</ol>
-</li>
-</ul>
-<p>欢迎提出意见与建议。</p>
-<h3 id="for-developers-">For developers:</h3>
-<ol>
-<li>本项目是CMake工程，如果要改成QMake请记得添加QT的Core,Widgets&amp;VLC-qt的Core模块。
-由于gitignore设置，二进制文件无法添加到仓库中，请自行准备VLC-qt：
-<a href="https://vlc-qt.tano.si/#download">VLC-qt下载地址</a></li>
-<li>本项目使用Python爬虫实现网络音乐检索功能，请安装Python 3环境及lxml,pyinstaller库。可使用以下命令：
-<pre><code>
-pip <span class="hljs-keyword">install</span> lxml
-pip <span class="hljs-keyword">install</span> pyinstaller
-</code></pre>使用 <code>pyinstaller -F ./src/net_music.py</code>或<code>pyinstaller ./src/net_music.spec</code> 命令生成可执行文件，并放在程序同一目录下</li>
+    <h2>简易播放器TinyPlayer</h2>
+    <p>采用QT构建的音频播放器</p>
+    <p>快捷键</p>
+    <ul>
+        <li>Ctrl+O：打开音乐文件</li>
+        <li>Ctrl+Shift+O：打开目录，自动添加并扫描目录下的合法文件</li>
+        <li>Alt+O：打开背景图片文件</li>
+        <li>Ctrl+D：删除乐曲</li>
+        <li>F1：打开此帮助</li>
+        <li>空格：播放/暂停</li>
+    </ul><hr>
+    <li>
+    支持格式：<del>采用QT自带的QMediaPlayer，支持格式与平台有关。</del><br>
+    2022.4更新：自2.0版改用VLC-qt，支持:
+        <ol>
+            <li> MPEG音频格式(.MP3,.MP2,.MP1)</li>
+            <li> Windows音频格式(.WAV,.WMA)</li>
+            <li> 无损音频格式(.FLAC)</li>
+            <li> AIFF格式(.AIFF,.AIF,.AIFC)</li>
+            <li> AAC,M4A</li>
+            <li> OggVorbis(.OGG,.OGA)*</li>
+            <li> AU格式(.au,.snd)</li>
+            *:注：Ogg为容器格式，播放器不能确定封装的是音频还是视频，如果是视频，那么也只能播放音频部分。
+        </ol>
+    </li>
+    <li>构建平台：
+        <ol>
+            <li>硬件与系统环境：Intel 第十代酷睿CPU+Windows 10 x64</li>
+            <li>软件平台：QT5.12+QT Creator 5+CMake 3.21+MinGW 8.1</li>
+        </ol>
+    </li>
+    <li>功能展望
+        <ol>
+            <li class="half_done">采用更加好看的界面。(部分完成)</li>
+            <li class="half_done">设置界面(部分完成)</li>
+            <li><del>支持更多格式</del>(完成)</li>
+            <li>关联文件</li>
+            <li class="half_done">支持播放线上音乐</li>
+        </ol>
+    </li>
+    <li>目前Bug
+        <ol>
+            <li>部分文件详细信息中有乱码</li>
+            <li>AAC文件添加进播放列表后无法及时更新信息。</li>
+            <li>个别情况下界面会卡死，具体表现位字符及进度条按钮“重影”。<strong>如遇此问题，请尝试点击文件-&gt;更换背景-&gt;还原默认</strong></li>
+        </ol>
+    </li>
+    <p>欢迎提出意见与建议。</p>
+    <h3 id="for-developers-">For developers:</h3>
+    <ol>
+        <li>本项目是CMake工程，如果要改成QMake请记得添加QT的Core,Widgets&amp;VLC-qt的Core模块。
+        由于gitignore设置，二进制文件无法添加到仓库中，请自行准备VLC-qt：
+        <a href="https://vlc-qt.tano.si/#download">VLC-qt下载地址</a>
+        </li>
+        <li>本项目使用Python爬虫实现网络音乐检索功能，请安装Python 3环境及lxml,pyinstaller库。可使用以下命令：
+            <pre><code>
+            pip <span class="hljs-keyword">install</span> lxml
+            pip <span class="hljs-keyword">install</span> pyinstaller
+            </code></pre>
+        </li>
+        使用 <code>pyinstaller -F ./src/net_music.py</code>或<code>pyinstaller ./src/net_music.spec</code> 命令生成可执行文件，并放在程序同一目录下
+    </ol>
 </body>
 </html>

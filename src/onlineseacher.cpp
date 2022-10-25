@@ -42,11 +42,11 @@ void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 void OnlineSeacher::doSearch(int method) {
     assert(method == 1||method == 2);
     if(!QFile::exists(PROGRAM)) {
-        QMessageBox::critical(nullptr,"错误","找不到执行搜索需要的程序");
         emit done();
+        QMessageBox::critical(nullptr,"错误","找不到执行搜索需要的程序");
         return;
     }
-    QString methodStr = (method == 1) ? "1" : (method == 2 ? "2" : "");
+    QString methodStr = (method == 1) ? "1" : "2";
     prog.setArguments(QStringList({methodStr,keyword}));
     prog.start();
     //这个信号可能多次发出，可在第一次响应后删除文件，并判断文件是否存在即可
@@ -55,8 +55,8 @@ void OnlineSeacher::doSearch(int method) {
 
 void OnlineSeacher::download(QStringList uri, const QString &path, const QStringList &names) {
     if(!QFile::exists(DOWN_PROGRAM)) {
-        QMessageBox::critical(nullptr,"错误","找不到下载器");
         emit downloaded();
+        QMessageBox::critical(nullptr,"错误","找不到下载器");
         return;
     }
     for(int i = 0; i < names.length(); i++) {
