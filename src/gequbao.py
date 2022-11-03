@@ -16,6 +16,16 @@ def _redirect_addr(addr:str):
 def _text(respo):
     return respo.read().decode("utf-8")
 def get_list(name:str):
+    '''
+   Parameters
+    ----------
+    name : str
+        歌曲名，要求以字符串形式给出
+
+    Returns
+    -------
+    None.
+    '''
     count = 0
     pages = []
     uri = host + "/s/" + parse.quote(name)

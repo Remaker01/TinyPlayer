@@ -86,10 +86,10 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
 #undef CONNECT_DOWNLOAD
 QModelIndexList PlayListView::getSelections() {return QListView::selectedIndexes();}
 
-void PlayListView::setOpacity(double value) {
-    int a = std::min(255,qRound(256*value));
-    setStyleSheet("background-color: rgba(255,255,255," + QString::number(a) + ");");
-}
+//void PlayListView::setOpacity(double value) {
+//    int a = std::min(255,qRound(256*value));
+//    setStyleSheet("background-color: rgba(255,255,255," + QString::number(a) + ");");
+//}
 
 void PlayListView::commitChange() {model->setStringList(playList);}
 

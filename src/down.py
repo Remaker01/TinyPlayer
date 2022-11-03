@@ -1,6 +1,6 @@
 '''
 简易音乐下载模块。
-传入参数1为下载目录，后面为下载地址
+传入参数1为下载目录，后面为下载地址与文件名，用英文分号分隔
 '''
 from urllib import request
 from multiprocessing.pool import ThreadPool
@@ -20,6 +20,7 @@ def _get_url_fname(urls:str):
         url,fname = tmp[0],urls[urls.rfind('/')+1:]
     else:
         url,fname=tmp[0],tmp[1]
+	# 去掉文件名中的非法字符
         fname = ''.join(x for x in fname if x.isprintable() and (x not in ILLEGAL_CHARS))
     return url,fname
 def do_download(urls:str):

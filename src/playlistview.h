@@ -23,7 +23,7 @@ public:
     explicit PlayListView(QWidget *parent = nullptr);
     void contextMenuEvent ( QContextMenuEvent *e);
     QModelIndexList getSelections();
-    void setOpacity(double value);
+//    void setOpacity(double value);
     /// 提交修改。在对播放列表进行操作后调用
     void commitChange();
     QStringList &list();

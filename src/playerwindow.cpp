@@ -1,4 +1,5 @@
 #include "playerwindow.h"
+#include <QDebug>
 #define CHANGE_TO_PLAYICON ui->playButton->changeState("开始",PLAY_ICON)
 #define CHANGE_TO_PAUSEICON ui->playButton->changeState("暂停",PAUSE_ICON)
 #define RESET_LABEL ui->mediaLabel->setText(player->getMediaDetail().getTitle())
@@ -36,7 +37,6 @@ inline void PlayerWindow::initUi() {
     ui->searchLabel->setReplyClick(true);
     ui->mupbutton->setReplyClick(true);
     ui->mdownButton->setReplyClick(true);
-    ui->playView->setOpacity(0.6);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
@@ -63,8 +63,10 @@ inline void PlayerWindow::setToolBar(double opacity) {
     int val = std::min(255,qRound(255*opacity));
     QString color_st = "rgba(255,255,255," + QString::number(val) + "), ",color_end = "rgba(190,190,190," + QString::number(val) + ") ";
     ui->toolBar->setStyleSheet("QToolBar {"
-                               "background-color: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 " + color_st +
-                               "stop:1 " + color_end + ");border:none;}"
+                               "background-color: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1, stop:0 " + color_st +
+                               "stop:1 " + color_end + ");"
+                               "border:none;"
+                               "}"
                                );
 }
 
@@ -276,7 +278,7 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
             return;
         }
-        static QMovie gif(":/Icons/images/waiting.gif");  //282-285设置gif
+        static QMovie gif(":/Icons/images/waiting.gif");  //282-285:设置gif
         gif.setScaledSize(ui->searchLabel->size());
         ui->searchLabel->setMovie(&gif);
         gif.start();

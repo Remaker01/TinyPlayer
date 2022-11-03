@@ -65,10 +65,11 @@ void SettingWindow::on_locButton_clicked() {
 #ifdef Q_OS_WIN
         qt_ntfs_permission_lookup++;
 #endif
+        // 检查目录是否可写且有空间
         if(QFileInfo(loc).isWritable()&&QStorageInfo(loc).bytesAvailable() > 0)
             ui->locEdit->setText(loc);
         else
-            QMessageBox::warning(this,"警告","指定目录不可写，请重新选择");
+            QMessageBox::warning(nullptr,"警告","指定目录不可写，请重新选择");
 #ifdef Q_OS_WIN
         qt_ntfs_permission_lookup--;
 #endif

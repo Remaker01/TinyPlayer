@@ -108,7 +108,6 @@ background-color: rgb(200, 200,200);
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
 border:0px;
-background-position:center center;
 padding-bottom:2px;
 }
 QPushButton:hover{
@@ -168,7 +167,6 @@ background-color: rgb(200,200,200);
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
 border:0px;
-background-position:center center;
 padding-bottom:2px;
 }
 QPushButton:hover{
@@ -276,7 +274,7 @@ background-color: rgb(200,200,200);
         <number>3</number>
        </property>
        <property name="bottomMargin">
-        <number>3</number>
+        <number>1</number>
        </property>
        <item>
         <widget class="PlayerButton" name="mupbutton">
@@ -315,11 +313,19 @@ background-color: rgb(200,200,200);
          <property name="minimumSize">
           <size>
            <width>200</width>
-           <height>0</height>
+           <height>22</height>
           </size>
          </property>
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLineEdit{
+border:0px;
+border-radius:4px;
+min-height:20px;
+padding:1px 1px;
+}</string>
          </property>
          <property name="maxLength">
           <number>256</number>
@@ -373,16 +379,6 @@ background-color: rgb(200,200,200);
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="2" colspan="2">
-        <widget class="PlayListView" name="playView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="2">
         <widget class="QLabel" name="waitingLabel">
          <property name="text">
@@ -406,6 +402,30 @@ background-color: rgb(200,200,200);
          </property>
          <property name="text">
           <string>取消</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="2">
+        <widget class="PlayListView" name="playView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QWidget{
+background-color: rgba(255, 255, 255, 154);
+}
+QListView::item:hover:!selected {
+background-color: rgba(200, 200, 200, 100);
+color:black;
+}
+QListView::item:selected {
+/*background-color: rgb(198, 227, 251);*/
+background-color: rgb(200, 225, 250);
+color:black;
+}</string>
          </property>
         </widget>
        </item>

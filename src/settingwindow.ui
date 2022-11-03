@@ -40,7 +40,7 @@ QCheckBox::indicator:unchecked{
 background-image: url(:/Icons/images/unchecked.png);
 }
 QSpinBox,QLineEdit{
-padding:1px 2px;
+padding:2px 1px;
 }</string>
   </property>
   <widget class="QCheckBox" name="minOnCloseBox">
