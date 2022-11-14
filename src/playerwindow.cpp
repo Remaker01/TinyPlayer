@@ -5,14 +5,14 @@
 #define RESET_LABEL ui->mediaLabel->setText(player->getMediaDetail().getTitle())
 const QString PlayerWindow::CONFIG_FILE = "player.config";
 static const QLatin1Char zero('0');
-static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOL = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
+static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOLUME = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
 PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
-    PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),QMainWindow(parent), ui(new Ui::PlayerWindow) {
+    PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),FramelessWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
     player = new PlayerCore(this);
     settingWind = new SettingWindow(this);
-    scher = new OnlineSeacher(this);
     res = new SearchResultWidget(this);
+    scher = new OnlineSeacher(this);
     initUi();
     initConfiguration();
     connectSlots();
@@ -37,15 +37,18 @@ inline void PlayerWindow::initUi() {
     ui->searchLabel->setReplyClick(true);
     ui->mupbutton->setReplyClick(true);
     ui->mdownButton->setReplyClick(true);
+    ui->logoButton->setReplyClick(true);
+    setCloseButton(ui->quitButton);
+    setMinimizeButton(ui->minButton);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
-    QList<QAction*> actions{ui->actionLoadList,ui->actionOpenDir,ui->actionSaveList,ui->actionToDefault,ui->actionOpenHelp};
-    for (QAction *action:actions) {
-        ui->toolBar->widgetForAction(action)->setStyleSheet("padding:6px 0px;");
-        ui->toolBar->widgetForAction(action)->setToolTip("");
-    }
+//    QList<QAction*> actions{ui->actionLoadList,ui->actionOpenDir,ui->actionSaveList,ui->actionToDefault,ui->actionOpenHelp};
+//    for (QAction *action:actions) {
+//        ui->toolBar->widgetForAction(action)->setStyleSheet("padding:6px 0px;");
+//        ui->toolBar->widgetForAction(action)->setToolTip("");
+//    }
 }
 
 inline void PlayerWindow::initSystemtray() {
@@ -59,11 +62,11 @@ inline void PlayerWindow::initSystemtray() {
     tray->show();
 }
 
-inline void PlayerWindow::setToolBar(double opacity) {
+inline void PlayerWindow::setTitlebar(double opacity) {
     int val = std::min(255,qRound(255*opacity));
     QString color_st = "rgba(255,255,255," + QString::number(val) + "), ",color_end = "rgba(190,190,190," + QString::number(val) + ") ";
-    ui->toolBar->setStyleSheet("QToolBar {"
-                               "background-color: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1, stop:0 " + color_st +
+    ui->topWidget->setStyleSheet(QStringLiteral("QWidget#topWidget {"
+                               "background-color: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1, stop:0 ") + color_st +
                                "stop:1 " + color_end + ");"
                                "border:none;"
                                "}"
@@ -86,15 +89,15 @@ inline void PlayerWindow::initConfiguration() {
     QSettings setting(CONFIG_FILE,QSettings::IniFormat);
     if(!QFile::exists(CONFIG_FILE)) {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
-        setting.setValue(LAST_VOL,50);
+        setting.setValue(LAST_VOLUME,50);
         setting.setValue(LAST_MODE,0);
         setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
         setting.setValue("AUTOLOAD",settingWind->getAutoSave());
         setting.setValue("MIN_ONCLOSE",settingWind->getminOnClose());
     }
     lastPath = setting.value(LAST_PATH).toString();
-    ui->volumeSlider->setValue(setting.value(LAST_VOL).toInt());
-    setToolBar(setting.value("TOOLBAR_OPAC").toDouble());
+    ui->volumeSlider->setValue(setting.value(LAST_VOLUME).toInt());
+    setTitlebar(setting.value("TOOLBAR_OPAC").toDouble());
     settingWind->setOpacityValue(setting.value("TOOLBAR_OPAC").toDouble());
     settingWind->setAutoSave(setting.value("AUTOLOAD").toBool());
     settingWind->setminOnClose(setting.value("MIN_ONCLOSE").toBool());
@@ -163,7 +166,7 @@ inline void PlayerWindow::connectSlots() {
     connect(player,&VlcMediaPlayer::error,ui->waitingLabel,&QWidget::hide);  //播放出错也要隐藏
     connect(tray,&QSystemTrayIcon::activated,this,[this](QSystemTrayIcon::ActivationReason r){
         if(r == QSystemTrayIcon::Trigger)
-            QMainWindow::showNormal();
+            showNormal();
     });
     connect(scher,&OnlineSeacher::done,this,&PlayerWindow::on_onlineSearcher_done);
     connect(scher,&OnlineSeacher::downloaded,this,[this]{
@@ -183,7 +186,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.6  3.6.221018");
+                                                        "版本号:3.10  3.10.221116");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -272,7 +275,6 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(ui->nextButton,&PlayerButton::clicked,player,&PlayerCore::goNext);
     connect(ui->prevButton,&PlayerButton::clicked,player,&PlayerCore::goPrevious);
-    connect(ui->actionSet,&QAction::triggered,settingWind,&QWidget::show);
     connect(ui->searchLabel,&PlayerButton::clicked,this,[this]() {
         if(res->isVisible()) {
             QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
@@ -303,7 +305,7 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->mdownButton,&PlayerButton::clicked,this,[this]() {
         moveItem(false);
     });
-    connect(settingWind,&SettingWindow::changeOpacityRequirement,this,&PlayerWindow::setToolBar);
+    connect(settingWind,&SettingWindow::changeOpacityRequirement,this,&PlayerWindow::setTitlebar);
 }
 
 inline void PlayerWindow::ensureExit() {
@@ -504,7 +506,7 @@ void PlayerWindow::moveItem(bool moveUp) {
 PlayerWindow::~PlayerWindow() {
     QSettings setting(CONFIG_FILE,QSettings::IniFormat);
     setting.setValue(LAST_PATH,lastPath);
-    setting.setValue(LAST_VOL,ui->volumeSlider->value());
+    setting.setValue(LAST_VOLUME,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
     setting.setValue("AUTOLOAD",settingWind->getAutoSave());
     setting.setValue("MIN_ONCLOSE",settingWind->getminOnClose());

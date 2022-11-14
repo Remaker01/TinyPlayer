@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(TinyPlayer VERSION 3.6 LANGUAGES CXX)
+project(TinyPlayer VERSION 3.10 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -35,6 +35,7 @@ set(PROJECT_SOURCES
         src/settingwindow.h src/settingwindow.cpp src/settingwindow.ui
         src/onlineseacher.h src/onlineseacher.cpp
         src/searchresultwidget.h src/searchresultwidget.cpp src/searchresultwidget.ui
+        src/framelesswindow.h src/framelesswindow.cpp
         resource.qrc
         ${TS_FILES}
 )

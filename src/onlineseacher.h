@@ -11,6 +11,7 @@ private:
     QString keyword;
     QProcess prog,down_prog;
 public:
+    /// 搜索程序与下载程序的名称
     static const QString PROGRAM,DOWN_PROGRAM;
     explicit OnlineSeacher(QObject *parent = nullptr);
     OnlineSeacher(const QString &kwd,QObject *parent = nullptr);
@@ -23,8 +24,9 @@ public:
     void doSearch(int method = 1);
     void download(QStringList uri, const QString &path, const QStringList &names);
 signals:
-    /// doSearch()结束后调用
+    /// doSearch()结束后触发
     void done();
+    /// download()结束后触发
     void downloaded();
 };
 

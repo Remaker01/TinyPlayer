@@ -1,7 +1,6 @@
 #ifndef PLAYERWINDOW_H
 #define PLAYERWINDOW_H
 
-#include <QMainWindow>
 #include <QFileDialog>
 #include <QPalette>
 #include <QDesktopServices>
@@ -10,6 +9,7 @@
 #include <QKeyEvent>
 #include <QCloseEvent>
 #include <QToolButton>
+#include "framelesswindow.h"
 #include "playerbutton.h"
 #include "player.h"
 #include "playlistview.h"
@@ -20,7 +20,7 @@
 #define SLOTS
 #endif
 namespace Ui { class PlayerWindow; }
-class PlayerWindow : public QMainWindow {
+class PlayerWindow : public FramelessWindow {
     Q_OBJECT
 private:
     static const QString CONFIG_FILE;
@@ -35,7 +35,7 @@ private:
     SearchResultWidget *res;
     void initUi();
     void initSystemtray();
-    void setToolBar(double opacity);
+    void setTitlebar(double opacity);
     void setBackground(const QPixmap &img);
     void changeMode(PlayerCore::PlayMode m);
     void connectSlots();

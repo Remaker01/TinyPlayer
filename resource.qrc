@@ -28,5 +28,7 @@
         <file>images/setting.png</file>
         <file>images/checked.png</file>
         <file>images/unchecked.png</file>
+        <file>images/min.png</file>
+        <file>images/quit.png</file>
     </qresource>
 </RCC>

@@ -14,7 +14,7 @@ void PlayerButton::mousePressEvent(QMouseEvent *e) {
         wi = wi - (wi >> 3);
         he = he - (he >> 3);
         resize(wi,he);
-        move(x() + ((w >> 3) -1),y() + (h >> 3));
+        move(x() + ((w >> 3) -1),y() + (h >> 3)); //除缩小外，还要向右、向下移动
     }
 }
 
