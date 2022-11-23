@@ -1,10 +1,7 @@
 #ifndef SETTINGWINDOW_H
 #define SETTINGWINDOW_H
-
-#include <QWidget>
-#include <QFileDialog>
-#include <QStandardPaths>
-#include <QMessageBox>
+#define __WIDGET_NEEDED__
+#include "global_include.h"
 namespace Ui {class SettingWindow;}
 
 class SettingWindow : public QWidget {

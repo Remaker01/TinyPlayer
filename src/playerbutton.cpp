@@ -20,9 +20,9 @@ void PlayerButton::mousePressEvent(QMouseEvent *e) {
 
 void PlayerButton::mouseReleaseEvent(QMouseEvent *e) {
     if(e->button() == Qt::LeftButton&&replyClick) {
-        emit clicked();
         resize(w,h);
         move(x() - ((w >> 3) -1),y() - (h >> 3));
+        emit clicked();
     }
 }
 

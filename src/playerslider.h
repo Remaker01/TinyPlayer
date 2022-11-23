@@ -1,8 +1,7 @@
 #ifndef PLAYERSLIDER_H
 #define PLAYERSLIDER_H
-#include <QSlider>
-#include <QMouseEvent>
-#include "player.h"
+#define __WIDGET_NEEDED__
+#include "global_include.h"
 class PlayerSlider :public QSlider{
     Q_OBJECT
 public:

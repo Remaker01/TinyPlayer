@@ -14,9 +14,9 @@ const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG
 const QString PlayerCore::MODE_TIPS[MODE_COUNT] = {"单曲播放","顺序播放","单曲循环","列表循环"};
 VlcInstance PlayerCore::ins(VlcCommon::args());
 PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
-    curMedia = new VlcMedia("",true,&ins);
+    curMedia = new VlcMedia("",&ins);
     connectSlots();
-    equ = new VlcEqualizer(this);
+    equ = nullptr;
 }
 
 inline void PlayerCore::connectSlots() {
@@ -217,21 +217,10 @@ bool PlayerCore::moveDown(int i,int k) {
 }
 
 void PlayerCore::setSoundEffect(uint index) {
+    if(equ == nullptr)
+        equ = new VlcEqualizer(this);
     equ->loadFromPreset(index);
     equ->setEnabled(true);
-}
-
-void PlayerCore::switchState() {
-    switch (VlcMediaPlayer::state()) {
-    case Vlc::Playing:
-        pause();
-        break;
-    case Vlc::Paused:
-        play();
-        break;
-    default:
-        break;
-    }
 }
 
 PlayerCore::~PlayerCore() {

@@ -1,5 +1,4 @@
 #include "playerwindow.h"
-#include <QDebug>
 #define CHANGE_TO_PLAYICON ui->playButton->changeState("开始",PLAY_ICON)
 #define CHANGE_TO_PAUSEICON ui->playButton->changeState("暂停",PAUSE_ICON)
 #define RESET_LABEL ui->mediaLabel->setText(player->getMediaDetail().getTitle())
@@ -38,17 +37,18 @@ inline void PlayerWindow::initUi() {
     ui->mupbutton->setReplyClick(true);
     ui->mdownButton->setReplyClick(true);
     ui->logoButton->setReplyClick(true);
+    static QAction sep1,sep2,sep3;
+    sep1.setSeparator(true),sep2.setSeparator(true),sep3.setSeparator(true);
+    setMenu({ui->actionopenFile,ui->actionOpenDir,&sep1,
+                      ui->actionLoadList,ui->actionSaveList,&sep2,
+                      ui->actionLoadImg,ui->actionToDefault,&sep3,
+                      ui->actionAbout,ui->actionExit});
     setCloseButton(ui->quitButton);
     setMinimizeButton(ui->minButton);
     initSystemtray();
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
-//    QList<QAction*> actions{ui->actionLoadList,ui->actionOpenDir,ui->actionSaveList,ui->actionToDefault,ui->actionOpenHelp};
-//    for (QAction *action:actions) {
-//        ui->toolBar->widgetForAction(action)->setStyleSheet("padding:6px 0px;");
-//        ui->toolBar->widgetForAction(action)->setToolTip("");
-//    }
 }
 
 inline void PlayerWindow::initSystemtray() {
@@ -64,12 +64,13 @@ inline void PlayerWindow::initSystemtray() {
 
 inline void PlayerWindow::setTitlebar(double opacity) {
     int val = std::min(255,qRound(255*opacity));
-    QString color_st = "rgba(255,255,255," + QString::number(val) + "), ",color_end = "rgba(190,190,190," + QString::number(val) + ") ";
-    ui->topWidget->setStyleSheet(QStringLiteral("QWidget#topWidget {"
+    QString color_st = "rgba(245,245,255," + QString::number(val) + "), ",color_end = "rgba(185,185,195," + QString::number(val) + ") ";
+    ui->topWidget->setStyleSheet(QStringLiteral("QWidget#topWidget {"  // 因可能频繁调用，将较长的字符串常量先初始化
                                "background-color: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1, stop:0 ") + color_st +
-                               "stop:1 " + color_end + ");"
+                               "stop:1 " + color_end + QStringLiteral(");"
                                "border:none;"
                                "}"
+                               "QWidget {font-family:\"") + font().family() + "\";}" //防止字体失效
                                );
 }
 
@@ -186,7 +187,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.10  3.10.221116");
+                                                        "版本号:3.10Beta  3.10.221121");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -306,6 +307,10 @@ inline void PlayerWindow::connectUiSlots() {
         moveItem(false);
     });
     connect(settingWind,&SettingWindow::changeOpacityRequirement,this,&PlayerWindow::setTitlebar);
+    connect(ui->logoButton,&PlayerButton::clicked,this,[this]() {
+       getMenu()->exec(QCursor::pos());
+    });
+    connect(ui->setButton,&QPushButton::clicked,settingWind,&QWidget::show);
 }
 
 inline void PlayerWindow::ensureExit() {

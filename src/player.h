@@ -1,9 +1,9 @@
 #ifndef PLAY_H
 #define PLAY_H
-#include <QFile>
 #include <VLCQtCore/MediaPlayer.h>
 #include <VLCQtCore/Audio.h>
 #include <VLCQtCore/Equalizer.h>
+#include <QMessageBox>
 #include "music.h"
 #include "onlineseacher.h"
 /**
@@ -69,8 +69,6 @@ public slots:
     bool moveUp(int i,int k = 1);
     bool moveDown(int i, int k = 1);
     void setSoundEffect(uint index);
-    /// 播放/暂停状态互相切换
-    void switchState();
 signals:
     void finished();
     //void mediaSourceChanged(qint64 newTime);

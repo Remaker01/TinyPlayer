@@ -1,9 +1,6 @@
 #ifndef MUSIC_H
 #define MUSIC_H
-#include <QCoreApplication>
-#include <QHash>
-#include <QMessageBox>
-#include <QFile>
+#include "global_include.h"
 #include <VLCQtCore/MetaManager.h>
 #include <VLCQtCore/Media.h>
 #include <VLCQtCore/Common.h>

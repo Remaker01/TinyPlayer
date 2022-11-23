@@ -25,6 +25,7 @@ set(INCLUDE_DIRECTORIES
 set(TS_FILES TinyPlayer_zh_CN.ts)
 
 set(PROJECT_SOURCES
+        src/global_include.h
         src/playerwindow.cpp src/playerwindow.h src/playerwindow.ui
         src/player.cpp src/player.h
 	src/playerbutton.cpp src/playerbutton.h

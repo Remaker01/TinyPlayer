@@ -1,12 +1,7 @@
 #ifndef PLAYLISTVIEW_H
 #define PLAYLISTVIEW_H
-#include <QListView>
-#include <QUrl>
-#include <QDropEvent>
-#include <QMimeData>
-#include <QContextMenuEvent>
-#include <QMenu>
-#include <QStringListModel>
+#define __WIDGET_NEEDED__
+#include "global_include.h"
 class PlayListView : public QListView {
     Q_OBJECT
 private:

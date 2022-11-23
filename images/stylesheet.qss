@@ -5,7 +5,6 @@ QSlider::handle:horizontal {
     margin-top:-5px;
     margin-bottom:-5px;
 }
-
 QSlider::groove:horizontal {
     border-radius:6px;
     height:5px;

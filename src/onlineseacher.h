@@ -1,9 +1,6 @@
 #ifndef ONLINESEACHER_H
 #define ONLINESEACHER_H
 
-#include <QMessageBox>
-#include <QProcess>
-#include <QFile>
 #include "searchresultwidget.h"
 class OnlineSeacher : public QObject {
     Q_OBJECT

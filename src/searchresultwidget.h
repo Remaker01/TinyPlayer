@@ -1,9 +1,7 @@
 #ifndef SEARCHRESULTWIDGET_H
 #define SEARCHRESULTWIDGET_H
-
-#include <QWidget>
-#include <QDesktopServices>
-#include <QUrl>
+#define __WIDGET_NEEDED__
+#include "global_include.h"
 #include <set>
 #include "ui_searchresultwidget.h"
 namespace Ui {class SearchResultWidget;}

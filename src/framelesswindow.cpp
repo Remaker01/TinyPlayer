@@ -2,10 +2,10 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent),leftBtnPressed(false),dir(NONE) {
-    QWidget::setWindowFlags(Qt::FramelessWindowHint);
+FramelessWindow::FramelessWindow(QWidget *par) : QWidget(par),leftBtnPressed(false),dir(NONE) {
+    setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_StyledBackground);
     setMouseTracking(true);
-    setAttribute(Qt::WA_StyledBackground, true);
 }
 
 void FramelessWindow::region(const QPoint &currentLoc,const QRect &_rect) {
@@ -81,6 +81,18 @@ void FramelessWindow::setMaxmizeButton(QAbstractButton *maxBtn) {
         connect(maxBtn,&QAbstractButton::clicked,this,&QWidget::showMaximized);
 }
 
+void FramelessWindow::setMenu(QList<QAction *> actions, const QString &style) {
+    if(menu == nullptr)
+        menu = new QMenu(this);
+    menu->clear();
+    menu->addActions(actions);
+    menu->setStyleSheet(style);
+}
+
+QMenu *FramelessWindow::getMenu() {
+    return menu;
+}
+
 void FramelessWindow::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         leftBtnPressed = true;
@@ -93,15 +105,13 @@ void FramelessWindow::mousePressEvent(QMouseEvent *ev) {
 }
 
 void FramelessWindow::mouseMoveEvent(QMouseEvent *ev) {
-    if(windowState() == Qt::WindowMaximized)
-        return;
     QPoint globalPoint = ev->globalPos();   //鼠标全局坐标
-    QRect rect = QWidget::rect();  //rect == QRect(0,0 1280x720)
-    QPoint topLeft = mapToGlobal(rect.topLeft());
-    QPoint bottomRight = mapToGlobal(rect.bottomRight());
+    QRect _rect = QWidget::rect();  //rect == QRect(0,0 1280x720)
+    QPoint topLeft = mapToGlobal(_rect.topLeft());
+    QPoint bottomRight = mapToGlobal(_rect.bottomRight());
 
     if(!leftBtnPressed) {  //没有按下左键时
-        region(globalPoint,rect); //窗口大小的改变——判断鼠标位置，改变光标形状
+        region(globalPoint,_rect); //窗口大小的改变——判断鼠标位置，改变光标形状
     }
     else {
         //如果不在边角处(==NONE)，则移动，否则改变大小
@@ -199,4 +209,13 @@ void FramelessWindow::mouseReleaseEvent(QMouseEvent *ev) {
             dir = NONE;
         }
     }
+}
+
+void FramelessWindow::showEvent(QShowEvent *ev) {
+    static QPropertyAnimation anim(this, "windowOpacity");
+    anim.setDuration(150);
+    anim.setStartValue(0.0);
+    anim.setEndValue(1.0);
+    anim.start();
+    ev->accept();
 }

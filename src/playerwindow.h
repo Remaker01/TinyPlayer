@@ -1,14 +1,6 @@
 #ifndef PLAYERWINDOW_H
 #define PLAYERWINDOW_H
 
-#include <QFileDialog>
-#include <QPalette>
-#include <QDesktopServices>
-#include <QSettings>
-#include <QSystemTrayIcon>
-#include <QKeyEvent>
-#include <QCloseEvent>
-#include <QToolButton>
 #include "framelesswindow.h"
 #include "playerbutton.h"
 #include "player.h"
