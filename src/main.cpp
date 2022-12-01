@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
         QDir::setCurrent(a.applicationDirPath());
         QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,a.applicationDirPath());
         QStringList args = a.arguments();
-        PlayerWindow w(args.size()>1?args[1]:"");
+        PlayerWindow w(argc>1?args[1]:"");
         if(!w.isVisible())
             w.show();
         return a.exec();

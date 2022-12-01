@@ -1,7 +1,4 @@
 #include "framelesswindow.h"
-#ifndef NDEBUG
-#include <QDebug>
-#endif
 FramelessWindow::FramelessWindow(QWidget *par) : QWidget(par),leftBtnPressed(false),dir(NONE) {
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_StyledBackground);
@@ -89,9 +86,9 @@ void FramelessWindow::setMenu(QList<QAction *> actions, const QString &style) {
     menu->setStyleSheet(style);
 }
 
-QMenu *FramelessWindow::getMenu() {
-    return menu;
-}
+//QMenu *FramelessWindow::getMenu() {
+//    return menu;
+//}
 
 void FramelessWindow::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
@@ -218,4 +215,10 @@ void FramelessWindow::showEvent(QShowEvent *ev) {
     anim.setEndValue(1.0);
     anim.start();
     ev->accept();
+}
+
+void FramelessWindow::showMenu(QRect legalRange) {
+    QPoint loc = QCursor::pos();
+    if(legalRange.contains(mapFromGlobal(loc))&&menu != nullptr)
+        menu->exec(loc);
 }

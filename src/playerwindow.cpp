@@ -308,7 +308,7 @@ inline void PlayerWindow::connectUiSlots() {
     });
     connect(settingWind,&SettingWindow::changeOpacityRequirement,this,&PlayerWindow::setTitlebar);
     connect(ui->logoButton,&PlayerButton::clicked,this,[this]() {
-       getMenu()->exec(QCursor::pos());
+       showMenu(ui->logoButton->rect());
     });
     connect(ui->setButton,&QPushButton::clicked,settingWind,&QWidget::show);
 }
@@ -445,8 +445,8 @@ void PlayerWindow::on_onlineSearcher_done() {
     if(QFile("links.tmp").exists()) {
         res->setItems(scher->analyzeResult());
         res->show();
-        ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
     }
+    ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
     ui->searchLabel->setReplyClick(true);
 }
 static constexpr uint16_t MAGIC = (uint16_t)0x0102;

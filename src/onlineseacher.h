@@ -7,6 +7,7 @@ class OnlineSeacher : public QObject {
 private:
     QString keyword;
     QProcess prog,down_prog;
+    void connectSlots();
 public:
     /// 搜索程序与下载程序的名称
     static const QString PROGRAM,DOWN_PROGRAM;

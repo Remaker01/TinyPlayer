@@ -29,7 +29,7 @@ public:
      * @param style 样式表，默认为空
      */
     void setMenu(QList<QAction*> actions,const QString &style = QString());
-    QMenu *getMenu();
+//    QMenu *getMenu();
 protected:
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
@@ -41,7 +41,8 @@ private:
     volatile bool leftBtnPressed; //左键是否按下
     volatile Diretion dir; //记录窗口大小改变的方向
     QMenu* menu = nullptr;
-signals:
+public slots:
+    void showMenu(QRect legalRange);
 };
 
 #endif // FRAMELESSWINDOW_H
