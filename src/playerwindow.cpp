@@ -55,7 +55,7 @@ inline void PlayerWindow::initSystemtray() {
     tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.ico"),this);
     tray->setToolTip("TinyPlayer");
     trayMenu = new QMenu(this);
-    trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QMainWindow::showNormal);
+    trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QWidget::showNormal);
     trayMenu->addAction(QIcon(),"播放/暂停",ui->playButton,&PlayerButton::click);
     trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit);
     tray->setContextMenu(trayMenu);
@@ -187,7 +187,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.10Beta  3.10.221121");
+                                                        "版本号:3.10  3.10.221203");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -319,7 +319,7 @@ inline void PlayerWindow::ensureExit() {
     QPushButton *yes = box.addButton("是",QMessageBox::NoRole);
     box.addButton("否",QMessageBox::RejectRole);
     connect(yes,&QPushButton::clicked,qApp,&QApplication::quit);
-    connect(&box,&QMessageBox::accepted,this,&QMainWindow::hide);
+    connect(&box,&QMessageBox::accepted,this,&QWidget::hide);
     box.exec();
 }
 
