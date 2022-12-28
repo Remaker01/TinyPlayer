@@ -2,15 +2,17 @@
 简易音乐下载模块。
 传入参数1为下载目录，后面为下载地址与文件名，用英文分号分隔
 '''
-from urllib import request
+from urllib3.poolmanager import PoolManager
 from multiprocessing.pool import ThreadPool
 import sys
 import os
 # import time
 head = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0",
-    "Accept":"gzip, deflate"
+    "Accept":"gzip, deflate",
+    "Connection":"keep-alive"
 }
+_http = PoolManager(num_pools=5)
 pool = ThreadPool(20)
 argc = len(sys.argv)
 ILLEGAL_CHARS=[':','*','?','\"','<','>','|']
@@ -29,10 +31,9 @@ def do_download(urls:str):
     '''
     url,fname = _get_url_fname(urls)
     fp = open(fname,"wb")
-    respo = request.urlopen(request.Request(url,headers=head,method="GET"))
-    # size = float(respo.headers['content-length'])
-    # print("正在下载" + url[loc+1:] + ",大小为%.2fKB"%(size/1024))
-    fp.write(respo.read())
+    respo = _http.request("GET",url=url,headers=head,preload_content=False)
+    for chunk in respo.stream(1024):
+        fp.write(chunk)
     # print("已下载" + url[loc+1:])
     fp.close()
 if __name__ == "__main__":
@@ -44,8 +45,9 @@ if __name__ == "__main__":
         os.makedirs(loc)
     os.chdir(loc)
     for i in range(2,argc,10):
-        urls=set(sys.argv[i:min(argc,i+10)])
+        urls=sys.argv[i:min(argc,i+10)]
         pool.map(do_download,urls)
     pool.close()
     pool.join()
+    _http.clear()
     # print(time.time()-st)
