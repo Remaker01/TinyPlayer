@@ -67,6 +67,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="copyButton">
+        <property name="text">
+         <string>复制链接</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="insertButton">
         <property name="text">
          <string>插入播放列表</string>

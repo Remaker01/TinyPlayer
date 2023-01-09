@@ -1,20 +1,23 @@
 '''通过 www.gequbao.com 查询'''
-from urllib import request,parse
+from urllib3.poolmanager import PoolManager
 from lxml import etree
 from multiprocessing.pool import ThreadPool
 host = "https://www.gequbao.com"
 head = {
-    "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/90.0",
+    "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
     "Accept-Language" : "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
-    "Referer":host
+    "Referer":host,
+    "Connection":"keep-alive"
 }
 pool = ThreadPool(20)
+_http = PoolManager(num_pools=5,headers=head)
 _fp = open("links.tmp","w",encoding="utf-8")
 def _redirect_addr(addr:str):
-    response = request.urlopen(request.Request(url=addr,headers=head,method="GET"))
+    response = _http.urlopen(url=addr,method="GET",preload_content=False)
+    response.release_conn()
     return response.geturl()
 def _text(respo):
-    return respo.read().decode("utf-8")
+    return respo.data.decode("utf-8")
 def get_list(name:str):
     '''
    Parameters
@@ -28,8 +31,8 @@ def get_list(name:str):
     '''
     count = 0
     pages = []
-    uri = host + "/s/" + parse.quote(name)
-    respo = request.urlopen(request.Request(uri,headers=head,method="GET"))
+    uri = host + "/s/" + name
+    respo = _http.request(url=uri,method="GET")
     tree = etree.HTML(_text(respo))
     result = tree.xpath("//body/div[1]/div[2]/div/div/table//td[1]/a[1]")
     for item in result:
@@ -43,7 +46,7 @@ def get_list(name:str):
     pool.join()
     _fp.close()
 def get_addr(page_url:str):
-    respo = request.urlopen(request.Request(page_url,headers=head,method="GET"))
+    respo = _http.request(url=page_url,method="GET")
     tree = etree.HTML(_text(respo))
     fake_url = tree.xpath("//body/div[1]/script/text()")
     fake_url = fake_url[0]

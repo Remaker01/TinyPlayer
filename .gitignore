@@ -78,3 +78,4 @@ CMakeLists.txt.user
 # configs
 *.config
 plugins.dat
+src/links.tmp

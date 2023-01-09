@@ -82,3 +82,11 @@ void SearchResultWidget::on_tableWidget_cellClicked(int row, int column) {
 SearchResultWidget::~SearchResultWidget() {
     delete ui;
 }
+
+void SearchResultWidget::on_copyButton_clicked() {
+    auto sel = getSelectedItems();
+    if(sel.isEmpty())
+        return;
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(sel[0].url);
+}

@@ -36,6 +36,8 @@ signals:
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
 
+    void on_copyButton_clicked();
+
 private:
     Ui::SearchResultWidget *ui;
 };
