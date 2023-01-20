@@ -34,7 +34,7 @@ const QString &Music::getTitle() const {return title;}
 
 const QString &Music::getDcrp() const {return description;}
 
-const QUrl &Music::getAlbumImage() const {qDebug() << albumImage; return albumImage;}
+const QUrl &Music::getAlbumImage() const {return albumImage;}
 
 QString Music::formatTime() {
     if(!formattedTime.isEmpty())

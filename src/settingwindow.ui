@@ -141,7 +141,7 @@ padding:2px 1px;
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="effectBox">
       <item>
        <property name="text">
         <string>平缓</string>

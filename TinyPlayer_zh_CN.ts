@@ -219,6 +219,11 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/searchresultwidget.ui" line="72"/>
+        <source>复制链接</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/searchresultwidget.ui" line="79"/>
         <source>插入播放列表</source>
         <translation type="unfinished"></translation>
     </message>

@@ -19,7 +19,7 @@ public:
     bool getminOnClose();
     QString getDownLoc();
     int getSrchMethod();
-    void setSrchMethod(int m);
+//    void setSrchMethod(int m);
     ~SettingWindow();
 private slots:
 //    void on_minOnCloseBox_stateChanged(int arg1);

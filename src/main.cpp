@@ -1,7 +1,3 @@
-/* TODO
- * 1. 右上角加个设置
- * 2. 单击左上角弹出菜单
- */
 #include "playerwindow.h"
 #include <QSharedMemory>
 int main(int argc, char *argv[]) {

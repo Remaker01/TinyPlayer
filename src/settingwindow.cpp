@@ -9,7 +9,7 @@ SettingWindow::SettingWindow(QWidget *parent) :
     ui->autoSaveBox->setTristate(false);
     ui->minOnCloseBox->setTristate(false);
     opacity = ui->spinBox->value() / 100.0;
-    connect(ui->comboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
+    connect(ui->effectBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
 }
 
 void SettingWindow::setAutoSave(bool f) {
@@ -48,6 +48,7 @@ void SettingWindow::on_pushButton_clicked() {
     ui->minOnCloseBox->setChecked(false);
     ui->autoSaveBox->setChecked(true);
     ui->spinBox->setValue(70);
+    ui->effectBox->setCurrentIndex(0);
     ui->locEdit->setText("音乐文件夹");
 }
 
