@@ -46,14 +46,14 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
 void OnlineSeacher::doSearch(int method) {
-    if(method != 1&&method != 2)
+    if(method < 0||method > 2)
         return;
     if(!QFile::exists(PROGRAM)) {
         emit done();
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载搜索引擎");
         return;
     }
-    QString methodStr = (method == 1) ? "1" : "2";
+    QString methodStr = (method == 0) ? "0" : (method == 1 ? "1" : "2");
     prog.setArguments(QStringList({methodStr,keyword}));
     prog.start();
 }

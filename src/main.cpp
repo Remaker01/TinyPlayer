@@ -8,7 +8,6 @@ int main(int argc, char *argv[]) {
         if(!font.exactMatch())
             QMessageBox::warning(nullptr,"提示","字体缺失，请下载幼圆字体");
         QDir::setCurrent(a.applicationDirPath());
-        QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,a.applicationDirPath());
         QStringList args = a.arguments();
         PlayerWindow w(argc>1?args[1]:"");
         if(!w.isVisible())

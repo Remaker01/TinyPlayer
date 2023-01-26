@@ -327,12 +327,17 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="257"/>
-        <source>引擎1(速度较快，结果较少)</source>
+        <source>网易云音乐</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="262"/>
-        <source>引擎2(速度较慢且可靠性稍差，结果较多)</source>
+        <source>酷狗音乐</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/settingwindow.ui" line="267"/>
+        <source>荔枝音乐</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

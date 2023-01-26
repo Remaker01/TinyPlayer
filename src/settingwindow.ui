@@ -254,12 +254,17 @@ padding:2px 1px;
      <widget class="QComboBox" name="methodBox">
       <item>
        <property name="text">
-        <string>引擎1(速度较快，结果较少)</string>
+        <string>网易云音乐</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>引擎2(速度较慢且可靠性稍差，结果较多)</string>
+        <string>酷狗音乐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>荔枝音乐</string>
        </property>
       </item>
      </widget>
