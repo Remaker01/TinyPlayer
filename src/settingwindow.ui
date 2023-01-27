@@ -259,12 +259,12 @@ padding:2px 1px;
       </item>
       <item>
        <property name="text">
-        <string>酷狗音乐</string>
+        <string>酷狗音乐(不稳定)</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>荔枝音乐</string>
+        <string>荔枝网</string>
        </property>
       </item>
      </widget>

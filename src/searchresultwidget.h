@@ -1,23 +1,11 @@
 #ifndef SEARCHRESULTWIDGET_H
 #define SEARCHRESULTWIDGET_H
 #define __WIDGET_NEEDED__
-#include "global_include.h"
 #include <set>
+#include "onlineseacher.h"
 #include "ui_searchresultwidget.h"
 namespace Ui {class SearchResultWidget;}
-/**
- * @brief The ResultInfo struct:
- * 结果信息结构体，在SearchResultWidget中添加的条目必须符合此结构体格式
- */
-struct ResultInfo {
-    QString title,artist,url;
-    ResultInfo() = default;
-    ResultInfo(const QString &title,const QString artist,const QString uri) {
-        this->title = title;
-        this->artist = artist;
-        url = uri;
-    }
-};
+
 class SearchResultWidget : public QWidget{
     Q_OBJECT
 public:

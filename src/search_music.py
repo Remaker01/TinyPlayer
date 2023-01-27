@@ -31,7 +31,7 @@ def _redirect_addr(addr:str):
     response = http.urlopen(url=addr,method="GET",headers=_head,preload_content=False)
     response.release_conn()
     return response.geturl()
-def _write(datas):
+def write(datas):
     fp = open("links.tmp","w",encoding="utf-8",newline='\n')
     for data in datas:
         if data[2] is not None:
@@ -44,7 +44,7 @@ def getMusicList(name:str,providor="netease"):
         raise ValueError("提供商必须为{0}之一".format(PROVIDORS))
     global _head
     head = _head.copy()
-    web_url = HOST + "/?name={0}&type=netease".format(quote(name))
+    web_url = HOST + "/?name={0}&type={1}".format(quote(name),providor)
     data = {"input":name,"filter":"name","type":providor,"page":"1"} # filter应该是name
     head_json = {
         "Accept":ACCEPT_JSON,
@@ -58,6 +58,6 @@ def getMusicList(name:str,providor="netease"):
     respo_json = http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False) # 问题4：最后一个参数保证Content-type正确
     # print(respo_json.headers)
     result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
-    _write(result)
+    write(result)
 if __name__ == "__main__":
     getMusicList("test")

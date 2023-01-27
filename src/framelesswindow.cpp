@@ -210,7 +210,7 @@ void FramelessWindow::mouseReleaseEvent(QMouseEvent *ev) {
 
 void FramelessWindow::showEvent(QShowEvent *ev) {
     static QPropertyAnimation anim(this, "windowOpacity");
-    anim.setDuration(150);
+    anim.setDuration(120);
     anim.setStartValue(0.0);
     anim.setEndValue(1.0);
     anim.start();

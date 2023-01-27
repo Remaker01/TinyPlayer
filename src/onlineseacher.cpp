@@ -34,7 +34,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
     while (!f.atEnd()) {
         QString line = f.readLine();
         QStringList now = line.split(";");
-        info.title = now[0].replace("下载","").replace("mp3","");
+        info.title = now[0]/*.replace("下载","").replace("mp3","")*/;//防止"下载","MP3"等关键字出现异常
         info.artist = now[1];
         info.url = now[2].replace('\r',"").replace('\n',"").replace("&amp;","&");
         result.append(info);
@@ -58,19 +58,22 @@ void OnlineSeacher::doSearch(int method) {
     prog.start();
 }
 
-void OnlineSeacher::download(QStringList uri, const QString &path, const QStringList &names) {
+void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const QStringList &names) {
     if(!QFile::exists(DOWN_PROGRAM)) {
         emit downloaded();
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载下载器");
         return;
     }
+    QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
-        uri[i] += ';';
-        uri[i] += names[i];
-        if(!uri[i].endsWith(".mp3",Qt::CaseInsensitive))
-            uri[i].append(".mp3");
+        QString suffix = uri[i].fileName().right(4);
+        args.append(uri[i].fileName());
+        args.last() += ';';
+        args.last() += names[i];
+        if(!args.last().endsWith(suffix,Qt::CaseInsensitive))
+            args.last().append(suffix);
     }
-    uri.prepend(path);
-    down_prog.setArguments(uri);
+    args.prepend(path);
+    down_prog.setArguments(args);
     down_prog.start();
 }

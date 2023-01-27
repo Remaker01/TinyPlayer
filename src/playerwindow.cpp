@@ -187,7 +187,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.20  3.10.230126");
+                                                        "版本号:3.20  3.20.230126");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -250,11 +250,12 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::warning(this,"提示","一次最多下载15首哦~");
             return;
         }
-        QStringList urlsToDown,names;
+        QStringList names;
+        QList<QUrl> urlsToDown;
         for (const QModelIndex &i:indexes) {
             QString name = ui->playView->list().at(i.row());
             names.append(name.replace("\n[线上音乐]",""));
-            urlsToDown.append(player->getMedia(i.row()).toString());
+            urlsToDown.append(player->getMedia(i.row()));
         }
         ui->waitingLabel->setText("正在下载");
         ui->waitingLabel->show();

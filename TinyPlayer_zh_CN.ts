@@ -337,7 +337,8 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="267"/>
-        <source>荔枝音乐</source>
+        <source>荔枝网</source>
+        <oldsource>荔枝音乐</oldsource>
         <translation type="unfinished"></translation>
     </message>
 </context>

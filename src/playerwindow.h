@@ -7,7 +7,7 @@
 #include "playlistview.h"
 #include "settingwindow.h"
 #include "./ui_playerwindow.h"
-#include "onlineseacher.h"
+#include "searchresultwidget.h"
 #ifndef SLOTS
 #define SLOTS
 #endif
