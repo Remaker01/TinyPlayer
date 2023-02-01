@@ -4,7 +4,7 @@ from urllib3.poolmanager import PoolManager
 import json
 from urllib.parse import quote
 HOST = "https://yy.yidianzhuye.com"
-ACCEPT_WEB = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+# ACCEPT_WEB = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
 ACCEPT_JSON = "application/json, text/javascript, */*; q=0.01"
 PROVIDORS = ("netease","kugou","lizhi") # 网页搜索"生日快乐歌"耗时分别为1.29s,3.29s,2.89s，另外migu也可行但耗时太长(7.9s)
 _head = {
@@ -37,7 +37,7 @@ def write(datas):
         if data[2] is not None:
             data[2] = _redirect_addr(data[2])
             if data[2].find("/404") < 0: 
-                fp.write(';'.join(data) + '\n')
+                fp.write('\u00a0'.join(data) + '\n')
     fp.close()
 def getMusicList(name:str,providor="netease"):
     if providor not in PROVIDORS:
@@ -52,7 +52,7 @@ def getMusicList(name:str,providor="netease"):
         "Referer":web_url,
         "X-Requested-With":"XMLHttpRequest"
     }
-    head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
+    # head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
     # respo_htm = http.request_encode_url("GET",url=web_url,headers=head) # 问题2：直接请求网页得不到结果
     head.update(head_json)
     respo_json = http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False) # 问题4：最后一个参数保证Content-type正确
@@ -60,4 +60,4 @@ def getMusicList(name:str,providor="netease"):
     result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
     write(result)
 if __name__ == "__main__":
-    getMusicList("test")
+    getMusicList("remake")

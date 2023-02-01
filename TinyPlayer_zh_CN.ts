@@ -332,7 +332,8 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/settingwindow.ui" line="262"/>
-        <source>酷狗音乐</source>
+        <source>酷狗音乐(不稳定)</source>
+        <oldsource>酷狗音乐</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>

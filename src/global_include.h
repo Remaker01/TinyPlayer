@@ -28,6 +28,7 @@
 #include <QSettings>
 #include <QMimeData>
 #include <QUrl>
+#include <QSet>
 #ifndef NDEBUG
 #include <QDebug>
 #endif

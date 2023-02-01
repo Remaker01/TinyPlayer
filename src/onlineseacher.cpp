@@ -33,7 +33,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
     ResultInfo info;
     while (!f.atEnd()) {
         QString line = f.readLine();
-        QStringList now = line.split(";");
+        QStringList now = line.split(u8"\u00a0");
         info.title = now[0]/*.replace("下载","").replace("mp3","")*/;//防止"下载","MP3"等关键字出现异常
         info.artist = now[1];
         info.url = now[2].replace('\r',"").replace('\n',"").replace("&amp;","&");
@@ -53,8 +53,8 @@ void OnlineSeacher::doSearch(int method) {
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载搜索引擎");
         return;
     }
-    QString methodStr = (method == 0) ? "0" : (method == 1 ? "1" : "2");
-    prog.setArguments(QStringList({methodStr,keyword}));
+    QString methodStrs[] = {"0","1","2"};
+    prog.setArguments({methodStrs[method],keyword});
     prog.start();
 }
 
@@ -67,7 +67,7 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
     QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
         QString suffix = uri[i].fileName().right(4);
-        args.append(uri[i].fileName());
+        args.append(uri[i].url()); // toString:QUrl(...)
         args.last() += ';';
         args.last() += names[i];
         if(!args.last().endsWith(suffix,Qt::CaseInsensitive))
