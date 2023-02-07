@@ -30,5 +30,6 @@
         <file>images/unchecked.png</file>
         <file>images/min.png</file>
         <file>images/quit.png</file>
+        <file>images/icon.png</file>
     </qresource>
 </RCC>

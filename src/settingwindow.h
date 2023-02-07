@@ -10,6 +10,7 @@ private:
     double opacity;
     friend class PlayerWindow;
     Ui::SettingWindow *ui;
+    void initUi();
 public:
     explicit SettingWindow(QWidget *parent = nullptr);
     void setAutoSave(bool f);

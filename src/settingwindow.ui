@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>设置</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
   <property name="styleSheet">
    <string notr="true">QWidget{
 font: 9pt &quot;幼圆&quot;;
@@ -41,6 +44,10 @@ background-image: url(:/Icons/images/unchecked.png);
 }
 QSpinBox,QLineEdit{
 padding:2px 1px;
+}
+QLineEdit{
+border-radius:3px;
+border:0px;
 }</string>
   </property>
   <widget class="QCheckBox" name="minOnCloseBox">
@@ -78,7 +85,7 @@ padding:2px 1px;
      <x>10</x>
      <y>260</y>
      <width>571</width>
-     <height>81</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -88,6 +95,9 @@ padding:2px 1px;
     </sizepolicy>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="topMargin">
+     <number>5</number>
+    </property>
     <item>
      <spacer name="horizontalSpacer_2">
       <property name="orientation">

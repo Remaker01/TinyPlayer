@@ -6,11 +6,20 @@ SettingWindow::SettingWindow(QWidget *parent) :
     QWidget(parent),ui(new Ui::SettingWindow) {
     QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,QApplication::applicationDirPath());
     ui->setupUi(this);
-    setWindowFlag(Qt::Window);
+//    setWindowFlag(Qt::Window);
     ui->autoSaveBox->setTristate(false);
     ui->minOnCloseBox->setTristate(false);
     opacity = ui->spinBox->value() / 100.0;
     connect(ui->effectBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
+    initUi();
+}
+
+inline void SettingWindow::initUi() {
+    QPalette pl;
+    QPixmap img(":/Icons/images/back.jpg");
+    int w = maximumWidth(),h = img.height()/2;
+    pl.setBrush(backgroundRole(),QBrush(img.scaled(w,h)));
+    setPalette(pl);
 }
 
 void SettingWindow::setAutoSave(bool f) {

@@ -521,8 +521,11 @@ color:black;
       </property>
       <item>
        <widget class="PlayerButton" name="logoButton">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="pixmap">
-         <pixmap resource="../resource.qrc">:/Icons/images/icon.ico</pixmap>
+         <pixmap resource="../resource.qrc">:/Icons/images/icon.png</pixmap>
         </property>
        </widget>
       </item>

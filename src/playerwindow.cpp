@@ -9,7 +9,7 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),FramelessWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
     player = new PlayerCore(this);
-    settingWind = new SettingWindow(this);
+    settingWind = new SettingWindow;
     res = new SearchResultWidget(this);
     scher = new OnlineSeacher(this);
     initUi();
@@ -42,7 +42,7 @@ inline void PlayerWindow::initUi() {
     setMenu({ui->actionopenFile,ui->actionOpenDir,&sep1,
                       ui->actionLoadList,ui->actionSaveList,&sep2,
                       ui->actionLoadImg,ui->actionToDefault,&sep3,
-                      ui->actionAbout,ui->actionExit});
+                      ui->actionOpenHelp,ui->actionAbout,ui->actionExit});
     setCloseButton(ui->quitButton);
     setMinimizeButton(ui->minButton);
     initSystemtray();
@@ -187,7 +187,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "基于Qt的简易音频播放器\n\n"
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.20  3.20.230129");
+                                                        "版本号:3.20  3.21.230205");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -341,6 +341,8 @@ void PlayerWindow::closeEvent(QCloseEvent *ev) {
         hide();
         first = false;
     }
+    else
+        settingWind->close();
 }
 SLOTS
 #define BEFORE_ADD  static bool f = true;\
@@ -519,4 +521,5 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
     saveList("default.lst");
     delete ui;
+    delete settingWind;
 }

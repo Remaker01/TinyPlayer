@@ -86,10 +86,6 @@ void FramelessWindow::setMenu(QList<QAction *> actions, const QString &style) {
     menu->setStyleSheet(style);
 }
 
-//QMenu *FramelessWindow::getMenu() {
-//    return menu;
-//}
-
 void FramelessWindow::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         leftBtnPressed = true;

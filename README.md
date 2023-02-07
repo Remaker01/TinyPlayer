@@ -26,8 +26,8 @@
    1. ~~采用更加好看的界面。~~(部分完成)
    2. ~~设置界面~~(部分完成)
    3. ~~支持更多格式~~(完成)
-   4. ~~关联文件~~(部分完成)
-   5. ~~支持播放线上音乐~~(完成)
+   4. ~~关联文件~~(完成)
+   5. ~~支持播放线上音乐~~(目前支持网易云音乐、酷狗音乐、荔枝网)
 4. 目前Bug
    1. 部分文件详细信息中有乱码
    2. AAC文件添加进播放列表后无法及时更新信息。
@@ -39,10 +39,11 @@
 1. 本项目是CMake工程，如果要改成QMake请记得添加QT的Core,Widgets&VLC-qt的Core模块。
 由于gitignore设置，二进制文件无法添加到仓库中，请自行准备VLC-qt：
 [VLC-qt下载地址](https://vlc-qt.tano.si/#download)
-2. 本项目使用Python爬虫实现网络音乐检索、下载功能，请安装Python 3环境及lxml,pyinstaller库。可使用以下命令：
+2. 本项目使用Python实现网络音乐检索、下载功能，请安装Python 3环境及lxml,pyinstaller,urllib3库。可使用以下命令：
 ```
 pip install lxml
 pip install pyinstaller
+pip install urllib3
 ```
 使用 
 ```
