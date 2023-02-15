@@ -3,7 +3,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QSharedMemory shared("player");
-    QFont font("幼圆",9);
+    QFont font("幼圆");
     if(shared.create(1)) {
         if(!font.exactMatch())
             QMessageBox::warning(nullptr,"提示","字体缺失，请下载幼圆字体");

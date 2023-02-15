@@ -11,6 +11,7 @@ PlayerSlider::PlayerSlider(QWidget *parent):QSlider(parent) {
         setStyleSheet(style);
     }
     qss.close();
+    setFocusPolicy(Qt::NoFocus);
 }
 
 void PlayerSlider::mousePressEvent(QMouseEvent *e) {

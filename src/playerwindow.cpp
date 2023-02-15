@@ -15,8 +15,9 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     initUi();
     initConfiguration();
     connectSlots();
+    showNormal();
     if(!arg.isEmpty()) {
-        showNormal();  //提前显示，避免列表过大导致加载缓慢
+         //提前显示，避免列表过大导致加载缓慢
         if(Music::isLegal(arg)) {
             doAddMedia(QStringList(arg));
             ui->playButton->click();
@@ -25,7 +26,6 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
             QMessageBox::warning(this,"提示","您打开的文件不是合法的音频格式或播放列表");
     }
     else if(settingWind->getAutoSave()) {
-        showNormal();
         openList("default.lst");
     }
 }
@@ -253,9 +253,10 @@ inline void PlayerWindow::connectUiSlots() {
         QStringList names;
         QList<QUrl> urlsToDown;
         for (const QModelIndex &i:indexes) {
-            QString name = ui->playView->list().at(i.row());
+            int j = i.row();
+            QString name = ui->playView->list().at(j);
             names.append(name.replace("\n[线上音乐]",""));
-            urlsToDown.append(player->getMedia(i.row()));
+            urlsToDown.append(player->getMedia(j));
         }
         ui->waitingLabel->setText("正在下载");
         ui->waitingLabel->show();
@@ -328,6 +329,12 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
     if(e->key() == Qt::Key_Space&&!ui->searchEdit->hasFocus()) {
         e->accept();
         ui->playButton->click();
+    }
+    else if (e->key() == Qt::Key_Up) {
+        ui->volumeSlider->setValue(ui->volumeSlider->value()+5);
+    }
+    else if (e->key() == Qt::Key_Down) {
+        ui->volumeSlider->setValue(ui->volumeSlider->value()-5);
     }
 }
 

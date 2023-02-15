@@ -41,7 +41,7 @@ public:
     ///获取以秒为单位的时间
     int getPosInSecond();
     int getCurrentMediaIndex();
-    ///设置时间，以秒为单位
+    ///设置时间，以秒为单位。
     void setPos(int pos);
     ///设置播放列表位置
     void setCurrentMediaIndex(int i);
