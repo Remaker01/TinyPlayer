@@ -508,7 +508,7 @@ color:black;
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <property name="leftMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>0</number>

@@ -79,3 +79,5 @@ CMakeLists.txt.user
 *.config
 plugins.dat
 src/links.tmp
+# vscode
+/.vscode/*.*

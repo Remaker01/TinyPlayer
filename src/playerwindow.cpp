@@ -17,7 +17,6 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     connectSlots();
     showNormal();
     if(!arg.isEmpty()) {
-         //提前显示，避免列表过大导致加载缓慢
         if(Music::isLegal(arg)) {
             doAddMedia(QStringList(arg));
             ui->playButton->click();
@@ -57,7 +56,7 @@ inline void PlayerWindow::initSystemtray() {
     trayMenu = new QMenu(this);
     trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QWidget::showNormal);
     trayMenu->addAction(QIcon(),"播放/暂停",ui->playButton,&PlayerButton::click);
-    trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit);
+    trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit); //不直接使用ui->actionExit使退出时无需确认
     tray->setContextMenu(trayMenu);
     tray->show();
 }
@@ -185,9 +184,11 @@ inline void PlayerWindow::connectUiSlots() {
     connect(ui->actionAbout,&QAction::triggered,this,[this] {
         QMessageBox box(QMessageBox::Information,"关于","TinyPlayer播放器\n"
                                                         "基于Qt的简易音频播放器\n\n"
+#ifndef NDEBUG
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
+#endif
                                                         "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.20  3.21.230205");
+                                                        "版本号:3.21  3.21.230220");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{

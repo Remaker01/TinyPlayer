@@ -31,14 +31,6 @@ def _redirect_addr(addr:str):
     response = http.urlopen(url=addr,method="GET",headers=_head,preload_content=False)
     response.release_conn()
     return response.geturl()
-def write(datas):
-    fp = open("links.tmp","w",encoding="utf-8",newline='\n')
-    for data in datas:
-        if data[2] is not None:
-            data[2] = _redirect_addr(data[2])
-            if data[2].find("/404") < 0: 
-                fp.write('\u00a0'.join(data) + '\n')
-    fp.close()
 def getMusicList(name:str,providor="netease"):
     if providor not in PROVIDORS:
         raise ValueError("提供商必须为{0}之一".format(PROVIDORS))
@@ -58,6 +50,13 @@ def getMusicList(name:str,providor="netease"):
     respo_json = http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False) # 问题4：最后一个参数保证Content-type正确
     # print(respo_json.headers)
     result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
-    write(result)
+
+    fp = open("links.tmp","w",encoding="utf-8",newline='\n')
+    for data in result:
+        if data[2] is not None:
+            data[2] = _redirect_addr(data[2])
+            if data[2].find("/404") < 0: 
+                fp.write('\u00a0'.join(data) + '\n')
+    fp.close()
 if __name__ == "__main__":
     getMusicList("remake")
