@@ -2,12 +2,20 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-#define RESET setMedia(list[current].toString())
+#define RESET setMedia(list[current].getUrl())
+/* 新需求：播放在线音乐时“当前歌曲”不显示文件名，而是歌曲名
+ * 设计： 1.Music新增属性alterName
+ * 2.player中的list改为QList<Music>类型
+ * 3.每次新增音乐时，在PlayerCore中判断是否线上，如果是线上则设置alterName
+ * 4.每次getTitle()时都判定是否为线上音乐，如果是且alterName非空，则返回alterName，否则返回title
+ * 测试：对本地和线上音乐分别测试1次：双击(√)、上/下一首(√)、插入(√)、删除(√)、移动(√)、播放(√)、详细信息(√)
+ * 对线上音乐测试下载(√)
+ */
 const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG Audio
                                                    ".wav",".wma",   //Windows Audio
                                                    ".flac",".ape",  //Lossless
                                                    ".aac",  //aac
-                                                   ".ogg",".oga" // OggVorbis
+                                                   ".ogg",".oga", // OggVorbis
                                                    ".aif",".aiff",".aifc",  //Aiff
                                                    ".m4a", //m4a
                                                    ".au",".snd"};  //au
@@ -70,18 +78,20 @@ inline void PlayerCore::setMedia(const QString &media) {
     setPos(0);
 }
 
+inline void PlayerCore::setMedia(const QUrl &media) {setMedia(media.toString());}
+
 QUrl PlayerCore::getMedia() {
     if(curMedia == nullptr)
         return QUrl();
     return QUrl(curMedia->currentLocation());
 }
 
-const QUrl &PlayerCore::getMedia(int i) {return list[i];}
+const QUrl &PlayerCore::getMedia(int i) {return list[i].getUrl();}
 
-Music PlayerCore::getMediaDetail(int i) {return Music(list[i]);}
+Music PlayerCore::getMediaDetail(int i) {return list[i];}
 
 Music PlayerCore::getMediaDetail() {
-    return (current >= 0)? Music(getMedia()):Music();
+    return (current >= 0)? list[current]:Music();
 }
 
 int PlayerCore::getPosInSecond() {
@@ -103,10 +113,10 @@ void PlayerCore::setCurrentMediaIndex(int i) {
     if(i >= list.size()||i < 0)
         return;
     current = i;
-    setMedia(list[current].toString());
+    setMedia(list[current].getUrl());
 }
 
-bool PlayerCore::addToList(const QString &media, bool local) {
+bool PlayerCore::addToList(const QString &media, bool local, QString alter) {
    if(list.size() == MAX_MEDIA_COUNT) {
         QMessageBox::warning(nullptr,"警告","已达到音乐数上限" + QString::number(MAX_MEDIA_COUNT));
         return false;
@@ -119,10 +129,10 @@ bool PlayerCore::addToList(const QString &media, bool local) {
         }
     }
     QUrl tmp = (local)?QUrl::fromLocalFile(media):QUrl(media);
-    Music music(tmp);
+    Music music(tmp,alter);
     if((local&&!Music::isLegal(media))||!ok||medias.contains(music))
         return false;
-    list.append(tmp);
+    list.append(music);
     medias.insert(music);
     return true;
 }
@@ -142,7 +152,7 @@ bool PlayerCore::removeFromList(int loc) {
     if(loc <= now) {
         if(loc == now) {
             current = std::max(0,loc - 1);
-            setMedia(list[current].toString());
+            setMedia(list[current].getUrl());
             emit finished();
         }
         //loc<now,此时now一定不为0
@@ -217,9 +227,16 @@ bool PlayerCore::moveDown(int i,int k) {
 }
 
 void PlayerCore::setSoundEffect(uint index) {
+    static const uint map[] = {0u,1u,4u,5u,7u,11u,13u,16u};
+    if(index >= sizeof (map)/sizeof (uint)) {
+#ifndef NDEBUG
+        qCritical() << "ERROR:setSoundEffect:index error.";
+#endif
+        return;
+    }
     if(equ == nullptr)
         equ = new VlcEqualizer(this);
-    equ->loadFromPreset(index);
+    equ->loadFromPreset(map[index]);
     equ->setEnabled(true);
 }
 

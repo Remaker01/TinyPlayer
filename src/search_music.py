@@ -20,7 +20,7 @@ def _get_links_from_json(respo):
         return []
     songs = []
     for obj in objs:
-        title=  obj.get("title")
+        title=  obj.get("title").replace('\u00a0',' ') # nbsp换成普通空格，看起来一样但可防止出错
         link = obj.get("url")
         author = obj.get("author")
         songs.append([title,author,link])

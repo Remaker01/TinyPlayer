@@ -91,7 +91,6 @@ void FramelessWindow::mousePressEvent(QMouseEvent *ev) {
         leftBtnPressed = true;
         if(dir == NONE) {
             mouseLoc = ev->globalPos() - frameGeometry().topLeft();
-            //globalPos()鼠标位置，topLeft()窗口左上角的位置
         }
     }
     QWidget::mousePressEvent(ev);

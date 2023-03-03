@@ -1,5 +1,5 @@
 #include "music.h"
-Music::Music(const QUrl &uri):url(uri) {
+Music::Music(const QUrl &uri, const QString &altername):url(uri) {
     static VlcInstance ins(VlcCommon::args());
     VlcMedia m(uri.toString(),&ins);
     m.parse();
@@ -8,8 +8,10 @@ Music::Music(const QUrl &uri):url(uri) {
     length = m.duration();
     VlcMetaManager tmp(&m);
     title = tmp.title();
-    if(!url.isLocalFile())
+    if(!url.isLocalFile()) {
         title = url.fileName();
+        alterName = altername;
+    }
     description = tmp.description();
     album = tmp.album();
     albumImage = tmp.artwork();
@@ -30,7 +32,11 @@ bool Music::equals(const Music &a) const {
 
 const QUrl &Music::getUrl() const {return url;}
 
-const QString &Music::getTitle() const {return title;}
+const QString &Music::getTitle() const {
+    if(!url.isLocalFile()&&!alterName.isEmpty())
+        return alterName;
+    return title;
+}
 
 const QString &Music::getDcrp() const {return description;}
 

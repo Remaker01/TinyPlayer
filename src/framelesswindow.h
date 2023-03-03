@@ -23,6 +23,7 @@ public:
     void setCloseButton(QAbstractButton *closeBtn);
     void setMinimizeButton(QAbstractButton *minBtn);
     void setMaxmizeButton(QAbstractButton *maxBtn);
+//    void addSubMenu(const QString &name,QList<QString> &items,int loc = -1); //unused
     /**
      * setMenu 设置菜单包含的actions和样式表。原有actions和样式表将被清空
      * @param actions 定义的actions
@@ -41,7 +42,9 @@ private:
     volatile bool leftBtnPressed; //左键是否按下
     volatile Diretion dir; //记录窗口大小改变的方向
     QMenu* menu = nullptr;
+//    QMenu* subMenu = nullptr;
 public slots:
+    /// 在指定范围legalRange内显示菜单
     void showMenu(QRect legalRange);
 };
 

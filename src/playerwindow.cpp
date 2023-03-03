@@ -106,9 +106,8 @@ inline void PlayerWindow::initConfiguration() {
 
 inline void PlayerWindow::changeMode(PlayerCore::PlayMode m) {
     QString name = ":/Icons/images/" + QString::number((int)m) + ".png";
-    ui->modeButton->setPixmap(QPixmap(name));
     player->mode = m;
-    ui->modeButton->setToolTip(PlayerCore::MODE_TIPS[(int)m]);
+    ui->modeButton->changeState(PlayerCore::MODE_TIPS[(int)m],QPixmap(name));
 }
 
 inline void PlayerWindow::connectSlots() {
@@ -295,8 +294,7 @@ inline void PlayerWindow::connectUiSlots() {
         ui->searchEdit->clearFocus();
     });
     connect(settingWind,&SettingWindow::changeEffectRequirement,this,[this](int i) {
-        static const uint map[] = {0u,1u,4u,5u,7u,11u,13u,16u};
-        player->setSoundEffect(map[i]);
+        player->setSoundEffect((uint)i);
     });
     connect(res,&SearchResultWidget::addItemRequirement,this,[this](bool autoDel) {
         doAddOnlineMedia(res->getSelectedItems());
@@ -393,7 +391,7 @@ void PlayerWindow::doAddOnlineMedia(const QList<ResultInfo> &medias) {
         if(!f)
             break;
         ui->waitingLabel->setText("正在插入" + item.title);
-        if(player->addToList(item.url,false))
+        if(player->addToList(item.url,false,item.title))
             playList.append(item.title + " - " + item.artist + "\n[线上音乐]");
     }
     AFTER_ADD
@@ -490,8 +488,7 @@ bool PlayerWindow::openList(const QString &file) {
     QStringList tmp;
     QString str;
     while (!ds.atEnd()) {
-        ds >> str;
-        tmp.append(str);
+        ds >> str;tmp.append(str);
     }
     doAddMedia(tmp);
     lstFile.close();

@@ -10,7 +10,7 @@ private:
     QString formattedTime;
     QUrl url;
     //歌曲名
-    QString title,description,album;
+    QString title,description,album,alterName;
     QUrl albumImage;
     int length;
     static bool isMPEG(QFile *media,QDataStream &reader);
@@ -27,9 +27,10 @@ public:
     /**
      * 根据指定的URL建立音乐对象
      * @param uri 给定的URL
+     * @param alterName 替代名，仅在线上音乐时有效
      * @note 本构造函数**不会**判断URL是否合法
      */
-    Music(const QUrl &uri = QUrl());
+    Music(const QUrl &uri = QUrl(), const QString &altername = QString());
     Music(const Music &a) = default;
     ///获取包含标题、时间、唱片集、描述的音乐信息
     QString toString();
