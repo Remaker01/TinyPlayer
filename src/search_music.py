@@ -54,8 +54,8 @@ def getMusicList(name:str,providor="netease"):
     fp = open("links.tmp","w",encoding="utf-8",newline='\n')
     for data in result:
         if data[2] is not None:
-            data[2] = _redirect_addr(data[2])
-            if data[2].find("/404") < 0: 
+            x = _redirect_addr(data[2])
+            if x.find("/404") < 0:
                 fp.write('\u00a0'.join(data) + '\n')
     fp.close()
 if __name__ == "__main__":

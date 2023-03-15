@@ -35,6 +35,7 @@ public:
     QList<ResultInfo> analyzeResult();
     void doSearch(int method = 1);
     void download(const QList<QUrl> &uri, const QString &path, const QStringList &names);
+    virtual ~OnlineSeacher();
 signals:
     /// doSearch()结束后触发
     void done();

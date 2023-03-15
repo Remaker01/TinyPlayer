@@ -51,10 +51,10 @@ inline void PlayerWindow::initUi() {
 }
 
 inline void PlayerWindow::initSystemtray() {
-    tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.ico"),this);
+    tray = new QSystemTrayIcon(QIcon(":/Icons/images/icon.png"),this);
     tray->setToolTip("TinyPlayer");
     trayMenu = new QMenu(this);
-    trayMenu->addAction(QIcon(":/Icons/images/icon.ico"),"打开窗口",this,&QWidget::showNormal);
+    trayMenu->addAction(QIcon(":/Icons/images/icon.png"),"打开窗口",this,&QWidget::showNormal);
     trayMenu->addAction(QIcon(),"播放/暂停",ui->playButton,&PlayerButton::click);
     trayMenu->addAction(QIcon(":/Icons/images/exit.png"),"退出",qApp,&QApplication::quit); //不直接使用ui->actionExit使退出时无需确认
     tray->setContextMenu(trayMenu);

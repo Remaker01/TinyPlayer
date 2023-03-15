@@ -5,8 +5,8 @@ SearchResultWidget::SearchResultWidget(QWidget *parent) :
     QWidget(parent),ui(new Ui::SearchResultWidget) {
     ui->setupUi(this);
     setWindowFlag(Qt::Window);
-    QStringList headers{"标题","歌手","链接"};
-    ui->tableWidget->setColumnCount(headers.size());
+    QStringList headers({"标题","歌手","链接"});
+    ui->tableWidget->setColumnCount(3);
     ui->tableWidget->setHorizontalHeaderLabels(headers);
     connect(ui->insertButton,&QPushButton::clicked,this,[this] {emit addItemRequirement(ui->autoDelBox->isChecked());});
 }

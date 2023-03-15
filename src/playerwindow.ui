@@ -40,6 +40,38 @@
    <string notr="true">QWidget#PlayerWindow{
 border:1px dashed gray;
 border-radius:8px;
+}
+QSlider::handle:horizontal {
+    border-image:url(:/Icons/images/border.png);
+    width: 15px;
+    height:12px;
+    margin-top:-5px;
+    margin-bottom:-5px;
+}
+QSlider::groove:horizontal {
+    border-radius:6px;
+    height:5px;
+    background:#505050;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+QSlider::sub-page:horizontal{
+    border-radius:6px;
+    margin-top:4px; /*不要超出groove*/
+    margin-bottom:4px;
+    background: #8097b8;
+}
+QMenu{
+	background-color:#fafafa;
+}
+QMenu::item:hover{background-color:#e7e7e7;color:#000000;}
+QMenu::item:selected{
+	background-color: #e7e7e7; /*11100111*/
+	color: #000000;
+}
+QMenu::item{
+	padding:5px;
+	min-width:100px;
 }</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -795,9 +827,6 @@ background-color: rgba(255,32,32,154);
    <property name="toolTip">
     <string>打开帮助</string>
    </property>
-   <property name="shortcut">
-    <string>F1</string>
-   </property>
   </action>
   <action name="actionAbout">
    <property name="icon">
@@ -824,16 +853,10 @@ background-color: rgba(255,32,32,154);
    <property name="text">
     <string>更换背景...</string>
    </property>
-   <property name="shortcut">
-    <string>Alt+O</string>
-   </property>
   </action>
   <action name="actionOpenDir">
    <property name="text">
     <string>打开文件夹...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="actionLoadList">

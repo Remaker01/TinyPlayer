@@ -64,6 +64,7 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载下载器");
         return;
     }
+
     QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
         QString suffix = uri[i].fileName().right(4);
@@ -76,4 +77,13 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
     args.prepend(path);
     down_prog.setArguments(args);
     down_prog.start();
+}
+
+OnlineSeacher::~OnlineSeacher() {
+    if(prog.state() == QProcess::Running)
+        prog.kill();
+    if(down_prog.state() == QProcess::Running)
+        down_prog.kill();
+    prog.close();
+    down_prog.close();
 }
