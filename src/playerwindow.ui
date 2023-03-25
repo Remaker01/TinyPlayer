@@ -531,6 +531,30 @@ padding:1px 1px;
        </widget>
       </item>
       <item>
+       <widget class="QComboBox" name="comboBox">
+        <property name="styleSheet">
+         <string notr="true">QComboBox{padding:3px 2px;}
+QComboBox QAbstractItemView{outline:0px;}
+QComboBox QAbstractItemView::item{padding:3px;}</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>网易云音乐</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>酷狗音乐(不稳定)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>荔枝网</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

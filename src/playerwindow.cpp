@@ -48,6 +48,7 @@ inline void PlayerWindow::initUi() {
     setBackground(QPixmap(":/Icons/images/back.jpg"));
     ui->waitingLabel->hide();
     ui->cancelButton->hide();
+    ui->comboBox->setView(new QListView());
 }
 
 inline void PlayerWindow::initSystemtray() {
@@ -186,8 +187,8 @@ inline void PlayerWindow::connectUiSlots() {
 #ifndef NDEBUG
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
 #endif
-                                                        "作者邮箱:latexreal@163.com\n"
-                                                        "版本号:3.21  3.21.230220");
+                                                        "作者邮箱:latexreal@163.com\t\n"
+                                                        "版本号:3.30  3.30.230321");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -288,7 +289,7 @@ inline void PlayerWindow::connectUiSlots() {
         ui->searchLabel->setMovie(&gif);
         gif.start();
         scher->setKeyWord( ui->searchEdit->text().replace(';',""));
-        scher->doSearch(settingWind->getSrchMethod());
+        scher->doSearch(ui->comboBox->currentIndex());
         ui->searchLabel->setReplyClick(false);
         connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
         ui->searchEdit->clearFocus();

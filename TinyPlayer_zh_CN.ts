@@ -9,6 +9,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/playerwindow.ui" line="105"/>
+        <source>上移</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="118"/>
+        <source>下移</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/playerwindow.ui" line="149"/>
         <source>QPushButton{
 background-color: rgba(255, 255, 255,0);
@@ -52,21 +62,6 @@ background-color: rgb(200, 200,200);
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="105"/>
-        <source>上移</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="118"/>
-        <source>下移</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="513"/>
-        <source>在线搜索音乐...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/playerwindow.ui" line="373"/>
         <source>正在打开...</source>
         <translation type="unfinished"></translation>
@@ -77,115 +72,134 @@ background-color: rgb(200, 200,200);
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="691"/>
-        <source>上一首</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="707"/>
-        <source>开始</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="717"/>
-        <source>停止</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="733"/>
-        <source>下一首</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="659"/>
-        <source>00:00</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="666"/>
-        <source>/00:00</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="788"/>
-        <source>单曲播放</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="464"/>
-        <source>&lt;strong&gt;TinyPlayer&lt;/strong&gt;</source>
-        <oldsource>&lt;span style=&quot; font-weight:600;&quot;&gt;TinyPlayer&lt;/span&gt;</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="549"/>
-        <source>设置</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/playerwindow.ui" line="627"/>
-        <source> 当前歌曲:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/playerwindow.ui" line="426"/>
         <source> 当前播放列表 共0项</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="808"/>
+        <location filename="src/playerwindow.ui" line="464"/>
+        <source>&lt;strong&gt;TinyPlayer&lt;/strong&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="513"/>
+        <source>在线搜索音乐...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="542"/>
+        <source>网易云音乐</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="547"/>
+        <source>酷狗音乐(不稳定)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="552"/>
+        <source>荔枝网</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="573"/>
+        <source>设置</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="651"/>
+        <source> 当前歌曲:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="683"/>
+        <source>00:00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="690"/>
+        <source>/00:00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="715"/>
+        <source>上一首</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="731"/>
+        <source>开始</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="741"/>
+        <source>停止</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="757"/>
+        <source>下一首</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="812"/>
+        <source>单曲播放</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/playerwindow.ui" line="832"/>
         <source>打开文件...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="811"/>
+        <location filename="src/playerwindow.ui" line="835"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="820"/>
+        <location filename="src/playerwindow.ui" line="844"/>
         <source>退出</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="825"/>
-        <location filename="src/playerwindow.ui" line="828"/>
+        <location filename="src/playerwindow.ui" line="849"/>
+        <location filename="src/playerwindow.ui" line="852"/>
         <source>打开帮助</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="837"/>
+        <location filename="src/playerwindow.ui" line="861"/>
         <source>关于</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="842"/>
-        <location filename="src/playerwindow.ui" line="845"/>
+        <location filename="src/playerwindow.ui" line="866"/>
+        <location filename="src/playerwindow.ui" line="869"/>
         <source>还原默认背景</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="854"/>
+        <location filename="src/playerwindow.ui" line="878"/>
         <source>更换背景...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="859"/>
+        <location filename="src/playerwindow.ui" line="883"/>
         <source>打开文件夹...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="864"/>
+        <location filename="src/playerwindow.ui" line="888"/>
         <source>加载播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="869"/>
+        <location filename="src/playerwindow.ui" line="893"/>
         <source>保存播放列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/playerwindow.ui" line="874"/>
+        <location filename="src/playerwindow.ui" line="898"/>
         <source>打开历史文件</source>
         <translation type="unfinished"></translation>
     </message>
@@ -241,95 +255,73 @@ background-color: rgb(200, 200,200);
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="149"/>
+        <location filename="src/settingwindow.ui" line="155"/>
         <source>音效:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="157"/>
+        <location filename="src/settingwindow.ui" line="169"/>
         <source>平缓</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="162"/>
+        <location filename="src/settingwindow.ui" line="174"/>
         <source>经典</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="167"/>
+        <location filename="src/settingwindow.ui" line="179"/>
         <source>舞会</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="172"/>
+        <location filename="src/settingwindow.ui" line="184"/>
         <source>低音</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="177"/>
+        <location filename="src/settingwindow.ui" line="189"/>
         <source>高音</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="182"/>
+        <location filename="src/settingwindow.ui" line="194"/>
         <source>流行乐</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="187"/>
+        <location filename="src/settingwindow.ui" line="199"/>
         <source>摇滚</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="192"/>
+        <location filename="src/settingwindow.ui" line="204"/>
         <source>慢摇滚</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="200"/>
+        <location filename="src/settingwindow.ui" line="218"/>
         <source>工具条不透明度:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="207"/>
+        <location filename="src/settingwindow.ui" line="231"/>
         <source>%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="235"/>
-        <source>搜索引擎</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/settingwindow.ui" line="242"/>
-        <source>下载位置</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/settingwindow.ui" line="249"/>
+        <location filename="src/settingwindow.ui" line="257"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="256"/>
+        <location filename="src/settingwindow.ui" line="264"/>
         <source>音乐文件夹</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/settingwindow.ui" line="267"/>
-        <source>网易云音乐</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/settingwindow.ui" line="272"/>
-        <source>酷狗音乐(不稳定)</source>
-        <oldsource>酷狗音乐</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/settingwindow.ui" line="277"/>
-        <source>荔枝网</source>
-        <oldsource>荔枝音乐</oldsource>
+        <location filename="src/settingwindow.ui" line="274"/>
+        <source>下载位置</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

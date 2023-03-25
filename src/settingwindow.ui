@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>360</height>
+    <width>550</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>360</height>
+    <width>550</width>
+    <height>350</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>600</width>
-    <height>360</height>
+    <width>550</width>
+    <height>350</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -83,8 +83,8 @@ border:0px;
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>260</y>
-     <width>571</width>
+     <y>250</y>
+     <width>521</width>
      <height>71</height>
     </rect>
    </property>
@@ -137,112 +137,120 @@ border:0px;
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>110</y>
+     <y>120</y>
      <width>341</width>
      <height>43</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <widget class="QLabel" name="effectLabel">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>11</y>
+      <width>40</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>音效:</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="effectBox">
+    <property name="geometry">
+     <rect>
+      <x>58</x>
+      <y>11</y>
+      <width>78</width>
+      <height>21</height>
+     </rect>
+    </property>
     <item>
-     <widget class="QLabel" name="effectLabel">
-      <property name="text">
-       <string>音效:</string>
-      </property>
-     </widget>
+     <property name="text">
+      <string>平缓</string>
+     </property>
     </item>
     <item>
-     <widget class="QComboBox" name="effectBox">
-      <item>
-       <property name="text">
-        <string>平缓</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>经典</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>舞会</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>低音</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>高音</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>流行乐</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>摇滚</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>慢摇滚</string>
-       </property>
-      </item>
-     </widget>
+     <property name="text">
+      <string>经典</string>
+     </property>
     </item>
     <item>
-     <widget class="QLabel" name="opacLabel">
-      <property name="text">
-       <string>工具条不透明度:</string>
-      </property>
-     </widget>
+     <property name="text">
+      <string>舞会</string>
+     </property>
     </item>
     <item>
-     <widget class="QSpinBox" name="spinBox">
-      <property name="suffix">
-       <string>%</string>
-      </property>
-      <property name="minimum">
-       <number>30</number>
-      </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
-      <property name="value">
-       <number>70</number>
-      </property>
-     </widget>
+     <property name="text">
+      <string>低音</string>
+     </property>
     </item>
-   </layout>
+    <item>
+     <property name="text">
+      <string>高音</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>流行乐</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>摇滚</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>慢摇滚</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="opacLabel">
+    <property name="geometry">
+     <rect>
+      <x>143</x>
+      <y>11</y>
+      <width>118</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>工具条不透明度:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox">
+    <property name="geometry">
+     <rect>
+      <x>268</x>
+      <y>11</y>
+      <width>62</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="suffix">
+     <string>%</string>
+    </property>
+    <property name="minimum">
+     <number>30</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>70</number>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="widget_3" native="true">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>160</y>
+     <y>170</y>
      <width>451</width>
-     <height>91</height>
+     <height>81</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QLabel" name="methodLabel">
-      <property name="text">
-       <string>搜索引擎</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="locLabel">
-      <property name="text">
-       <string>下载位置</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="3">
      <widget class="QToolButton" name="locButton">
       <property name="text">
@@ -260,23 +268,11 @@ border:0px;
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QComboBox" name="methodBox">
-      <item>
-       <property name="text">
-        <string>网易云音乐</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>酷狗音乐(不稳定)</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>荔枝网</string>
-       </property>
-      </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="locLabel">
+      <property name="text">
+       <string>下载位置</string>
+      </property>
      </widget>
     </item>
    </layout>

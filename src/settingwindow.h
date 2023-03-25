@@ -2,14 +2,14 @@
 #define SETTINGWINDOW_H
 #define __WIDGET_NEEDED__
 #include "global_include.h"
-namespace Ui {class SettingWindow;}
-
+//namespace Ui {class SettingWindow;}
+class Ui_SettingWindow;
 class SettingWindow : public QWidget {
     Q_OBJECT
 private:
     double opacity;
     friend class PlayerWindow;
-    Ui::SettingWindow *ui;
+    Ui_SettingWindow *ui;
     void initUi();
 public:
     explicit SettingWindow(QWidget *parent = nullptr);
@@ -19,7 +19,7 @@ public:
     bool getAutoSave();
     bool getminOnClose();
     QString getDownLoc();
-    int getSrchMethod();
+//    int getSrchMethod();
 //    void setSrchMethod(int m);
     ~SettingWindow();
 private slots:

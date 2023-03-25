@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QStorageInfo>
 SettingWindow::SettingWindow(QWidget *parent) :
-    QWidget(parent),ui(new Ui::SettingWindow) {
+    QWidget(parent),ui(new Ui_SettingWindow) {
     QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,QApplication::applicationDirPath());
     ui->setupUi(this);
 //    setWindowFlag(Qt::Window);
@@ -48,7 +48,7 @@ QString SettingWindow::getDownLoc() {
     return text;
 }
 
-int SettingWindow::getSrchMethod() {return ui->methodBox->currentIndex();}
+//int SettingWindow::getSrchMethod() {return ui->methodBox->currentIndex();}
 
 SettingWindow::~SettingWindow() {
     delete ui;

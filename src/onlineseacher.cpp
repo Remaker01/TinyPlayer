@@ -46,8 +46,12 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
 void OnlineSeacher::doSearch(int method) {
-    if(method < 0||method > 2)
+    if(method < 0||method > 2) {
+#ifndef NDEBUG
+        qCritical() << "doSearch:invalid method.";
+#endif
         return;
+    }
     if(!QFile::exists(PROGRAM)) {
         emit done();
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载搜索引擎");
@@ -67,7 +71,8 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
 
     QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
-        QString suffix = uri[i].fileName().right(4);
+        QString suffix = uri[i].url().right(4);
+        qDebug() << suffix;
         args.append(uri[i].url()); // toString:QUrl(...)
         args.last() += ';';
         args.last() += names[i];

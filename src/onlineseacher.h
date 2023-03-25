@@ -21,7 +21,7 @@ private:
     QString keyword;
     QProcess prog,down_prog;
     void connectSlots();
-    QString getFileSuffix(const QString &name);
+    //QString getFileSuffix(const QString &name);
 public:
     /// 搜索程序与下载程序的名称
     static const QString PROGRAM,DOWN_PROGRAM;

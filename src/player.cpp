@@ -66,16 +66,20 @@ inline void PlayerCore::connectSlots() {
 
 inline void PlayerCore::setMedia(const QString &media) {
     Vlc::State sta = VlcMediaPlayer::state();
+    VlcMediaPlayer::stop();
     delete curMedia;
-    curMedia = new VlcMedia(media,&ins);
-    curMedia->parse();
-    while (!curMedia->parsed())
-        QCoreApplication::processEvents();
-    VlcMediaPlayer::openOnly(curMedia);
-    emit VlcMediaPlayer::lengthChanged(curMedia->duration());
+    curMedia = nullptr;
+    if(!media.isEmpty()) {
+        curMedia = new VlcMedia(media,&ins);
+        curMedia->parse();
+        while (!curMedia->parsed())
+            QCoreApplication::processEvents();
+        VlcMediaPlayer::openOnly(curMedia);
+        emit VlcMediaPlayer::lengthChanged(curMedia->duration());
+        setPos(0);
+    }
     if(sta == Vlc::Playing||sta == Vlc::Paused)
         emit finished();
-    setPos(0);
 }
 
 inline void PlayerCore::setMedia(const QUrl &media) {setMedia(media.toString());}
@@ -112,6 +116,12 @@ void PlayerCore::setPos(int pos) {
 void PlayerCore::setCurrentMediaIndex(int i) {
     if(i >= list.size()||i < 0)
         return;
+    if(i == current) {
+#ifndef NDEBUG
+        qWarning() << "WARNING:setCurrentMediaIndex:current index == i ==" << i << ",Exiting.";
+#endif
+        return;
+    }
     current = i;
     setMedia(list[current].getUrl());
 }
@@ -143,13 +153,13 @@ bool PlayerCore::removeFromList(int loc) {
     int now = current;
     medias.remove(list[loc]);
     list.removeAt(loc);
-    if(list.isEmpty()) {
+    if(list.isEmpty()) { // 删掉了最后一个
         current = -1;
         setMedia("");
         emit finished();
         return true;
     }
-    if(loc <= now) {
+    if(loc <= now) { //会导致变current变化
         if(loc == now) {
             current = std::max(0,loc - 1);
             setMedia(list[current].getUrl());
@@ -230,7 +240,7 @@ void PlayerCore::setSoundEffect(uint index) {
     static const uint map[] = {0u,1u,4u,5u,7u,11u,13u,16u};
     if(index >= sizeof (map)/sizeof (uint)) {
 #ifndef NDEBUG
-        qCritical() << "ERROR:setSoundEffect:index error.";
+        qCritical() << "setSoundEffect:index error.";
 #endif
         return;
     }
