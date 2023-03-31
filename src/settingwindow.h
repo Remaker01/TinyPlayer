@@ -13,12 +13,15 @@ private:
     void initUi();
 public:
     explicit SettingWindow(QWidget *parent = nullptr);
+    void loadSettings(QSettings &setting);
+    void saveSettings(QSettings &setting);
     void setAutoSave(bool f);
     void setminOnClose(bool f);
     void setOpacityValue(double opac);
     bool getAutoSave();
     bool getminOnClose();
     QString getDownLoc();
+    void setDownLoc(QString loc);
 //    int getSrchMethod();
 //    void setSrchMethod(int m);
     ~SettingWindow();

@@ -24,7 +24,7 @@ private:
     void setMedia(const QUrl &media);
 public:
     static constexpr int MAX_MEDIA_COUNT = 10000;
-    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 16,MAX_HISTORY = 8;
+    static constexpr int MODE_COUNT = 4,FORMAT_COUNT = 17,MAX_HISTORY = 8;
     static const QString Formats[FORMAT_COUNT];
     /// 各模式的提示文字
     static const QString MODE_TIPS[MODE_COUNT];

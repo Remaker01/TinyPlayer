@@ -3,15 +3,8 @@
 #include <QDebug>
 #endif
 #define RESET setMedia(list[current].getUrl())
-/* 新需求：播放在线音乐时“当前歌曲”不显示文件名，而是歌曲名
- * 设计： 1.Music新增属性alterName
- * 2.player中的list改为QList<Music>类型
- * 3.每次新增音乐时，在PlayerCore中判断是否线上，如果是线上则设置alterName
- * 4.每次getTitle()时都判定是否为线上音乐，如果是且alterName非空，则返回alterName，否则返回title
- * 测试：对本地和线上音乐分别测试1次：双击(√)、上/下一首(√)、插入(√)、删除(√)、移动(√)、播放(√)、详细信息(√)
- * 对线上音乐测试下载(√)
- */
-const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1",  //MPEG Audio
+
+const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1","mpga",  //MPEG Audio
                                                    ".wav",".wma",   //Windows Audio
                                                    ".flac",".ape",  //Lossless
                                                    ".aac",  //aac

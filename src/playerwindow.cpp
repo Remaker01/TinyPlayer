@@ -92,16 +92,11 @@ inline void PlayerWindow::initConfiguration() {
         setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
         setting.setValue(LAST_VOLUME,50);
         setting.setValue(LAST_MODE,0);
-        setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
-        setting.setValue("AUTOLOAD",settingWind->getAutoSave());
-        setting.setValue("MIN_ONCLOSE",settingWind->getminOnClose());
     }
     lastPath = setting.value(LAST_PATH).toString();
     ui->volumeSlider->setValue(setting.value(LAST_VOLUME).toInt());
-    setTitlebar(setting.value("TOOLBAR_OPAC").toDouble());
-    settingWind->setOpacityValue(setting.value("TOOLBAR_OPAC").toDouble());
-    settingWind->setAutoSave(setting.value("AUTOLOAD").toBool());
-    settingWind->setminOnClose(setting.value("MIN_ONCLOSE").toBool());
+    settingWind->loadSettings(setting);
+    setTitlebar(setting.value("TOOLBAR_OPAC").toDouble()); //如设置文件正常则98，99两行互换位置也正确，但如不正常，互换后则会异常退出
     changeMode((PlayerCore::PlayMode)setting.value(LAST_MODE).toInt());
 }
 
@@ -188,7 +183,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
 #endif
                                                         "作者邮箱:latexreal@163.com\t\n"
-                                                        "版本号:3.30  3.30.230321");
+                                                        "版本号:3.30  3.30.230325");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -208,7 +203,7 @@ inline void PlayerWindow::connectUiSlots() {
         return QDesktopServices::openUrl(QUrl::fromLocalFile("README.htm"));
     });
     connect(ui->actionLoadImg,&QAction::triggered,this,[this]() {
-        QString back = QFileDialog::getOpenFileName(this,"选择文件","","图片文件(*.jpg;*.jpeg;*.png;*.jfif)");
+        QString back = QFileDialog::getOpenFileName(this,"选择文件","","图片文件(*.jpg;*.jpeg;*.png;*.jfif;*.bmp;*.tif;*.tiff)");
         if(!back.isEmpty())
             setBackground(QPixmap(back));
     });
@@ -238,7 +233,7 @@ inline void PlayerWindow::connectUiSlots() {
             int v = ui->volumeSlider->value();
             if(v > 0) {
                 ui->volumeButton->setPixmap(unMuted);
-                emit ui->volumeSlider->valueChanged(v);
+                emit ui->volumeSlider->valueChanged(v); // 虽然音量改变，但数值不变
             }
         }
     });
@@ -456,6 +451,8 @@ void PlayerWindow::on_onlineSearcher_done() {
         res->setItems(scher->analyzeResult());
         res->show();
     }
+    else
+        QMessageBox::warning(this,"温馨提示","搜索时出错，请检查网络连接");
     ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
     ui->searchLabel->setReplyClick(true);
 }
@@ -522,9 +519,7 @@ PlayerWindow::~PlayerWindow() {
     setting.setValue(LAST_PATH,lastPath);
     setting.setValue(LAST_VOLUME,ui->volumeSlider->value());
     setting.setValue(LAST_MODE,(int)player->mode);
-    setting.setValue("AUTOLOAD",settingWind->getAutoSave());
-    setting.setValue("MIN_ONCLOSE",settingWind->getminOnClose());
-    setting.setValue("TOOLBAR_OPAC",settingWind->opacity);
+    settingWind->saveSettings(setting);
     saveList("default.lst");
     delete ui;
     delete settingWind;

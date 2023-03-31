@@ -13,6 +13,47 @@ SettingWindow::SettingWindow(QWidget *parent) :
     connect(ui->effectBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
     initUi();
 }
+/* TODO:测试项目:
+ * 1.两个框全部设置为选中->下次打开仍选中 ok
+ * 2.两个框全部不选择->下次打开仍全不选中，且不自动加载播放列表 ok
+ * 3.设置下载路径为"音乐文件夹"->下次打开仍为“音乐文件夹” ok
+ * 4.设置下载路径为桌面->下次打开仍为桌面
+ */
+void SettingWindow::loadSettings(QSettings &setting) {
+    QStringList keys = setting.childGroups(),keys_general = setting.childKeys();
+    // 在[General]项下的设置
+    if(keys_general.contains("TOOLBAR_OPAC"))
+        setOpacityValue(setting.value("TOOLBAR_OPAC").toDouble());
+    else
+        setting.setValue("TOOLBAR_OPAC",opacity);
+    if(keys_general.contains("AUTOLOAD"))
+        ui->autoSaveBox->setChecked(setting.value("AUTOLOAD").toBool());
+    else
+        setting.setValue("AUTOLOAD",ui->autoSaveBox->isChecked());
+    if(keys_general.contains("MIN_ONCLOSE"))
+        ui->minOnCloseBox->setChecked(setting.value("MIN_ONCLOSE").toBool());
+    else
+        setting.setValue("MIN_ONCLOSE",ui->minOnCloseBox->isChecked());
+    if(keys.contains("DOWNLOAD")) {
+        setDownLoc(setting.value("DOWNLOAD/LOC").toString());
+    }
+    else {
+        setting.setValue("DOWNLOAD/LOC",getDownLoc());
+    }
+}
+
+void SettingWindow::saveSettings(QSettings &setting) {
+    if(setting.format() == QSettings::InvalidFormat) {
+#ifndef NDEBUG
+        qCritical() << "ERROR:saveSettings:format of the setting is invalid.Exiting.";
+#endif
+        return;
+    }
+    setting.setValue("AUTOLOAD", ui->autoSaveBox->isChecked());
+    setting.setValue("MIN_ONCLOSE",ui->minOnCloseBox->isChecked());
+    setting.setValue("TOOLBAR_OPAC",opacity);
+    setting.setValue("DOWNLOAD/LOC",getDownLoc());
+}
 
 inline void SettingWindow::initUi() {
     QPalette pl;
@@ -46,6 +87,15 @@ QString SettingWindow::getDownLoc() {
     if(text == "音乐文件夹")
         return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
     return text;
+}
+
+void SettingWindow::setDownLoc(QString loc) {
+    if(QStandardPaths::writableLocation(QStandardPaths::MusicLocation).compare(loc,Qt::CaseInsensitive) == 0) {
+        ui->locEdit->setText("音乐文件夹");
+    }
+    else {
+       ui->locEdit->setText(loc);
+    }
 }
 
 //int SettingWindow::getSrchMethod() {return ui->methodBox->currentIndex();}
