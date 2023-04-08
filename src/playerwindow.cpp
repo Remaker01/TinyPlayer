@@ -183,7 +183,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
 #endif
                                                         "作者邮箱:latexreal@163.com\t\n"
-                                                        "版本号:3.30  3.30.230325");
+                                                        "版本号:3.33  3.33.230408");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -325,11 +325,14 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
         e->accept();
         ui->playButton->click();
     }
-    else if (e->key() == Qt::Key_Up) {
-        ui->volumeSlider->setValue(ui->volumeSlider->value()+5);
-    }
-    else if (e->key() == Qt::Key_Down) {
-        ui->volumeSlider->setValue(ui->volumeSlider->value()-5);
+    switch (e->key()) {
+    case Qt::Key_Up:
+        ui->volumeSlider->setValue(ui->volumeSlider->value()+5);break;
+    case Qt::Key_Down:
+        ui->volumeSlider->setValue(ui->volumeSlider->value()-5);break;
+    case Qt::Key_Enter:case Qt::Key_Return:
+        if(ui->searchEdit->hasFocus())
+            ui->searchLabel->click();
     }
 }
 

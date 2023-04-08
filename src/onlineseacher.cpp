@@ -46,10 +46,11 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
 void OnlineSeacher::doSearch(int method) {
-    if(method < 0||method > 2) {
+    if(method < 0||method > 3) {
 #ifndef NDEBUG
         qCritical() << "doSearch:invalid method.";
 #endif
+        emit done();
         return;
     }
     if(!QFile::exists(PROGRAM)) {
@@ -57,7 +58,7 @@ void OnlineSeacher::doSearch(int method) {
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载搜索引擎");
         return;
     }
-    QString methodStrs[] = {"0","1","2"};
+    QString methodStrs[] = {"0","1","2","3"};
     prog.setArguments({methodStrs[method],keyword});
     prog.start();
 }
@@ -68,14 +69,13 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载下载器");
         return;
     }
-
     QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
-        QString suffix = uri[i].url().right(4);
+        QString suffix = uri[i].fileName().right(4);
+#ifndef NDEBUG
         qDebug() << suffix;
-        args.append(uri[i].url()); // toString:QUrl(...)
-        args.last() += ';';
-        args.last() += names[i];
+#endif
+        args.append(uri[i].url()+';'+names[i]); // toString:QUrl(...)
         if(!args.last().endsWith(suffix,Qt::CaseInsensitive))
             args.last().append(suffix);
     }

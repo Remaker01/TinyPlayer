@@ -266,6 +266,11 @@ QComboBox QAbstractItemView::item{padding:3px;}</string>
         </item>
         <item>
          <property name="text">
+          <string>QQ音乐</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>荔枝网</string>
          </property>
         </item>

@@ -2,11 +2,11 @@
 from urllib3.poolmanager import PoolManager
 #TODO: 可否在执行_write时做一些并发
 import json
-from urllib.parse import quote
-HOST = "https://yy.yidianzhuye.com"
+from urllib.parse import quote,urlsplit
+HOST = "http://www.zhiyunge.cn/music/"
 # ACCEPT_WEB = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
 ACCEPT_JSON = "application/json, text/javascript, */*; q=0.01"
-PROVIDORS = ("netease","kugou","lizhi") # 网页搜索"生日快乐歌"耗时分别为1.29s,3.29s,2.89s，另外migu也可行但耗时太长(7.9s)
+PROVIDORS = ("netease","kugou","qq","lizhi") # 网页搜索"生日快乐歌"耗时分别为1.29s,3.29s,2.89s，另外migu也可行但耗时太长(7.9s)
 _head = {
     "Accept-encoding":"gzip, deflate, br",
     "Accept-Language" : "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
@@ -31,6 +31,10 @@ def _redirect_addr(addr:str):
     response = http.urlopen(url=addr,method="GET",headers=_head,preload_content=False)
     response.release_conn()
     return response.geturl()
+def _is_url_ok(url:str):
+    x = urlsplit(url)
+    cmp = lambda x:len(x) >= 4 and x.find('.') >= 0
+    return cmp(x.path) or cmp(x.query)
 def getMusicList(name:str,providor="netease"):
     if providor not in PROVIDORS:
         raise ValueError("提供商必须为{0}之一".format(PROVIDORS))
@@ -47,7 +51,7 @@ def getMusicList(name:str,providor="netease"):
     # head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
     # respo_htm = http.request_encode_url("GET",url=web_url,headers=head) # 问题2：直接请求网页得不到结果
     head.update(head_json)
-    respo_json = http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False) # 问题4：最后一个参数保证Content-type正确
+    respo_json = http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=1) # 问题4：最后一个参数保证Content-type正确
     # print(respo_json.headers)
     result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
 
@@ -55,7 +59,7 @@ def getMusicList(name:str,providor="netease"):
     for data in result:
         if data[2] is not None:
             x = _redirect_addr(data[2])
-            if x.find("/404") < 0:
+            if _is_url_ok(x):
                 fp.write('\u00a0'.join(data) + '\n')
     fp.close()
 if __name__ == "__main__":

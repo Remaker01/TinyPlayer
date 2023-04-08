@@ -1,6 +1,5 @@
 #include "settingwindow.h"
 #include "ui_settingwindow.h"
-#include <QDebug>
 #include <QStorageInfo>
 SettingWindow::SettingWindow(QWidget *parent) :
     QWidget(parent),ui(new Ui_SettingWindow) {
@@ -17,7 +16,7 @@ SettingWindow::SettingWindow(QWidget *parent) :
  * 1.两个框全部设置为选中->下次打开仍选中 ok
  * 2.两个框全部不选择->下次打开仍全不选中，且不自动加载播放列表 ok
  * 3.设置下载路径为"音乐文件夹"->下次打开仍为“音乐文件夹” ok
- * 4.设置下载路径为桌面->下次打开仍为桌面
+ * 4.设置下载路径为桌面->下次打开仍为桌面 ok
  */
 void SettingWindow::loadSettings(QSettings &setting) {
     QStringList keys = setting.childGroups(),keys_general = setting.childKeys();

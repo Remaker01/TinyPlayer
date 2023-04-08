@@ -126,7 +126,7 @@ bool PlayerCore::addToList(const QString &media, bool local, QString alter) {
     }
     bool ok = false;
     for(const QString &format:Formats) {
-        if(media.endsWith(format,Qt::CaseInsensitive)) {
+        if(media.indexOf(format,Qt::CaseInsensitive) > 0) {
             ok = true;
             break;
         }
