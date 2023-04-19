@@ -68,7 +68,7 @@ inline void PlayerCore::setMedia(const QString &media) {
         while (!curMedia->parsed())
             QCoreApplication::processEvents();
         VlcMediaPlayer::openOnly(curMedia);
-        emit VlcMediaPlayer::lengthChanged(curMedia->duration());
+        emit VlcMediaPlayer::lengthChanged(curMedia->duration()); //bug in lib?
         setPos(0);
     }
     if(sta == Vlc::Playing||sta == Vlc::Paused)

@@ -13,7 +13,7 @@ _head = {
     "Connection":"keep-alive",
     "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
 }
-http = PoolManager(num_pools=5)
+_http = PoolManager(num_pools=5)
 def _get_links_from_json(respo):
     objs = json.loads(respo).get("data")
     if objs is None:
@@ -28,7 +28,7 @@ def _get_links_from_json(respo):
 def _redirect_addr(addr:str):
     if addr.find("music.163") < 0:
         return addr # 仅有网易会重定向?
-    response = http.urlopen(url=addr,method="GET",headers=_head,preload_content=False)
+    response = _http.urlopen(url=addr,method="GET",headers=_head,preload_content=False)
     response.release_conn()
     return response.geturl()
 def _is_url_ok(url:str):
@@ -51,7 +51,7 @@ def getMusicList(name:str,providor="netease"):
     # head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
     # respo_htm = http.request_encode_url("GET",url=web_url,headers=head) # 问题2：直接请求网页得不到结果
     head.update(head_json)
-    respo_json = http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=1) # 问题4：最后一个参数保证Content-type正确
+    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=1) # 问题4：最后一个参数保证Content-type正确
     # print(respo_json.headers)
     result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
 

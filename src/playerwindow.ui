@@ -62,7 +62,7 @@ QSlider::sub-page:horizontal{
     background: #8097b8;
 }
 QMenu{
-	background-color:#ffffff;
+background-color:#ffffff;
 }
 QMenu::item:hover{background-color:#e7e7e7;color:#000000;}
 QMenu::item:selected{
@@ -84,283 +84,6 @@ QMenu::item{
    <property name="rightMargin">
     <number>4</number>
    </property>
-   <item row="2" column="5">
-    <widget class="QWidget" name="topRightwidget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <property name="topMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>1</number>
-      </property>
-      <item>
-       <widget class="PlayerButton" name="mupbutton">
-        <property name="toolTip">
-         <string>上移</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="../resource.qrc">:/Icons/images/moveup.png</pixmap>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="PlayerButton" name="mdownButton">
-        <property name="toolTip">
-         <string>下移</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="../resource.qrc">:/Icons/images/movedown.png</pixmap>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QLabel" name="mediaLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
-     </property>
-     <property name="lineWidth">
-      <number>0</number>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1" colspan="5">
-    <widget class="QWidget" name="topWidget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>3</number>
-      </property>
-      <item>
-       <widget class="PlayerButton" name="logoButton">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="../resource.qrc">:/Icons/images/icon.png</pixmap>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="topLabel">
-        <property name="text">
-         <string>&lt;strong&gt;TinyPlayer&lt;/strong&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="searchEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>22</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLineEdit{
-border:0px;
-border-radius:4px;
-min-height:20px;
-padding:1px 1px;
-}</string>
-        </property>
-        <property name="maxLength">
-         <number>256</number>
-        </property>
-        <property name="placeholderText">
-         <string>在线搜索音乐...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="PlayerButton" name="searchLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="../resource.qrc">:/Icons/images/serach.png</pixmap>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox">
-        <property name="styleSheet">
-         <string notr="true">QComboBox{padding:3px 2px;}
-QComboBox QAbstractItemView{outline:0px;}
-QComboBox QAbstractItemView::item{padding:3px;}</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>网易云音乐</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>酷狗音乐</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>QQ音乐</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>荔枝网</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="setButton">
-        <property name="toolTip">
-         <string>设置</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton{
-padding:5px 3px;
-border:0px;
-}
-QPushButton:hover{
-background-color: rgba(200, 200, 200,154);
-}</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../resource.qrc">
-          <normaloff>:/Icons/images/setting.png</normaloff>:/Icons/images/setting.png</iconset>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="minButton">
-        <property name="styleSheet">
-         <string notr="true">QPushButton{
-padding:5px 3px;
-border:0px;
-}
-QPushButton:hover{
-background-color: rgba(255, 255, 255,154);
-}</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../resource.qrc">
-          <normaloff>:/Icons/images/min.png</normaloff>:/Icons/images/min.png</iconset>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="quitButton">
-        <property name="styleSheet">
-         <string notr="true">QPushButton{
-border:0px;
-padding:5px 3px;
-}
-QPushButton:hover{
-background-color: rgba(255,32,32,154);
-}</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../resource.qrc">
-          <normaloff>:/Icons/images/quit.png</normaloff>:/Icons/images/quit.png</iconset>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="7" column="1" colspan="5">
     <widget class="QWidget" name="buttomWidget2" native="true">
      <property name="sizePolicy">
@@ -370,6 +93,22 @@ background-color: rgba(255,32,32,154);
       </sizepolicy>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>10</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item>
        <widget class="PlayerButton" name="prevButton">
         <property name="sizePolicy">
@@ -487,6 +226,394 @@ background-color: rgba(255,32,32,154);
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="5">
+    <widget class="QWidget" name="topWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="PlayerButton" name="logoButton">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../resource.qrc">:/Icons/images/icon.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="topLabel">
+        <property name="text">
+         <string>&lt;strong&gt;TinyPlayer&lt;/strong&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="searchEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit{
+border:0px;
+border-radius:4px;
+min-height:20px;
+padding:1px 1px;
+}</string>
+        </property>
+        <property name="maxLength">
+         <number>256</number>
+        </property>
+        <property name="placeholderText">
+         <string>在线搜索音乐...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PlayerButton" name="searchLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../resource.qrc">:/Icons/images/serach.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox{padding:3px 2px;}
+QComboBox QAbstractItemView{outline:0px;}
+QComboBox QAbstractItemView::item{padding:3px;}</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>网易云音乐</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>酷狗音乐</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>QQ音乐</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>荔枝网</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="setButton">
+        <property name="toolTip">
+         <string>设置</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+padding:5px 3px;
+border:0px;
+}
+QPushButton:hover{
+background-color: rgba(200, 200, 200,154);
+}</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../resource.qrc">
+          <normaloff>:/Icons/images/setting.png</normaloff>:/Icons/images/setting.png</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="minButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+padding:5px 3px;
+border:0px;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 255,154);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../resource.qrc">
+          <normaloff>:/Icons/images/min.png</normaloff>:/Icons/images/min.png</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="quitButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+border:0px;
+padding:5px 3px;
+}
+QPushButton:hover{
+background-color: rgba(255,32,32,154);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../resource.qrc">
+          <normaloff>:/Icons/images/quit.png</normaloff>:/Icons/images/quit.png</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="5">
+    <widget class="QWidget" name="middleWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="PlayerSlider" name="progressSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximum">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="currentLabel">
+        <property name="text">
+         <string>00:00</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="timeLable">
+        <property name="text">
+         <string>/00:00</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QWidget" name="topRightwidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>1</number>
+      </property>
+      <item>
+       <widget class="PlayerButton" name="mupbutton">
+        <property name="toolTip">
+         <string>上移</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../resource.qrc">:/Icons/images/moveup.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PlayerButton" name="mdownButton">
+        <property name="toolTip">
+         <string>下移</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../resource.qrc">:/Icons/images/movedown.png</pixmap>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="mediaLabel0">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string> 当前歌曲:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" rowspan="2" colspan="4">
+    <widget class="QWidget" name="rightWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="2">
+       <widget class="QLabel" name="waitingLabel">
+        <property name="text">
+         <string>正在打开...</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="cancelButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>取消</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <widget class="PlayListView" name="playView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget{
+background-color: rgba(255, 255, 255, 154);
+}
+QListView::item:hover:!selected {
+background-color: rgba(200, 200, 200, 100);
+color:black;
+}
+QListView::item:selected {
+/*background-color: rgb(198, 227, 251);*/
+background-color: rgb(200, 225, 250);
+color:black;
+}</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="curlistLabel">
+     <property name="text">
+      <string> 当前播放列表 共0项</string>
+     </property>
     </widget>
    </item>
    <item row="3" column="1">
@@ -703,128 +830,20 @@ background-color: rgb(200,200,200);
      </layout>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="curlistLabel">
-     <property name="text">
-      <string> 当前播放列表 共0项</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1" colspan="5">
-    <widget class="QWidget" name="middleWidget" native="true">
+   <item row="5" column="2">
+    <widget class="QLabel" name="mediaLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="PlayerSlider" name="progressSlider">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximum">
-         <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="currentLabel">
-        <property name="text">
-         <string>00:00</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="timeLable">
-        <property name="text">
-         <string>/00:00</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="mediaLabel0">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
-     <property name="text">
-      <string> 当前歌曲:</string>
+     <property name="lineWidth">
+      <number>0</number>
      </property>
-    </widget>
-   </item>
-   <item row="3" column="2" rowspan="2" colspan="4">
-    <widget class="QWidget" name="rightWidget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="2">
-       <widget class="QLabel" name="waitingLabel">
-        <property name="text">
-         <string>正在打开...</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="cancelButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>取消</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2">
-       <widget class="PlayListView" name="playView">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget{
-background-color: rgba(255, 255, 255, 154);
-}
-QListView::item:hover:!selected {
-background-color: rgba(200, 200, 200, 100);
-color:black;
-}
-QListView::item:selected {
-/*background-color: rgb(198, 227, 251);*/
-background-color: rgb(200, 225, 250);
-color:black;
-}</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>

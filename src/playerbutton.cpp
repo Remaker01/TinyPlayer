@@ -5,11 +5,11 @@ PlayerButton::PlayerButton(QWidget *parent):QLabel(parent) {
     setCursor(Qt::PointingHandCursor);
 }
 
-void PlayerButton::setReplyClick(bool f) {replyClick = f;}
+void PlayerButton::setClickable(bool f) {clickable = f;}
 
 void PlayerButton::mousePressEvent(QMouseEvent *e) {
     w = width(),h = height();
-    if(e->button() == Qt::LeftButton&&replyClick) {
+    if(e->button() == Qt::LeftButton&&clickable) {
         int wi = width(),he = height();
         wi = wi - (wi >> 3);
         he = he - (he >> 3);
@@ -19,7 +19,7 @@ void PlayerButton::mousePressEvent(QMouseEvent *e) {
 }
 
 void PlayerButton::mouseReleaseEvent(QMouseEvent *e) {
-    if(e->button() == Qt::LeftButton&&replyClick) {
+    if(e->button() == Qt::LeftButton&&clickable) {
         resize(w,h);
         move(x() - ((w >> 3) -1),y() - (h >> 3));
         emit clicked();
@@ -32,7 +32,7 @@ void PlayerButton::changeState(const QString &toolTip, const QPixmap &pixmap) {
 }
 
 void PlayerButton::click() {
-    if(replyClick)
+    if(clickable)
         emit clicked();
 }
 PlayerButton::~PlayerButton() {}

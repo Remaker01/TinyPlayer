@@ -30,12 +30,12 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
 }
 
 inline void PlayerWindow::initUi() {
-    ui->volumeButton->setReplyClick(true);
-    ui->modeButton->setReplyClick(true);
-    ui->searchLabel->setReplyClick(true);
-    ui->mupbutton->setReplyClick(true);
-    ui->mdownButton->setReplyClick(true);
-    ui->logoButton->setReplyClick(true);
+    ui->volumeButton->setClickable(true);
+    ui->modeButton->setClickable(true);
+    ui->searchLabel->setClickable(true);
+    ui->mupbutton->setClickable(true);
+    ui->mdownButton->setClickable(true);
+    ui->logoButton->setClickable(true);
     static QAction sep1,sep2,sep3;
     sep1.setSeparator(true),sep2.setSeparator(true),sep3.setSeparator(true);
     setMenu({ui->actionopenFile,ui->actionOpenDir,&sep1,
@@ -109,29 +109,26 @@ inline void PlayerWindow::changeMode(PlayerCore::PlayMode m) {
 inline void PlayerWindow::connectSlots() {
     connectUiSlots();
     connect(ui->playButton,&PlayerButton::clicked,this,[this](){
-         ui->stopButton->setReplyClick(true);
          if(player->state() != Vlc::Playing) {
              player->play();
-             if(player->state() == Vlc::Playing)
-                CHANGE_TO_PAUSEICON;
          }
          else {
              player->pause();
-             CHANGE_TO_PLAYICON;
+//             CHANGE_TO_PLAYICON;
          }
     });
     connect(ui->stopButton,&PlayerButton::clicked,this,[this]() {
         if(player->state() != Vlc::Stopped) {
            player->stop();
            CHANGE_TO_PLAYICON;
-           ui->stopButton->setReplyClick(false);
+           ui->stopButton->setClickable(false);
            ui->progressSlider->setValue(0);
         }
     });
     connect(player,&PlayerCore::lengthChanged,this,[&,this](int totTime) {
-        ui->playButton->setReplyClick(true);
-        ui->nextButton->setReplyClick(true);
-        ui->prevButton->setReplyClick(true);
+        ui->playButton->setClickable(true);
+        ui->nextButton->setClickable(true);
+        ui->prevButton->setClickable(true);
         totTime = qRound(totTime / 1000.0);
         //改变总时间
         ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
@@ -151,13 +148,18 @@ inline void PlayerWindow::connectSlots() {
     connect(player,&PlayerCore::finished,this,[&,this]() {
         ui->progressSlider->setValue(0);
         CHANGE_TO_PLAYICON;
-        ui->stopButton->setReplyClick(false);
+        ui->stopButton->setClickable(false);
     });
     connect(player,&VlcMediaPlayer::opening,this,[this] {
         ui->waitingLabel->setText("正在缓冲");
         ui->waitingLabel->show();
     });
-    connect(player,&VlcMediaPlayer::playing,ui->waitingLabel,&QWidget::hide);
+    connect(player,&VlcMediaPlayer::playing,this,[this] {
+        ui->stopButton->setClickable(true);
+        CHANGE_TO_PAUSEICON;
+        ui->waitingLabel->hide();
+    });
+    connect(player,&VlcMediaPlayer::paused,this,[this] {CHANGE_TO_PLAYICON;});
     connect(player,&VlcMediaPlayer::error,ui->waitingLabel,&QWidget::hide);  //播放出错也要隐藏
     connect(tray,&QSystemTrayIcon::activated,this,[this](QSystemTrayIcon::ActivationReason r){
         if(r == QSystemTrayIcon::Trigger)
@@ -285,7 +287,7 @@ inline void PlayerWindow::connectUiSlots() {
         gif.start();
         scher->setKeyWord( ui->searchEdit->text().replace(';',""));
         scher->doSearch(ui->comboBox->currentIndex());
-        ui->searchLabel->setReplyClick(false);
+        ui->searchLabel->setClickable(false);
         connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
         ui->searchEdit->clearFocus();
     });
@@ -327,8 +329,10 @@ void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
     }
     switch (e->key()) {
     case Qt::Key_Up:
+        ui->playView->clearFocus();
         ui->volumeSlider->setValue(ui->volumeSlider->value()+5);break;
     case Qt::Key_Down:
+        ui->playView->clearFocus();
         ui->volumeSlider->setValue(ui->volumeSlider->value()-5);break;
     case Qt::Key_Enter:case Qt::Key_Return:
         if(ui->searchEdit->hasFocus())
@@ -412,10 +416,10 @@ void PlayerWindow::on_progressSlider_valueChanged(int value) {
 
 void PlayerWindow::on_progressSlider_sliderMoved(int position) {player->setPos(position);}
 
-#define AFTER_DEL(RPYCLICK_CONDITION) ui->playButton->setReplyClick(RPYCLICK_CONDITION);\
+#define AFTER_DEL(RPYCLICK_CONDITION) ui->playButton->setClickable(RPYCLICK_CONDITION);\
     ui->delButton->setEnabled(RPYCLICK_CONDITION);\
-    ui->prevButton->setReplyClick(RPYCLICK_CONDITION);\
-    ui->nextButton->setReplyClick(RPYCLICK_CONDITION);\
+    ui->prevButton->setClickable(RPYCLICK_CONDITION);\
+    ui->nextButton->setClickable(RPYCLICK_CONDITION);\
     if(!(RPYCLICK_CONDITION)) {\
         ui->timeLable->setText("/00:00");\
         ui->mediaLabel->clear();\
@@ -444,6 +448,7 @@ void PlayerWindow::on_clearButton_clicked() {
     ui->playView->commitChange();
     player->clear();
     ui->curlistLabel->setText("当前播放列表 共0项");
+    ui->progressSlider->setMaximum(0);
     AFTER_DEL(false)
 }
 #undef AFTER_DEL
@@ -457,7 +462,7 @@ void PlayerWindow::on_onlineSearcher_done() {
     else
         QMessageBox::warning(this,"温馨提示","搜索时出错，请检查网络连接");
     ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
-    ui->searchLabel->setReplyClick(true);
+    ui->searchLabel->setClickable(true);
 }
 static constexpr uint16_t MAGIC = (uint16_t)0x0102;
 bool PlayerWindow::saveList(const QString &file) {
@@ -498,6 +503,7 @@ bool PlayerWindow::openList(const QString &file) {
 
 void PlayerWindow::on_playView_doubleClicked(const QModelIndex &index) {
     player->setCurrentMediaIndex(index.row());
+    player->play();
 }
 
 void PlayerWindow::moveItem(bool moveUp) {
