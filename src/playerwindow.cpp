@@ -16,10 +16,13 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     initConfiguration();
     connectSlots();
     showNormal();
+    //逻辑：如果打开的是音频文件，则直接播放然后打开default.lst，否则，只打开arg指定的播放列表，无论是否成功都不打开default.lst
     if(!arg.isEmpty()) {
         if(Music::isLegal(arg)) {
             doAddMedia(QStringList(arg));
             ui->playButton->click();
+            if(settingWind->getAutoSave())
+                openList("default.lst");
         }
         else if(!openList(arg))
             QMessageBox::warning(this,"提示","您打开的文件不是合法的音频格式或播放列表");

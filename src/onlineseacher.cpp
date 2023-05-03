@@ -71,7 +71,7 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
     }
     QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
-        QString suffix = uri[i].fileName().right(4);
+        QString suffix = uri[i].url().endsWith(".mp3",Qt::CaseInsensitive) ? ".mp3" : ".m4a";
 #ifndef NDEBUG
         qDebug() << suffix;
 #endif

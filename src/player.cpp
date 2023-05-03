@@ -2,7 +2,7 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-#define RESET setMedia(list[current].getUrl())
+#define reset() setMedia(list[current].getUrl())
 
 const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1","mpga",  //MPEG Audio
                                                    ".wav",".wma",   //Windows Audio
@@ -26,7 +26,7 @@ inline void PlayerCore::connectSlots() {
         switch (mode) {
         case SIGNLE:
             //去掉这句，会导致结束后无法再次开始
-            RESET;
+            reset();
             emit finished();
             break;
         case SEQUENTIAL:
@@ -35,18 +35,18 @@ inline void PlayerCore::connectSlots() {
                 play();
             }
             else {
-                RESET;
+                reset();
                 emit finished();
             }
             break;
         case SIGNLE_LOOP:
             //不能直接设为0再重新开始，否则导致进度条一直卡在满格
-            RESET;
+            reset();
             play();
             break;
         case LIST_LOOP:
             if(list.size() == 1)
-                RESET;
+                reset();
             else
                 goNext();
             play();

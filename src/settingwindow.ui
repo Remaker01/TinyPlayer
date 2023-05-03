@@ -59,6 +59,9 @@ border:0px;
      <height>19</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
    <property name="text">
     <string>关闭时最小化</string>
    </property>
@@ -71,6 +74,9 @@ border:0px;
      <width>271</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
    </property>
    <property name="text">
     <string>自动加载上次退出时的播放列表</string>
@@ -113,6 +119,9 @@ border:0px;
     </item>
     <item>
      <widget class="QPushButton" name="pushButton">
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
       <property name="text">
        <string>还原默认</string>
       </property>
@@ -253,6 +262,9 @@ border:0px;
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="2">
      <widget class="QLineEdit" name="locEdit">
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
       <property name="text">
        <string>音乐文件夹</string>
       </property>

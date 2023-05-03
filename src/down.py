@@ -13,7 +13,7 @@ head = {
     "Connection":"keep-alive"
 }
 _http = PoolManager(num_pools=5)
-pool = ThreadPool(20)
+pool = ThreadPool(10)
 argc = len(sys.argv)
 ILLEGAL_CHARS=[':','*','?','\"','<','>','|']
 def _get_url_fname(urls:str):
@@ -44,9 +44,8 @@ if __name__ == "__main__":
     if not os.path.exists(loc):
         os.makedirs(loc)
     os.chdir(loc)
-    for i in range(2,argc,10):
-        urls=sys.argv[i:min(argc,i+10)]
-        pool.map(do_download,urls)
+    for i in range(2,argc):
+        pool.apply_async(do_download,args=(sys.argv[i],))
     pool.close()
     pool.join()
     _http.clear()

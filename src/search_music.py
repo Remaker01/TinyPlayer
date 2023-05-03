@@ -28,7 +28,7 @@ def _get_links_from_json(respo):
 def _redirect_addr(addr:str):
     if addr.find("music.163") < 0:
         return addr # 仅有网易会重定向?
-    response = _http.urlopen(url=addr,method="GET",headers=_head,preload_content=False)
+    response = _http.urlopen(url=addr,method="GET",headers=_head,preload_content=False,retries=1)
     response.release_conn()
     return response.geturl()
 def _is_url_ok(url:str):
@@ -51,7 +51,7 @@ def getMusicList(name:str,providor="netease"):
     # head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
     # respo_htm = http.request_encode_url("GET",url=web_url,headers=head) # 问题2：直接请求网页得不到结果
     head.update(head_json)
-    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=1) # 问题4：最后一个参数保证Content-type正确
+    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=1) # 问题4：保证Content-type正确
     # print(respo_json.headers)
     result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
 

@@ -198,6 +198,9 @@ QMenu::item{
       </item>
       <item>
        <widget class="PlayerSlider" name="volumeSlider">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="maximum">
          <number>100</number>
         </property>
@@ -378,6 +381,9 @@ QComboBox QAbstractItemView::item{padding:3px;}</string>
       </item>
       <item>
        <widget class="QPushButton" name="setButton">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="toolTip">
          <string>设置</string>
         </property>
@@ -401,6 +407,9 @@ background-color: rgba(200, 200, 200,154);
       </item>
       <item>
        <widget class="QPushButton" name="minButton">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton{
 padding:5px 3px;
@@ -464,6 +473,9 @@ background-color: rgba(255,32,32,154);
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="maximum">
          <number>0</number>
@@ -575,7 +587,7 @@ background-color: rgba(255,32,32,154);
          </sizepolicy>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>取消</string>
@@ -589,6 +601,9 @@ background-color: rgba(255,32,32,154);
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget{
