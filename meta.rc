@@ -22,8 +22,8 @@ VS_VERSION_INFO VERSIONINFO
             BLOCK "080404b0"
             BEGIN
                 VALUE "FileDescription", "TinyPlayer Ö÷³ÌÐò"
-                VALUE "FileVersion", "3.20.0\0"
-                VALUE "ProductVersion", "3.20\0"
+                VALUE "FileVersion", "3.34.0\0"
+                VALUE "ProductVersion", "3.34\0"
                 //VALUE "OriginalFilename", "TinyPlayer.exe\0"
                 VALUE "ProductName", "TinyPlayer"
            END

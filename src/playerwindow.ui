@@ -198,9 +198,6 @@ QMenu::item{
       </item>
       <item>
        <widget class="PlayerSlider" name="volumeSlider">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
         <property name="maximum">
          <number>100</number>
         </property>
@@ -340,7 +337,7 @@ padding:1px 1px;
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QComboBox{padding:3px 2px;}
+         <string notr="true">QComboBox{padding:3px 3px;}
 QComboBox QAbstractItemView{outline:0px;}
 QComboBox QAbstractItemView::item{padding:3px;}</string>
         </property>
@@ -473,9 +470,6 @@ background-color: rgba(255,32,32,154);
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="maximum">
          <number>0</number>
@@ -691,8 +685,10 @@ background-color: rgb(200, 200,200);
             <string notr="true">QPushButton{
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
-border:0px;
-padding-bottom:2px;
+/*border:0px;*/
+border-radius:5px;
+background-position:center center;
+padding-bottom:5px;
 }
 QPushButton:hover{
 background-color: rgba(255, 255, 255,127);
@@ -750,8 +746,10 @@ background-color: rgb(200,200,200);
             <string notr="true">QPushButton{
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
-border:0px;
-padding-bottom:2px;
+/*border:0px;*/
+border-radius:5px;
+background-position:center center;
+padding-bottom:5px;
 }
 QPushButton:hover{
 background-color: rgba(255, 255, 255,127);
@@ -809,7 +807,8 @@ background-color: rgb(200,200,200);
             <string notr="true">QPushButton{
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
-border:0px;
+/*border:0px;*/
+border-radius:5px;
 background-position:center center;
 padding-bottom:5px;
 }

@@ -145,7 +145,7 @@ inline void PlayerWindow::connectSlots() {
             ui->albumLabel->setPixmap(QPixmap(albumPic).scaled(150,150));
     });
     connect(player,&PlayerCore::timeChanged,this,[this](int t) {
-        ui->progressSlider->setValue(qRound(t / 1000.0));
+        ui->progressSlider->setValue(qRound(t / 1000.0f));
     });
     //停止后重置进度条
     connect(player,&PlayerCore::finished,this,[&,this]() {
@@ -188,7 +188,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
 #endif
                                                         "作者邮箱:latexreal@163.com\t\n"
-                                                        "版本号:3.33  3.33.230408");
+                                                        "版本号:3.34  3.34.230520");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{

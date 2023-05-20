@@ -12,7 +12,7 @@ SettingWindow::SettingWindow(QWidget *parent) :
     connect(ui->effectBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&SettingWindow::changeEffectRequirement);
     initUi();
 }
-/* TODO:测试项目:
+/* 测试项目:
  * 1.两个框全部设置为选中->下次打开仍选中 ok
  * 2.两个框全部不选择->下次打开仍全不选中，且不自动加载播放列表 ok
  * 3.设置下载路径为"音乐文件夹"->下次打开仍为“音乐文件夹” ok
