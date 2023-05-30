@@ -19,15 +19,22 @@ public:
     Q_DECL_DEPRECATED_X("Use getSelectedItems instead") QList<QString> getSelectedURLs();
     void removeSelected();
     ~SearchResultWidget();
+protected:
+    void closeEvent(QCloseEvent *event);
 signals:
     void addItemRequirement(bool autoDelete);
+    void changPageRequirement(uint page);
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
-
     void on_copyButton_clicked();
+    void on_nextButton_clicked();
+    void on_prevButton_clicked();
 
 private:
     Ui::SearchResultWidget *ui;
+    QMovie *gif;
+    inline uint getPage();
+    inline void setPage(uint page);
 };
 
 #endif // SEARCHRESULTWIDGET_H

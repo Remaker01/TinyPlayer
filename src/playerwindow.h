@@ -33,6 +33,8 @@ private:
     void connectSlots();
     void connectUiSlots();
     void ensureExit();
+    /// 搜寻第page页的内容，不改变关键字
+    void searchForPage(uint page=1);
 protected:
     void keyReleaseEvent(QKeyEvent *e);
     void closeEvent(QCloseEvent *ev);

@@ -173,6 +173,7 @@ inline void PlayerWindow::connectSlots() {
         QDesktopServices::openUrl(QUrl::fromLocalFile(settingWind->getDownLoc()));
         ui->waitingLabel->hide();
     });
+    connect(res,&SearchResultWidget::changPageRequirement,this,&PlayerWindow::searchForPage);
 }
 
 inline void PlayerWindow::connectUiSlots() {
@@ -284,15 +285,16 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
             return;
         }
-        static QMovie gif(":/Icons/images/waiting.gif");  //282-285:设置gif
-        gif.setScaledSize(ui->searchLabel->size());
-        ui->searchLabel->setMovie(&gif);
-        gif.start();
+//        static QMovie gif(":/Icons/images/waiting.gif");  //282-285:设置gif
+//        gif.setScaledSize(ui->searchLabel->size());
+//        ui->searchLabel->setMovie(&gif);
+//        gif.start();
         scher->setKeyWord( ui->searchEdit->text().replace(';',""));
-        scher->doSearch(ui->comboBox->currentIndex());
-        ui->searchLabel->setClickable(false);
-        connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
-        ui->searchEdit->clearFocus();
+        searchForPage();
+//        scher->doSearch(ui->comboBox->currentIndex());
+//        ui->searchLabel->setClickable(false);
+//        connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
+//        ui->searchEdit->clearFocus();
     });
     connect(settingWind,&SettingWindow::changeEffectRequirement,this,[this](int i) {
         player->setSoundEffect((uint)i);
@@ -323,6 +325,22 @@ inline void PlayerWindow::ensureExit() {
     connect(yes,&QPushButton::clicked,qApp,&QApplication::quit);
     connect(&box,&QMessageBox::accepted,this,&QWidget::hide);
     box.exec();
+}
+
+inline void PlayerWindow::searchForPage(uint page) {
+//    if(res->isVisible()) {
+//        QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
+//        return;
+//    }
+    static QMovie gif(":/Icons/images/waiting.gif");  //282-285:设置gif
+    gif.setScaledSize(ui->searchLabel->size());
+    ui->searchLabel->setMovie(&gif);
+    gif.start();
+    //scher->setKeyWord(ui->searchEdit->text().replace(';',""));
+    scher->doSearch(ui->comboBox->currentIndex(),page);
+    ui->searchLabel->setClickable(false);
+    connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
+    ui->searchEdit->clearFocus();
 }
 
 void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {

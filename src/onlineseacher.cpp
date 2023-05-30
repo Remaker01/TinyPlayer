@@ -45,7 +45,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
 
 void OnlineSeacher::setKeyWord(const QString &kwd) {keyword = kwd;}
 
-void OnlineSeacher::doSearch(int method) {
+void OnlineSeacher::doSearch(int method, uint page) {
     if(method < 0||method > 3) {
 #ifndef NDEBUG
         qCritical() << "doSearch:invalid method.";
@@ -59,7 +59,7 @@ void OnlineSeacher::doSearch(int method) {
         return;
     }
     QString methodStrs[] = {"0","1","2","3"};
-    prog.setArguments({methodStrs[method],keyword});
+    prog.setArguments({methodStrs[method],keyword,QString::number(page)});
     prog.start();
 }
 

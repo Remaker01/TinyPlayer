@@ -28,20 +28,20 @@ def _get_links_from_json(respo):
 def _redirect_addr(addr:str):
     if addr.find("music.163") < 0:
         return addr # 仅有网易会重定向?
-    response = _http.urlopen(url=addr,method="GET",headers=_head,preload_content=False,retries=1)
+    response = _http.urlopen(url=addr,method="GET",headers=_head,preload_content=False,retries=2)
     response.release_conn()
     return response.geturl()
 def _is_url_ok(url:str):
     x = urlsplit(url)
     cmp = lambda x:len(x) >= 4 and x.find('.') >= 0
     return cmp(x.path) or cmp(x.query)
-def getMusicList(name:str,providor="netease"):
+def getMusicList(name:str,providor="netease",page=1):
     if providor not in PROVIDORS:
         raise ValueError("提供商必须为{0}之一".format(PROVIDORS))
     global _head
     head = _head.copy()
     web_url = HOST + "/?name={0}&type={1}".format(quote(name),providor)
-    data = {"input":name,"filter":"name","type":providor,"page":"1"} # filter应该是name
+    data = {"input":name,"filter":"name","type":providor,"page":str(page)} # filter应该是name
     head_json = {
         "Accept":ACCEPT_JSON,
         "Origin":HOST,

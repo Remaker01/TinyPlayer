@@ -33,7 +33,7 @@ public:
      * @note 必须在done()信号调用后使用
      */
     QList<ResultInfo> analyzeResult();
-    void doSearch(int method = 1);
+    void doSearch(int method,uint page = 1);
     void download(const QList<QUrl> &uri, const QString &path, const QStringList &names);
     virtual ~OnlineSeacher();
 signals:
