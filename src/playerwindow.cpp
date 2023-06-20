@@ -141,8 +141,13 @@ inline void PlayerWindow::connectSlots() {
         QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
         if(albumPic.isEmpty())
             ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
-        else
-            ui->albumLabel->setPixmap(QPixmap(albumPic).scaled(150,150));
+        else {
+            QPixmap pixmap(albumPic);
+            if(pixmap.isNull()||pixmap.width()*pixmap.height()==1)
+                ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
+            else
+                ui->albumLabel->setPixmap(pixmap.scaled(150,150));
+        }
     });
     connect(player,&PlayerCore::timeChanged,this,[this](int t) {
         ui->progressSlider->setValue(qRound(t / 1000.0f));
@@ -290,7 +295,7 @@ inline void PlayerWindow::connectUiSlots() {
 //        ui->searchLabel->setMovie(&gif);
 //        gif.start();
         scher->setKeyWord( ui->searchEdit->text().replace(';',""));
-        searchForPage();
+        searchForPage(1u);
 //        scher->doSearch(ui->comboBox->currentIndex());
 //        ui->searchLabel->setClickable(false);
 //        connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
@@ -533,15 +538,20 @@ void PlayerWindow::moveItem(bool moveUp) {
         return;
     int row = selected[0].row();
     if(!moveUp) {
-        if(player->moveDown(row))
+        if(player->moveDown(row)) {
             ui->playView->list().move(row,row + 1);
+            row++;
+        }
     }
     else {
-        if(player->moveUp(row))
+        if(player->moveUp(row)) {
             ui->playView->list().move(row,row - 1);
+            row--;
+        }
     }
     RESET_LABEL;
     ui->playView->commitChange();
+    ui->playView->setSelected(row);
 }
 
 PlayerWindow::~PlayerWindow() {

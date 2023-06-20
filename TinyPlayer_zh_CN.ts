@@ -238,6 +238,11 @@ background-color: rgb(200, 200,200);
     </message>
     <message>
         <location filename="src/searchresultwidget.ui" line="120"/>
+        <source>上一页</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/searchresultwidget.ui" line="130"/>
         <source>下一页</source>
         <translation type="unfinished"></translation>
     </message>

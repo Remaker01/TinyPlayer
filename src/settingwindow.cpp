@@ -60,6 +60,7 @@ inline void SettingWindow::initUi() {
     int w = maximumWidth(),h = img.height()/2;
     pl.setBrush(backgroundRole(),QBrush(img.scaled(w,h)));
     setPalette(pl);
+    ui->effectBox->setView(new QListView());
 }
 
 void SettingWindow::setAutoSave(bool f) {

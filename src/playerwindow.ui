@@ -61,12 +61,15 @@ QSlider::sub-page:horizontal{
     margin-bottom:4px;
     background: #8097b8;
 }
-QMenu{
-background-color:#ffffff;
+QMenu{background-color:#ffffff;}
+QMenu::item:hover{
+	background-color:#e7e7e7;
+	border-radius:4px;
+	color:#000000;
 }
-QMenu::item:hover{background-color:#e7e7e7;color:#000000;}
 QMenu::item:selected{
 	background-color: #e7e7e7; /*11100111*/
+	border-radius:4px;
 	color: #000000;
 }
 QMenu::item{
@@ -336,10 +339,18 @@ padding:1px 1px;
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
+        <property name="toolTip">
+         <string>搜索引擎</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QComboBox{padding:3px 3px;}
 QComboBox QAbstractItemView{outline:0px;}
-QComboBox QAbstractItemView::item{padding:3px;}</string>
+QComboBox QAbstractItemView::item{padding:3px 1px;}
+QComboBox QAbstractItemView::item:hover,
+QComboBox QAbstractItemView::item:selected{
+color: rgb(0, 0, 0);
+background-color: rgb(200, 230, 255);
+}</string>
         </property>
         <item>
          <property name="text">
@@ -686,7 +697,7 @@ background-color: rgb(200, 200,200);
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
 /*border:0px;*/
-border-radius:5px;
+border-radius:6px;
 background-position:center center;
 padding-bottom:5px;
 }
@@ -749,7 +760,7 @@ background-repeat:no-repeat;
 /*border:0px;*/
 border-radius:5px;
 background-position:center center;
-padding-bottom:5px;
+padding-bottom:6px;
 }
 QPushButton:hover{
 background-color: rgba(255, 255, 255,127);
@@ -808,7 +819,7 @@ background-color: rgb(200,200,200);
 background-color: rgba(255, 255, 255,0);
 background-repeat:no-repeat;
 /*border:0px;*/
-border-radius:5px;
+border-radius:4px;
 background-position:center center;
 padding-bottom:5px;
 }

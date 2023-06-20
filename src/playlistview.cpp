@@ -82,9 +82,18 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
     showDetail->setEnabled(true);
     open->setEnabled(true);
     QListView::contextMenuEvent(e);
+
+
 }
 #undef CONNECT_DOWNLOAD
 QModelIndexList PlayListView::getSelections() {return QListView::selectedIndexes();}
+
+void PlayListView::setSelected(int row) {
+    clearSelection();
+    QModelIndex target = model->index(row,0);
+    selectionModel()->select(target,QItemSelectionModel::Select);
+    setCurrentIndex(target);
+}
 
 //void PlayListView::setOpacity(double value) {
 //    int a = std::min(255,qRound(256*value));

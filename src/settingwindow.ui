@@ -46,7 +46,7 @@ QSpinBox,QLineEdit{
 padding:3px 1px;
 }
 QLineEdit{
-border-radius:3px;
+border-radius:4px;
 border:0px;
 }</string>
   </property>
@@ -148,107 +148,95 @@ border:0px;
      <x>10</x>
      <y>120</y>
      <width>341</width>
-     <height>43</height>
+     <height>51</height>
     </rect>
    </property>
-   <widget class="QLabel" name="effectLabel">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>11</y>
-      <width>40</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>音效:</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="effectBox">
-    <property name="geometry">
-     <rect>
-      <x>58</x>
-      <y>11</y>
-      <width>78</width>
-      <height>21</height>
-     </rect>
-    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <property name="text">
-      <string>平缓</string>
-     </property>
+     <widget class="QLabel" name="effectLabel">
+      <property name="text">
+       <string>音效:</string>
+      </property>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>经典</string>
-     </property>
+     <widget class="QComboBox" name="effectBox">
+      <property name="styleSheet">
+       <string notr="true">QComboBox{padding:3px 3px;}
+QComboBox QAbstractItemView{outline:0px;}
+QComboBox QAbstractItemView::item{padding:3px 1px;}
+QComboBox QAbstractItemView::item:selected,
+QComboBox QAbstractItemView::item:hover{
+background-color: rgb(205, 230, 255);
+color: rgb(0, 0, 0);
+}</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>平缓</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>经典</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>舞会</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>低音</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>高音</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>流行乐</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>摇滚</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>慢摇滚</string>
+       </property>
+      </item>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>舞会</string>
-     </property>
+     <widget class="QLabel" name="opacLabel">
+      <property name="text">
+       <string>工具条不透明度:</string>
+      </property>
+     </widget>
     </item>
     <item>
-     <property name="text">
-      <string>低音</string>
-     </property>
+     <widget class="QSpinBox" name="spinBox">
+      <property name="suffix">
+       <string>%</string>
+      </property>
+      <property name="minimum">
+       <number>30</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>70</number>
+      </property>
+     </widget>
     </item>
-    <item>
-     <property name="text">
-      <string>高音</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>流行乐</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>摇滚</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>慢摇滚</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="opacLabel">
-    <property name="geometry">
-     <rect>
-      <x>143</x>
-      <y>11</y>
-      <width>118</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>工具条不透明度:</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox">
-    <property name="geometry">
-     <rect>
-      <x>268</x>
-      <y>11</y>
-      <width>62</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="suffix">
-     <string>%</string>
-    </property>
-    <property name="minimum">
-     <number>30</number>
-    </property>
-    <property name="maximum">
-     <number>100</number>
-    </property>
-    <property name="value">
-     <number>70</number>
-    </property>
-   </widget>
+   </layout>
   </widget>
   <widget class="QWidget" name="widget_3" native="true">
    <property name="geometry">
