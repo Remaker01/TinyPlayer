@@ -37,8 +37,8 @@ public:
     ///获取指定编号的媒体目录url，相当于getMediaDetail(i).getUrl()
     const QUrl &getMedia(int i);
     ///获取媒体详细信息
-    Music getMediaDetail(int i);
-    Music getMediaDetail();
+    const Music &getMediaDetail(int i);
+    const Music &getMediaDetail();
     ///获取以秒为单位的时间
     int getPosInSecond();
     int getCurrentMediaIndex();

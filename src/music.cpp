@@ -42,12 +42,26 @@ const QString &Music::getDcrp() const {return description;}
 
 const QUrl &Music::getAlbumImage() const {return albumImage;}
 
+int Music::getLength() const {return length;}
+
 QString Music::formatTime() {
     if(!formattedTime.isEmpty())
         return formattedTime;
     int len = qRound(length / 1000.0);
     return formattedTime = QString::number(len / 60)
             + ':' + QString::number(len % 60);
+}
+
+void Music::setLength(int length) {
+    if(!isOnlineMusic()) {
+        return;
+    }
+    this->length = length;
+    this->formattedTime = "";
+}
+
+bool Music::isOnlineMusic() const {
+    return url.scheme().startsWith("http",Qt::CaseInsensitive);
 }
 
 bool Music::isLegal(QString media) {

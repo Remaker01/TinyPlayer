@@ -61,8 +61,14 @@ public:
     const QString &getDcrp() const;
     /// 获取专辑图片 注意：可能不准
     const QUrl &getAlbumImage() const;
-    ///获取经格式化后的时间
+    ///获取时长
+    int getLength() const;
+    ///获取经格式化后的时长
     QString formatTime();
+    ///设置线上音乐的时间
+    void setLength(int length);
+    /// 是否为在线音乐
+    bool isOnlineMusic() const;
 //    static Music getMediaDetail(const QString &fileName);
     /**
      * @brief 检查文件是否合法

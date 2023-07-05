@@ -85,10 +85,11 @@ QUrl PlayerCore::getMedia() {
 
 const QUrl &PlayerCore::getMedia(int i) {return list[i].getUrl();}
 
-Music PlayerCore::getMediaDetail(int i) {return list[i];}
+const Music &PlayerCore::getMediaDetail(int i) {return list[i];}
 
-Music PlayerCore::getMediaDetail() {
-    return (current >= 0)? list[current]:Music();
+const Music &PlayerCore::getMediaDetail() {
+    static const Music NULL_MUSIC = Music();
+    return (current >= 0)? list[current]:NULL_MUSIC;
 }
 
 int PlayerCore::getPosInSecond() {

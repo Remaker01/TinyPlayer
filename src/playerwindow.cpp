@@ -500,7 +500,7 @@ bool PlayerWindow::saveList(const QString &file) {
     ds.setVersion(QDataStream::Qt_5_2);
     ds << MAGIC; //magic number
     for(int i = 0; i < list.size(); i++) {
-        if(!list[i].contains("[线上音乐]"))
+        if(!player->getMediaDetail(i).isOnlineMusic())
             ds << player->getMedia(i).toLocalFile();
     }
     lstFile.close();

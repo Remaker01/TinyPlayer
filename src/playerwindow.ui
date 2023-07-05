@@ -63,12 +63,12 @@ QSlider::sub-page:horizontal{
 }
 QMenu{background-color:#ffffff;}
 QMenu::item:hover{
-	background-color:#e7e7e7;
+	background-color:#e5e5e5;
 	border-radius:4px;
 	color:#000000;
 }
 QMenu::item:selected{
-	background-color: #e7e7e7; /*11100111*/
+	background-color: #e5e5e5; /*11100111*/
 	border-radius:4px;
 	color: #000000;
 }
