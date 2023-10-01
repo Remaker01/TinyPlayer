@@ -1,7 +1,7 @@
 '''音乐搜索工具'''
 from urllib3.poolmanager import PoolManager
 #TODO: 可否在执行_write时做一些并发
-import json
+import ujson as json
 from urllib.parse import quote,urlsplit
 HOST = "http://www.zhiyunge.cn/music/"
 # ACCEPT_WEB = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
@@ -28,9 +28,9 @@ def _get_links_from_json(respo):
 def _redirect_addr(addr:str):
     if addr.find("music.163") < 0:
         return addr # 仅有网易会重定向?
-    response = _http.urlopen(url=addr,method="GET",headers=_head,preload_content=False,retries=2)
+    response = _http.urlopen(url=addr,method="GET",headers=_head,redirect=False)
     response.release_conn()
-    return response.geturl()
+    return response.headers.get("Location")
 def _is_url_ok(url:str):
     x = urlsplit(url)
     cmp = lambda x:len(x) >= 4 and x.find('.') >= 0
@@ -51,9 +51,8 @@ def getMusicList(name:str,providor="netease",page=1):
     # head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
     # respo_htm = http.request_encode_url("GET",url=web_url,headers=head) # 问题2：直接请求网页得不到结果
     head.update(head_json)
-    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=1) # 问题4：保证Content-type正确
-    # print(respo_json.headers)
-    result = _get_links_from_json(respo_json.data) # 问题3：是respo_json 别打错了
+    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=2) # 问题4：保证Content-type正确
+    result = _get_links_from_json(respo_json.data.decode("utf-8-sig")) # 问题3：是respo_json 别打错了
 
     fp = open("links.tmp","w",encoding="utf-8",newline='\n')
     for data in result:
@@ -62,5 +61,6 @@ def getMusicList(name:str,providor="netease",page=1):
             if _is_url_ok(x):
                 fp.write('\u00a0'.join(data) + '\n')
     fp.close()
+    return result
 if __name__ == "__main__":
     getMusicList("remake")
