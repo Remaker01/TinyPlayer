@@ -11,8 +11,6 @@ const QString OnlineSeacher::PROGRAM = "net_music";
 const QString OnlineSeacher::DOWN_PROGRAM = "down";
 #endif
 OnlineSeacher::OnlineSeacher(QObject *parent) : QObject(parent){
-    prog.setProgram(PROGRAM);
-    down_prog.setProgram(DOWN_PROGRAM);
     connectSlots();
 }
 
@@ -32,7 +30,7 @@ QList<ResultInfo> OnlineSeacher::analyzeResult() {
         return result;
     ResultInfo info;
     while (!f.atEnd()) {
-        QString line = f.readLine();
+		QString line = f.readLine();
         QStringList now = line.split(u8"\u00a0");
         info.title = now[0]/*.replace("下载","").replace("mp3","")*/;//防止"下载","MP3"等关键字出现异常
         info.artist = now[1];
@@ -56,8 +54,10 @@ void OnlineSeacher::doSearch(int method, uint page) {
     if(!QFile::exists(PROGRAM)) {
         emit done();
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载搜索引擎");
-        return;
-    }
+		return;
+	}
+	if(prog.program().isEmpty())
+		prog.setProgram(PROGRAM);
     QString methodStrs[] = {"0","1","2","3"};
     prog.setArguments({methodStrs[method],keyword,QString::number(page)});
     prog.start();
@@ -69,6 +69,8 @@ void OnlineSeacher::download(const QList<QUrl> &uri, const QString &path, const 
         QMessageBox::critical(nullptr,"出错了!","找不到或无法正确加载下载器");
         return;
     }
+	if(down_prog.program().isEmpty())
+		down_prog.setProgram(DOWN_PROGRAM);
     QStringList args;args.reserve(names.length());
     for(int i = 0; i < names.length(); i++) {
         QString suffix = uri[i].url().endsWith(".mp3",Qt::CaseInsensitive) ? ".mp3" : ".m4a";

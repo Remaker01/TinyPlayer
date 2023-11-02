@@ -2,7 +2,7 @@
 Music::Music(const QUrl &uri, const QString &altername):url(uri) {
     static VlcInstance ins(VlcCommon::args());
     VlcMedia m(uri.toString(),&ins);
-    m.parse();
+	m.parse();
     while (!m.parsed())
         QCoreApplication::processEvents();
     length = m.duration();
@@ -13,14 +13,14 @@ Music::Music(const QUrl &uri, const QString &altername):url(uri) {
         alterName = altername;
     }
     description = tmp.description();
-    album = tmp.album();
+	artist = tmp.artist();
     albumImage = tmp.artwork();
 }
 
 QString Music::toString() {
     return "标题：" + title + "\t\t\n" +
             "时长：" + formatTime() + '\n' +
-            "唱片集：" + album + '\n' +
+			"歌手：" + artist + '\n' +
             "描述：" + description;
 }
 
@@ -32,15 +32,15 @@ bool Music::equals(const Music &a) const {
 
 const QUrl &Music::getUrl() const {return url;}
 
-const QString &Music::getTitle() const {
+QString Music::getTitle() const {
     if(!url.isLocalFile()&&!alterName.isEmpty())
         return alterName;
     return title;
 }
 
-const QString &Music::getDcrp() const {return description;}
+QString Music::getDcrp() const {return description;}
 
-const QUrl &Music::getAlbumImage() const {return albumImage;}
+QUrl Music::getAlbumImage() const {return albumImage;}
 
 int Music::getLength() const {return length;}
 
@@ -56,7 +56,7 @@ void Music::setLength(int length) {
     if(!isOnlineMusic()) {
         return;
     }
-    this->length = length;
+    this->length = std::min(length,0);
     this->formattedTime = "";
 }
 

@@ -10,7 +10,7 @@ private:
     QString formattedTime;
     QUrl url;
     //歌曲名
-    QString title,description,album,alterName;
+    QString title,description,artist,alterName;
     QUrl albumImage;
     int length;
     static bool isMPEG(QFile *media,QDataStream &reader);
@@ -56,11 +56,11 @@ public:
     ///获取Url
     const QUrl &getUrl() const;
     /// 获取标题
-    const QString &getTitle() const;
+	QString getTitle() const;
     /// 获取介绍
-    const QString &getDcrp() const;
+	QString getDcrp() const;
     /// 获取专辑图片 注意：可能不准
-    const QUrl &getAlbumImage() const;
+	QUrl getAlbumImage() const;
     ///获取时长
     int getLength() const;
     ///获取经格式化后的时长
