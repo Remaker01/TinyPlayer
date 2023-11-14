@@ -194,7 +194,7 @@ inline void PlayerWindow::connectUiSlots() {
                                                         "环境:QT5.12+QT Creator5+CMake3.21+MinGW8.1\n"
 #endif
                                                         "作者邮箱:latexreal@163.com\t\n"
-                                                        "版本号:3.34  3.34.230520");
+														"版本号:3.40  3.40.231120");
         box.addButton("确定",QMessageBox::AcceptRole);
         QPushButton *addr = box.addButton("项目地址",QMessageBox::NoRole);
         connect(addr,&QPushButton::clicked,this,[]{
@@ -333,11 +333,7 @@ inline void PlayerWindow::ensureExit() {
 }
 
 inline void PlayerWindow::searchForPage(uint page) {
-//    if(res->isVisible()) {
-//        QMessageBox::warning(this,"提示","请关闭搜索结果窗口后进行新一次搜索");
-//        return;
-//    }
-    static QMovie gif(":/Icons/images/waiting.gif");  //282-285:设置gif
+	static QMovie gif(":/Icons/images/waiting.gif");  //设置gif
     gif.setScaledSize(ui->searchLabel->size());
     ui->searchLabel->setMovie(&gif);
     gif.start();
@@ -346,6 +342,64 @@ inline void PlayerWindow::searchForPage(uint page) {
     ui->searchLabel->setClickable(false);
     connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
     ui->searchEdit->clearFocus();
+}
+static constexpr uint16_t MAGIC = (uint16_t)0x35c4,MAGIC_OLD=(uint16_t)0x0102; //L=0x4c,S=0x53,T=0x54
+//文件格式：MAGIC+偏移量（仅在打开前列表为空时有意义）+数据
+bool PlayerWindow::saveList(const QString &file) {
+	QFile lstFile(file);
+	if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
+		return false;
+	const QStringList &list = ui->playView->list();
+	QDataStream ds(&lstFile);
+	ds.setVersion(QDataStream::Qt_5_2);
+	ds.setByteOrder(QDataStream::BigEndian);
+	int index = player->getCurrentMediaIndex();
+	if(index>=0&&!player->getMediaDetail(index).isOnlineMusic())
+		ds << MAGIC << (uint16_t)index; //magic number&index,跳过线上音乐
+	else
+		ds << MAGIC << (uint16_t)0;
+	for(int i = 0; i < list.size(); i++) {
+		if(!player->getMediaDetail(i).isOnlineMusic())
+			ds << player->getMedia(i).toLocalFile();
+	}
+	lstFile.close();
+	return true;
+}
+
+bool PlayerWindow::openList(const QString &file) {
+	QFile lstFile(file);
+	if(!lstFile.open(QIODevice::ReadOnly))
+		return false;
+	QDataStream ds(&lstFile);
+	ds.setVersion(QDataStream::Qt_5_2);
+	uint16_t magic,index;ds >> magic;
+	if(magic == MAGIC_OLD) {
+		openList_old(ds);return true;
+	}
+	if(magic != MAGIC)
+		return false;
+	ds >> index;
+	int oldSize = ui->playView->list().size();
+	QStringList tmp;
+	QString str;
+	while (!ds.atEnd()) {
+		ds >> str;tmp.append(str);
+	}
+	doAddMedia(tmp);
+	if(oldSize == 0)
+		player->setCurrentMediaIndex(index);
+	lstFile.close();
+	return true;
+}
+
+inline void PlayerWindow::openList_old(QDataStream &ds) {
+	QStringList tmp;
+	QString str;
+	while (!ds.atEnd()) {
+		ds >> str;tmp.append(str);
+	}
+	doAddMedia(tmp);
+	ds.device()->close();
 }
 
 void PlayerWindow::keyReleaseEvent(QKeyEvent *e) {
@@ -489,42 +543,6 @@ void PlayerWindow::on_onlineSearcher_done() {
         QMessageBox::warning(this,"温馨提示","搜索时出错，请检查网络连接");
     ui->searchLabel->setPixmap(QPixmap(":/Icons/images/serach.png"));
     ui->searchLabel->setClickable(true);
-}
-static constexpr uint16_t MAGIC = (uint16_t)0x0102;
-bool PlayerWindow::saveList(const QString &file) {
-    QFile lstFile(file);
-    if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
-        return false;
-    const QStringList &list = ui->playView->list();
-    QDataStream ds(&lstFile);
-    ds.setVersion(QDataStream::Qt_5_2);
-    ds << MAGIC; //magic number
-    for(int i = 0; i < list.size(); i++) {
-        if(!player->getMediaDetail(i).isOnlineMusic())
-            ds << player->getMedia(i).toLocalFile();
-    }
-    lstFile.close();
-    return true;
-}
-
-bool PlayerWindow::openList(const QString &file) {
-    QFile lstFile(file);
-    if(!lstFile.open(QIODevice::ReadOnly))
-        return false;
-    QDataStream ds(&lstFile);
-    ds.setVersion(QDataStream::Qt_5_2);
-    uint16_t magic;
-    ds >> magic;
-    if(magic != MAGIC)
-        return false;
-    QStringList tmp;
-    QString str;
-    while (!ds.atEnd()) {
-        ds >> str;tmp.append(str);
-    }
-    doAddMedia(tmp);
-    lstFile.close();
-    return true;
 }
 
 void PlayerWindow::on_playView_doubleClicked(const QModelIndex &index) {

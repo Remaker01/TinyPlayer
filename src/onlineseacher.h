@@ -21,7 +21,7 @@ private:
     QString keyword;
     QProcess prog,down_prog;
     void connectSlots();
-    //QString getFileSuffix(const QString &name);
+	static const char *getSuffix(const QString &uri);
 public:
     /// 搜索程序与下载程序的名称
     static const QString PROGRAM,DOWN_PROGRAM;
@@ -33,8 +33,11 @@ public:
      * @note 必须在done()信号调用后使用
      */
     QList<ResultInfo> analyzeResult();
+	/// 执行搜索动作。此函数是异步的。
     void doSearch(int method,uint page = 1);
-    void download(const QList<QUrl> &uri, const QString &path, const QStringList &names);
+	/// 执行下载动作。此函数是异步的。
+	void download(const QList<QUrl> &uri, const QString &path, const QList<QString> &names);
+	//以后新增搜索引擎使用
     virtual ~OnlineSeacher();
 signals:
     /// doSearch()结束后触发

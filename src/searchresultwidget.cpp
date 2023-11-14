@@ -1,8 +1,7 @@
 #include "searchresultwidget.h"
 #include <QDebug>
 #undef NDEBUG
-/* 分页查询
- * 思路：
+/* 分页查询思路：
  * 1.OnlineSeacher::doSearch中添加一个参数
  * 2.SearchResultWidget中添加上一页与下一页按钮。点击后：
  *   1.发送一个信号，参数为页数，PlayerWindow捕获到这个信号后立即重新开始搜索
@@ -19,7 +18,7 @@ SearchResultWidget::SearchResultWidget(QWidget *parent) :
     ui->tableWidget->setColumnCount(3);
     ui->tableWidget->setHorizontalHeaderLabels(headers);
     connect(ui->insertButton,&QPushButton::clicked,this,[this] {emit addItemRequirement(ui->autoDelBox->isChecked());});
-    gif = new QMovie(":/Icons/images/waiting.gif");gif->setParent(this);
+	gif = new QMovie(":/Icons/images/waiting.gif");gif->setParent(this);
     ui->gifLabel->setMovie(gif);
 }
 
@@ -29,7 +28,7 @@ void SearchResultWidget::setItems(const QList<ResultInfo> &results) {
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(results.size());
     for (int i = 0; i < results.size(); i++) {
-        QTableWidgetItem *itemTitle = new QTableWidgetItem(results[i].title),
+		QTableWidgetItem *itemTitle = new QTableWidgetItem(results[i].title),
         *itemArtist = new QTableWidgetItem(results[i].artist);
         QLabel *itemUrl = new QLabel(results[i].url);
         itemUrl->setCursor(Qt::PointingHandCursor);
@@ -59,10 +58,10 @@ QList<ResultInfo> SearchResultWidget::getSelectedItems() {
     QList<QTableWidgetItem*> itemSelected = ui->tableWidget->selectedItems();
     QList<ResultInfo> result;
     result.reserve(itemSelected.size());
-    for(int i = 0; i < itemSelected.size(); i++) {
+	for(int i = 0; i < itemSelected.size(); i++) {
         int p = itemSelected[i]->row();
         result.append(getItem(p));
-    }
+	}
     return result;
 }
 
@@ -102,19 +101,23 @@ void SearchResultWidget::on_tableWidget_cellClicked(int row, int column) {
 uint SearchResultWidget::getPage() {
     const QString pageStr = ui->pageLabel->text().mid(33);
     //查找第一个非数字
-    int n = 0;
+//    int n = 0;
+	uint page=0;
     for(QChar ch:pageStr) {
         if(!ch.isDigit())
             break;
-        n++;
+//        n++;
+		page = page*10u+(ch.toLatin1() - '0');
     }
-    return pageStr.midRef(0,n).toUInt();
+	return page;
 }
 
 void SearchResultWidget::setPage(uint page) {
     const QString pageStr = "<span style=\"font-size:small\">当前第%1页</span>";
     ui->pageLabel->setText(pageStr.arg(page));
     emit changPageRequirement(page);
+	if(page == 1u)
+		ui->prevButton->setEnabled(false);
 }
 
 void SearchResultWidget::on_nextButton_clicked() {
@@ -123,15 +126,14 @@ void SearchResultWidget::on_nextButton_clicked() {
     setPage(getPage()+1);
     ui->gifLabel->setVisible(true);
     gif->start();
-    ui->prevButton->setEnabled(true); //TODO:check this
+	ui->prevButton->setEnabled(true);
 }
 
 void SearchResultWidget::on_copyButton_clicked() {
     auto sel = getSelectedItems();
     if(sel.isEmpty())
         return;
-    QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(sel[0].url);
+	QApplication::clipboard()->setText(sel[0].url);
 }
 
 SearchResultWidget::~SearchResultWidget() {
@@ -146,7 +148,7 @@ void SearchResultWidget::on_prevButton_clicked() {
         setPage(page-1);
         ui->gifLabel->setVisible(true);
         gif->start();
-        if(page == 2)
-            ui->prevButton->setEnabled(false);
+//        if(page == 2)
+//            ui->prevButton->setEnabled(false);
     }
 }

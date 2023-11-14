@@ -35,6 +35,9 @@ private:
     void ensureExit();
     /// 搜寻第page页的内容，不改变关键字
     void searchForPage(uint page=1);
+	bool saveList(const QString &file);
+	bool openList(const QString &file);
+	void openList_old(QDataStream &lstFile);
 protected:
     void keyReleaseEvent(QKeyEvent *e);
     void closeEvent(QCloseEvent *ev);
@@ -52,8 +55,6 @@ private slots:
     void on_clearButton_clicked();
     void on_addButton_clicked();
     void on_onlineSearcher_done();
-    bool saveList(const QString &file);
-    bool openList(const QString &file);
     void moveItem(bool moveUp);
     void on_playView_doubleClicked(const QModelIndex &index);
 };

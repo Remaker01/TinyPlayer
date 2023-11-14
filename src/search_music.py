@@ -6,7 +6,7 @@ from urllib.parse import quote,urlsplit
 HOST = "http://www.zhiyunge.cn/music/"
 # ACCEPT_WEB = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
 ACCEPT_JSON = "application/json, text/javascript, */*; q=0.01"
-PROVIDORS = ("netease","kugou","qq","lizhi") # 网页搜索"生日快乐歌"耗时分别为1.29s,3.29s,2.89s，另外migu也可行但耗时太长(7.9s)
+PROVIDORS = ("netease","kugou","qq","lizhi","baidu")
 _head = {
     "Accept-encoding":"gzip, deflate, br",
     "Accept-Language" : "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
@@ -33,7 +33,7 @@ def _redirect_addr(addr:str):
     return response.headers.get("Location")
 def _is_url_ok(url:str):
     x = urlsplit(url)
-    cmp = lambda x:len(x) >= 4 and x.find('.') >= 0
+    cmp = lambda x:len(x) >= 5 and x.find('.') >= 0
     return cmp(x.path) or cmp(x.query)
 def getMusicList(name:str,providor="netease",page=1):
     if providor not in PROVIDORS:
@@ -51,7 +51,7 @@ def getMusicList(name:str,providor="netease",page=1):
     # head.update({"Accept":ACCEPT_WEB}) # 问题1：head是就地更新
     # respo_htm = http.request_encode_url("GET",url=web_url,headers=head) # 问题2：直接请求网页得不到结果
     head.update(head_json)
-    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=2) # 问题4：保证Content-type正确
+    respo_json = _http.request("POST",url=HOST,fields=data,headers=head,encode_multipart=False,retries=3) # 问题4：保证Content-type正确
     result = _get_links_from_json(respo_json.data.decode("utf-8-sig")) # 问题3：是respo_json 别打错了
 
     fp = open("links.tmp","w",encoding="utf-8",newline='\n')

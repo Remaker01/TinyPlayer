@@ -372,6 +372,11 @@ background-color: rgb(200, 230, 255);
           <string>荔枝网</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>百度音乐(较慢)</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>
