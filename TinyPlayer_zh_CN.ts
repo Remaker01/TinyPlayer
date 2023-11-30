@@ -71,7 +71,6 @@
     <message>
         <location filename="src/playerwindow.ui" line="377"/>
         <source>百度音乐(较慢)</source>
-        <oldsource>百度音乐(速度较慢)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -233,6 +232,11 @@ background-color: rgb(200, 200,200);
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/searchresultwidget.ui" line="64"/>
+        <source>&lt;span style=&quot;font-size:small&quot;&gt;当前第1页&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/searchresultwidget.ui" line="80"/>
         <source>插入后自动删除</source>
         <translation type="unfinished"></translation>
@@ -255,11 +259,6 @@ background-color: rgb(200, 200,200);
     <message>
         <location filename="src/searchresultwidget.ui" line="130"/>
         <source>下一页</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/searchresultwidget.ui" line="64"/>
-        <source>&lt;span style=&quot;font-size:small&quot;&gt;当前第1页&lt;/span&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

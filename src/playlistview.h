@@ -7,7 +7,7 @@ class PlayListView : public QListView {
 private:
     QAction *del,*open,*showDetail;
     QMenu *menu;
-    QStringListModel *model;
+//    QStringListModel *model;
     QStringList playList;
     void initMenu();
 protected:
@@ -21,8 +21,10 @@ public:
     void setSelected(int row);
 //    void setOpacity(double value);
     /// 提交修改。在对播放列表进行操作后调用
-    void commitChange();
-    QStringList &list();
+	Q_DECL_DEPRECATED void commitChange();
+	QStringList list();
+	void setList(const QStringList &list);
+	void clear();
     ~PlayListView();
 signals:
     void mediaDropin(const QStringList &medias);

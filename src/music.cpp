@@ -56,12 +56,12 @@ void Music::setLength(int length) {
     if(!isOnlineMusic()) {
         return;
     }
-    this->length = std::min(length,0);
+	this->length = std::max(length,0);
     this->formattedTime = "";
 }
 
 bool Music::isOnlineMusic() const {
-    return url.scheme().startsWith("http",Qt::CaseInsensitive);
+	return !url.isLocalFile();
 }
 
 bool Music::isLegal(QString media) {
@@ -70,7 +70,7 @@ bool Music::isLegal(QString media) {
         &Music::isM4A,&Music::isAiff,&Music::isAPE,&Music::isVorbis,&Music::isAU
     };
     QFile rawData(media);
-    if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
+	if(!rawData.open(QIODevice::ReadOnly)||rawData.size() <= 1024)
         return false;
     QDataStream ds(&rawData);
     for (auto checker : checkers) {

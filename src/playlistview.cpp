@@ -3,7 +3,7 @@
 #include <QDebug>
 #endif
 PlayListView::PlayListView(QWidget *parent):QListView(parent) {
-    model = new QStringListModel(this);
+	QStringListModel *model = new QStringListModel(this);
     setModel(model);
     setAcceptDrops(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -48,7 +48,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
             showDetail->setEnabled(false);
             bool hasLocal = false;
             for (const QModelIndex &idx:tmp) {
-                if(!playList[idx.row()].contains("[线上音乐]")) {
+				if(!playList[idx.row()].contains("\n[")) {
                     hasLocal = true;
                     open->setText("打开目录");
                     open->setEnabled(false);
@@ -61,7 +61,7 @@ void PlayListView::contextMenuEvent(QContextMenuEvent *e) {
             }
         }
         else {
-            if(playList[first].contains("[线上音乐]")) {
+			if(playList[first].contains("\n[")) {
                 open->setText("下载");
                 CONNECT_DOWNLOAD;
             }
@@ -90,18 +90,24 @@ QModelIndexList PlayListView::getSelections() {return QListView::selectedIndexes
 
 void PlayListView::setSelected(int row) {
     clearSelection();
-    QModelIndex target = model->index(row,0);
+	QStringListModel *model_ = (QStringListModel*)model();
+	QModelIndex target = model_->index(row,0);
     selectionModel()->select(target,QItemSelectionModel::Select);
     setCurrentIndex(target);
 }
 
-//void PlayListView::setOpacity(double value) {
-//    int a = std::min(255,qRound(256*value));
-//    setStyleSheet("background-color: rgba(255,255,255," + QString::number(a) + ");");
-//}
+void PlayListView::commitChange() {((QStringListModel*)model())->setStringList(playList);}
 
-void PlayListView::commitChange() {model->setStringList(playList);}
+QStringList PlayListView::list() {return playList;}
 
-QStringList &PlayListView::list() {return playList;}
+void PlayListView::setList(const QStringList &list) {
+	playList = list;
+	((QStringListModel*)model())->setStringList(playList);
+}
+
+void PlayListView::clear() {
+	playList.clear();
+	((QStringListModel*)model())->setStringList(playList);
+}
 
 PlayListView::~PlayListView() {}

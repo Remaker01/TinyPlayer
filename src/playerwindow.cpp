@@ -2,9 +2,9 @@
 #define CHANGE_TO_PLAYICON ui->playButton->changeState("开始",PLAY_ICON)
 #define CHANGE_TO_PAUSEICON ui->playButton->changeState("暂停",PAUSE_ICON)
 #define RESET_LABEL ui->mediaLabel->setText(player->getMediaDetail().getTitle())
-const QString PlayerWindow::CONFIG_FILE = "player.config";
-static const QLatin1Char zero('0');
-static const QString LAST_PATH = "/CONFIG/PATH",LAST_VOLUME = "/CONFIG/VOLUME",LAST_MODE = "/CONFIG/MODE";
+const QString PlayerWindow::CONFIG_FILE("player.config");
+#define Zero QChar('0')
+static const QString LAST_PATH("/CONFIG/PATH"),LAST_VOLUME("/CONFIG/VOLUME"),LAST_MODE("/CONFIG/MODE");
 PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     PLAY_ICON(":/Icons/images/play.png"),PAUSE_ICON(":/Icons/images/pause.png"),FramelessWindow(parent), ui(new Ui::PlayerWindow) {
     ui->setupUi(this);
@@ -92,14 +92,14 @@ inline void PlayerWindow::setBackground(const QPixmap &img) {
 inline void PlayerWindow::initConfiguration() {
     QSettings setting(CONFIG_FILE,QSettings::IniFormat);
     if(!QFile::exists(CONFIG_FILE)) {
-        setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
-        setting.setValue(LAST_VOLUME,50);
-        setting.setValue(LAST_MODE,0);
+		setting.setValue(LAST_PATH,QCoreApplication::applicationDirPath());
+		setting.setValue(LAST_VOLUME,50);
+		setting.setValue(LAST_MODE,0);
     }
     lastPath = setting.value(LAST_PATH).toString();
     ui->volumeSlider->setValue(setting.value(LAST_VOLUME).toInt());
     settingWind->loadSettings(setting);
-    setTitlebar(setting.value("TOOLBAR_OPAC").toDouble()); //如设置文件正常则98，99两行互换位置也正确，但如不正常，互换后则会异常退出
+	setTitlebar(setting.value("TOOLBAR_OPAC").toDouble()); //如设置文件正常则两行互换位置也正确，但如不正常，互换后则会异常退出
     changeMode((PlayerCore::PlayMode)setting.value(LAST_MODE).toInt());
 }
 
@@ -117,7 +117,6 @@ inline void PlayerWindow::connectSlots() {
          }
          else {
              player->pause();
-//             CHANGE_TO_PLAYICON;
          }
     });
     connect(ui->stopButton,&PlayerButton::clicked,this,[this]() {
@@ -134,19 +133,21 @@ inline void PlayerWindow::connectSlots() {
         ui->prevButton->setClickable(true);
         totTime = qRound(totTime / 1000.0);
         //改变总时间
-        ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,zero).arg(totTime % 60,2,10,zero));
+        ui->timeLable->setText(QString("/%1:%2").arg(totTime / 60,2,10,Zero).arg(totTime % 60,2,10,Zero));
         ui->progressSlider->setMaximum(totTime);
         RESET_LABEL;
         //改变专辑图片
         QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
-        if(albumPic.isEmpty())
+        QFile picFile(albumPic);
+        if(!picFile.open(QIODevice::ReadOnly))
             ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
         else {
-            QPixmap pixmap(albumPic);
+            QPixmap pixmap;pixmap.loadFromData(picFile.read(1 << 25)); //防止1.个别图片内容与后缀不匹配2.读取过大文件导致崩溃
             if(pixmap.isNull()||pixmap.width()*pixmap.height()==1)
                 ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
             else
                 ui->albumLabel->setPixmap(pixmap.scaled(150,150));
+            picFile.close();
         }
     });
     connect(player,&PlayerCore::timeChanged,this,[this](int t) {
@@ -257,12 +258,12 @@ inline void PlayerWindow::connectUiSlots() {
             QMessageBox::warning(this,"提示","一次最多下载15首哦~");
             return;
         }
-        QStringList names;
+        QStringList names,list = ui->playView->list();
         QList<QUrl> urlsToDown;
         for (const QModelIndex &i:indexes) {
             int j = i.row();
-            QString name = ui->playView->list().at(j);
-            names.append(name.replace("\n[线上音乐]",""));
+            QString name = list.at(j);
+            names.append(name.left(name.indexOf('\n')));
             urlsToDown.append(player->getMedia(j));
         }
         ui->waitingLabel->setText("正在下载");
@@ -337,7 +338,6 @@ inline void PlayerWindow::searchForPage(uint page) {
     gif.setScaledSize(ui->searchLabel->size());
     ui->searchLabel->setMovie(&gif);
     gif.start();
-    //scher->setKeyWord(ui->searchEdit->text().replace(';',""));
     scher->doSearch(ui->comboBox->currentIndex(),page);
     ui->searchLabel->setClickable(false);
     connect(scher,&OnlineSeacher::done,&gif,&QMovie::stop);
@@ -349,7 +349,7 @@ bool PlayerWindow::saveList(const QString &file) {
 	QFile lstFile(file);
 	if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
 		return false;
-	const QStringList &list = ui->playView->list();
+	const QStringList list = ui->playView->list();
 	QDataStream ds(&lstFile);
 	ds.setVersion(QDataStream::Qt_5_2);
 	ds.setByteOrder(QDataStream::BigEndian);
@@ -438,8 +438,8 @@ SLOTS
     ui->waitingLabel->show();\
     ui->cancelButton->show();\
     connect(ui->cancelButton,&QPushButton::clicked,[&]{f = false;});\
-    QStringList &playList = ui->playView->list();
-#define AFTER_ADD   ui->playView->commitChange();\
+	QStringList playList = ui->playView->list();
+#define AFTER_ADD   ui->playView->setList(playList);\
     if(playList.size() > 0)\
         ui->delButton->setEnabled(true);\
     if(player->getCurrentMediaIndex() < 0)\
@@ -475,7 +475,7 @@ void PlayerWindow::doAddOnlineMedia(const QList<ResultInfo> &medias) {
             break;
         ui->waitingLabel->setText("正在插入" + item.title);
         if(player->addToList(item.url,false,item.title))
-            playList.append(item.title + " - " + item.artist + "\n[线上音乐]");
+			playList.append(QString("%1 - %2\n[%3]").arg(item.title,item.artist,item.getSupplier()));
     }
     AFTER_ADD
 }
@@ -491,7 +491,7 @@ void PlayerWindow::on_volumeSlider_valueChanged(int value) {
 }
 
 void PlayerWindow::on_progressSlider_valueChanged(int value) {
-    ui->currentLabel->setText(QString("%1:%2").arg(value / 60,2,10,zero).arg(value % 60,2,10,zero));
+    ui->currentLabel->setText(QString("%1:%2").arg(value / 60,2,10,Zero).arg(value % 60,2,10,Zero));
 }
 
 void PlayerWindow::on_progressSlider_sliderMoved(int position) {player->setPos(position);}
@@ -507,7 +507,7 @@ void PlayerWindow::on_progressSlider_sliderMoved(int position) {player->setPos(p
 void PlayerWindow::doDelMedia() {
     QModelIndexList tmp = ui->playView->getSelections();
     QList<int> selections;
-    QStringList &playList = ui->playView->list();
+	QStringList playList = ui->playView->list();
     for (QModelIndex &i:tmp)
         selections.append(i.row());
     std::sort(selections.begin(),selections.end(),std::greater<int>());
@@ -517,15 +517,14 @@ void PlayerWindow::doDelMedia() {
         else
             playList.removeAt(i);
     }
-    ui->playView->commitChange();
+	ui->playView->setList(playList);
     bool f = (playList.size() > 0);
     ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");
     AFTER_DEL(f)
 }
 
 void PlayerWindow::on_clearButton_clicked() {
-    ui->playView->list().clear();
-    ui->playView->commitChange();
+	ui->playView->clear();
     player->clear();
     ui->curlistLabel->setText("当前播放列表 共0项");
     ui->progressSlider->setMaximum(0);
@@ -550,25 +549,26 @@ void PlayerWindow::on_playView_doubleClicked(const QModelIndex &index) {
     player->play();
 }
 
-void PlayerWindow::moveItem(bool moveUp) {
+inline void PlayerWindow::moveItem(bool moveUp) {
     QModelIndexList selected = ui->playView->getSelections();
     if(selected.isEmpty()||selected.size() > 1)
         return;
     int row = selected[0].row();
+	QStringList playList = ui->playView->list();
     if(!moveUp) {
         if(player->moveDown(row)) {
-            ui->playView->list().move(row,row + 1);
+			playList.move(row,row + 1);
             row++;
         }
     }
     else {
         if(player->moveUp(row)) {
-            ui->playView->list().move(row,row - 1);
+			playList.move(row,row - 1);
             row--;
         }
     }
     RESET_LABEL;
-    ui->playView->commitChange();
+	ui->playView->setList(playList);
     ui->playView->setSelected(row);
 }
 
@@ -582,3 +582,4 @@ PlayerWindow::~PlayerWindow() {
     delete ui;
     delete settingWind;
 }
+#undef Zero
