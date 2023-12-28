@@ -1,5 +1,5 @@
 #include "searchresultwidget.h"
-#include <QDebug>
+#include <QTimer>
 #undef NDEBUG
 /* 分页查询思路：
  * 1.OnlineSeacher::doSearch中添加一个参数
@@ -20,6 +20,7 @@ SearchResultWidget::SearchResultWidget(QWidget *parent) :
     connect(ui->insertButton,&QPushButton::clicked,this,[this] {emit addItemRequirement(ui->autoDelBox->isChecked());});
 	gif = new QMovie(":/Icons/images/waiting.gif");gif->setParent(this);
     ui->gifLabel->setMovie(gif);
+    ui->copiedLabel->setVisible(false);
 }
 
 void SearchResultWidget::setItems(const QList<ResultInfo> &results) {
@@ -134,6 +135,8 @@ void SearchResultWidget::on_copyButton_clicked() {
     if(sel.isEmpty())
         return;
 	QApplication::clipboard()->setText(sel[0].url);
+	ui->copiedLabel->setVisible(true);
+	QTimer::singleShot(1000,ui->copiedLabel,&QWidget::hide);
 }
 
 SearchResultWidget::~SearchResultWidget() {

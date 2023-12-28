@@ -20,6 +20,7 @@ private:
     int current = -1;
     int startLoc = 0;
     void connectSlots();
+    void reset();
     void setMedia(const QString &media);
     void setMedia(const QUrl &media);
 public:

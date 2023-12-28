@@ -1,4 +1,6 @@
 #include "framelesswindow.h"
+#include <QBitmap>
+#include <QPainter>
 FramelessWindow::FramelessWindow(QWidget *par) : QWidget(par),leftBtnPressed(false),dir(NONE) {
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_StyledBackground);
@@ -196,7 +198,6 @@ void FramelessWindow::mouseReleaseEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton) {
         leftBtnPressed = false;
         if (dir != NONE) {
-            releaseMouse(); //释放鼠标抓取
             setCursor(QCursor(Qt::ArrowCursor));
             dir = NONE;
         }
@@ -210,6 +211,16 @@ void FramelessWindow::showEvent(QShowEvent *ev) {
     anim.setEndValue(1.0);
     anim.start();
     ev->accept();
+}
+
+void FramelessWindow::paintEvent(QPaintEvent *ev) {
+    QBitmap bmp(this->size());
+    bmp.fill(QColor(Qt::white));
+    QPainter p(&bmp);
+    p.setPen(Qt::NoPen);
+    p.setBrush(QBrush(Qt::black));
+    p.drawRoundedRect(bmp.rect(),7,7);
+    setMask(bmp);
 }
 
 void FramelessWindow::showMenu(QRect legalRange) {

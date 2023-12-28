@@ -37,18 +37,14 @@
    <string>TinyPlayer</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget#PlayerWindow{
-border:1px dashed gray;
-border-radius:8px;
-}
-QSlider::handle:horizontal {
+   <string notr="true">QSlider::handle:horizontal{
     border-image:url(:/Icons/images/border.png);
     width: 15px;
     height:12px;
     margin-top:-5px;
     margin-bottom:-5px;
 }
-QSlider::groove:horizontal {
+QSlider::groove:horizontal{
     border-radius:6px;
     height:5px;
     background:#505050;

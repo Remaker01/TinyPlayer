@@ -95,6 +95,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QLabel" name="copiedLabel">
+        <property name="text">
+         <string>复制成功 </string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="copyButton">
         <property name="text">
          <string>复制链接</string>

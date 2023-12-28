@@ -143,7 +143,7 @@ inline void PlayerWindow::connectSlots() {
             ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
         else {
             QPixmap pixmap;pixmap.loadFromData(picFile.read(1 << 25)); //防止1.个别图片内容与后缀不匹配2.读取过大文件导致崩溃
-            if(pixmap.isNull()||pixmap.width()*pixmap.height()==1)
+            if(pixmap.isNull()||pixmap.width()*pixmap.height()<100)
                 ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
             else
                 ui->albumLabel->setPixmap(pixmap.scaled(150,150));
@@ -345,7 +345,7 @@ inline void PlayerWindow::searchForPage(uint page) {
 }
 static constexpr uint16_t MAGIC = (uint16_t)0x35c4,MAGIC_OLD=(uint16_t)0x0102; //L=0x4c,S=0x53,T=0x54
 //文件格式：MAGIC+偏移量（仅在打开前列表为空时有意义）+数据
-bool PlayerWindow::saveList(const QString &file) {
+inline bool PlayerWindow::saveList(const QString &file) {
 	QFile lstFile(file);
 	if(!lstFile.open(QIODevice::ReadWrite|QIODevice::Truncate))
 		return false;
@@ -366,7 +366,7 @@ bool PlayerWindow::saveList(const QString &file) {
 	return true;
 }
 
-bool PlayerWindow::openList(const QString &file) {
+inline bool PlayerWindow::openList(const QString &file) {
 	QFile lstFile(file);
 	if(!lstFile.open(QIODevice::ReadOnly))
 		return false;

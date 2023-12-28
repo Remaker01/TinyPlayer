@@ -30,14 +30,14 @@ public:
      * @param style 样式表，默认为空
      */
     void setMenu(QList<QAction*> actions,const QString &style = QString());
-//    QMenu *getMenu();
 protected:
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
     void showEvent(QShowEvent *ev);
+    void paintEvent(QPaintEvent *ev);
 private:
-    static constexpr int PADDING = 2; //设置窗口边距
+    static constexpr int PADDING = 3; //设置窗口边距
     QPoint mouseLoc; //鼠标位置
     volatile bool leftBtnPressed; //左键是否按下
     volatile Diretion dir; //记录窗口大小改变的方向

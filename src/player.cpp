@@ -2,8 +2,6 @@
 #ifndef NDEBUG
 #include <QDebug>
 #endif
-#define reset() setMedia(list[current].getUrl())
-
 const QString PlayerCore::Formats[FORMAT_COUNT] = {".mp3",".mp2",".mp1","mpga",  //MPEG Audio
                                                    ".wav",".wma",   //Windows Audio
                                                    ".flac",".ape",  //Lossless
@@ -21,7 +19,6 @@ PlayerCore::PlayerCore(QObject *parent):VlcMediaPlayer(&ins) {
 }
 
 inline void PlayerCore::connectSlots() {
-    //在setMedia中会将startLoc设为0，无需专门设置
     connect(this,&VlcMediaPlayer::end,this,[this]() {
         switch (mode) {
         case SIGNLE:
@@ -45,8 +42,9 @@ inline void PlayerCore::connectSlots() {
             play();
             break;
         case LIST_LOOP:
-            if(list.size() == 1)
+            if(list.size() == 1) {
                 reset();
+            }
             else
                 goNext();
             play();
@@ -57,11 +55,13 @@ inline void PlayerCore::connectSlots() {
     connect(this,&VlcMediaPlayer::stopped,this,[this]{startLoc = 0;});
 }
 
+inline void PlayerCore::reset() {VlcMediaPlayer::stop();startLoc = 0;}
+
 inline void PlayerCore::setMedia(const QString &media) {
     Vlc::State sta = VlcMediaPlayer::state();
     VlcMediaPlayer::stop();
     delete curMedia;
-    curMedia = nullptr;
+//    curMedia = nullptr;
     if(!media.isEmpty()) {
         curMedia = new VlcMedia(media,&ins);
         curMedia->parse();
@@ -70,6 +70,11 @@ inline void PlayerCore::setMedia(const QString &media) {
         VlcMediaPlayer::openOnly(curMedia);
         emit VlcMediaPlayer::lengthChanged(curMedia->duration()); //bug in lib?
         setPos(0);
+    }
+    else {
+        curMedia = nullptr;
+        current = -1;
+        emit VlcMediaPlayer::lengthChanged(0);
     }
     if(sta == Vlc::Playing||sta == Vlc::Paused)
         emit finished();
@@ -197,11 +202,23 @@ void PlayerCore::play() {
 }
 
 void PlayerCore::goNext() {
+    if(current < 0) {
+#ifndef NDEBUG
+        qWarning() << "WARNING:goNext:current == -1,exiting.";
+#endif
+        return;
+    }
     if(list.size() > 1)
         setCurrentMediaIndex((current + 1) % list.size());
 }
 
 void PlayerCore::goPrevious() {
+    if(current < 0) {
+#ifndef NDEBUG
+        qWarning() << "WARNING:goNext:current == -1,exiting.";
+#endif
+        return;
+    }
     if(list.size() > 1)
         setCurrentMediaIndex((current == 0) ? list.size() - 1 : current - 1);
 }
