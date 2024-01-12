@@ -57,6 +57,7 @@ public:
     const QUrl &getUrl() const;
     /// 获取标题
 	QString getTitle() const;
+	QString getArtist() const;
     /// 获取介绍
 	QString getDcrp() const;
     /// 获取专辑图片 注意：可能不准

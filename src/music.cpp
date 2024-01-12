@@ -18,7 +18,7 @@ Music::Music(const QUrl &uri, const QString &altername):url(uri) {
 }
 
 QString Music::toString() {
-    return "标题：" + title + "\t\t\n" +
+    return "标题：" + getTitle() + "\t\t\n" +
             "时长：" + formatTime() + '\n' +
 			"歌手：" + artist + '\n' +
             "描述：" + description;
@@ -38,6 +38,8 @@ QString Music::getTitle() const {
     return title;
 }
 
+QString Music::getArtist() const {return artist;}
+
 QString Music::getDcrp() const {return description;}
 
 QUrl Music::getAlbumImage() const {return albumImage;}
@@ -47,7 +49,7 @@ int Music::getLength() const {return length;}
 QString Music::formatTime() {
     if(!formattedTime.isEmpty())
         return formattedTime;
-    int len = qRound(length / 1000.0);
+    int len = qRound(length / 1000.0f);
     return formattedTime = QString::number(len / 60)
             + ':' + QString::number(len % 60);
 }

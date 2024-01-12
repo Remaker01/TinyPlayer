@@ -1,5 +1,4 @@
 #include "playerbutton.h"
-#include <QDebug>
 PlayerButton::PlayerButton(QWidget *parent):QLabel(parent) {
     setScaledContents(true);
     setCursor(Qt::PointingHandCursor);

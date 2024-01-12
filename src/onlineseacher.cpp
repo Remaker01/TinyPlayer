@@ -1,5 +1,4 @@
 #include "onlineseacher.h"
-#include <QDebug>
 #ifdef Q_OS_WIN
 const QString OnlineSeacher::PROGRAM = "net_music.exe";
 const QString OnlineSeacher::DOWN_PROGRAM = "down.exe";

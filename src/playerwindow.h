@@ -46,8 +46,10 @@ public:
     void initConfiguration();
     ~PlayerWindow();
 private slots:
-    void doAddMedia(QStringList medias);
-    void doAddOnlineMedia(const QList<ResultInfo> &medias);
+    void doAddLocalMedias(QStringList medias,bool reset = true);
+    void doAddLocalMedia(QString media, bool reset);
+    void doAddOnlineMedias(const QList<ResultInfo> &medias,bool reset=true);
+    void doAddOnlineMedia(const ResultInfo &media, bool reset);
     void on_volumeSlider_valueChanged(int value);
     void on_progressSlider_valueChanged(int value);
     void on_progressSlider_sliderMoved(int position);

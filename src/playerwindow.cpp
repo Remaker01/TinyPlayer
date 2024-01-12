@@ -19,7 +19,7 @@ PlayerWindow::PlayerWindow(const QString &arg,QWidget *parent):
     //逻辑：如果打开的是音频文件，则直接播放然后打开default.lst，否则，只打开arg指定的播放列表，无论是否成功都不打开default.lst
     if(!arg.isEmpty()) {
         if(Music::isLegal(arg)) {
-            doAddMedia(QStringList(arg));
+            doAddLocalMedias(QStringList(arg));
             ui->playButton->click();
             if(settingWind->getAutoSave())
                 openList("default.lst");
@@ -137,9 +137,10 @@ inline void PlayerWindow::connectSlots() {
         ui->progressSlider->setMaximum(totTime);
         RESET_LABEL;
         //改变专辑图片
-        QString albumPic = player->getMediaDetail().getAlbumImage().toLocalFile();
+        Music curMusic = player->getMediaDetail();
+        QString albumPic = curMusic.getAlbumImage().toLocalFile();
         QFile picFile(albumPic);
-        if(!picFile.open(QIODevice::ReadOnly))
+        if(curMusic.isOnlineMusic()||!picFile.open(QIODevice::ReadOnly))
             ui->albumLabel->setPixmap(QPixmap(":/Icons/images/non-music.png").scaled(150,150));
         else {
             QPixmap pixmap;pixmap.loadFromData(picFile.read(1 << 25)); //防止1.个别图片内容与后缀不匹配2.读取过大文件导致崩溃
@@ -184,7 +185,7 @@ inline void PlayerWindow::connectSlots() {
 
 inline void PlayerWindow::connectUiSlots() {
     connect(ui->actionExit,&QAction::triggered,this,&PlayerWindow::ensureExit);
-    connect(ui->playView,&PlayListView::mediaDropin,this,&PlayerWindow::doAddMedia);
+    connect(ui->playView,&PlayListView::mediaDropin,this,[this](const QStringList &medias) {doAddLocalMedias(medias);});
     connect(ui->delButton,&QPushButton::clicked,this,&PlayerWindow::doDelMedia);
     connect(ui->playView,&PlayListView::itemDelRequirement,this,&PlayerWindow::doDelMedia);
     connect(ui->progressSlider,&PlayerSlider::playerSliderClicked,player,&PlayerCore::setPos);
@@ -205,7 +206,7 @@ inline void PlayerWindow::connectUiSlots() {
     }); 
     connect(ui->actionopenFile,&QAction::triggered,this,[this]() {
         QStringList medias(QFileDialog::getOpenFileNames(this,"选择文件(将自动筛选合法格式，支持格式请查看帮助)",lastPath));
-        doAddMedia(medias);
+        doAddLocalMedias(medias);
     });
     connect(ui->modeButton,&PlayerButton::clicked,this,[this]() {
         int now = (int)player->mode;
@@ -278,7 +279,7 @@ inline void PlayerWindow::connectUiSlots() {
         QStringList files = dir.entryList();
         for (QString &str : files)
             str = dir.absolutePath() + '/' + str;
-        doAddMedia(files);
+        doAddLocalMedias(files);
     });
     connect(ui->playView,&PlayListView::showDetailRequirement,this,[this](int row) {
         Music detail = player->getMediaDetail(row);
@@ -306,7 +307,7 @@ inline void PlayerWindow::connectUiSlots() {
         player->setSoundEffect((uint)i);
     });
     connect(res,&SearchResultWidget::addItemRequirement,this,[this](bool autoDel) {
-        doAddOnlineMedia(res->getSelectedItems());
+        doAddOnlineMedias(res->getSelectedItems());
         if(autoDel)
             res->removeSelected();
     });
@@ -354,13 +355,18 @@ inline bool PlayerWindow::saveList(const QString &file) {
 	ds.setVersion(QDataStream::Qt_5_2);
 	ds.setByteOrder(QDataStream::BigEndian);
 	int index = player->getCurrentMediaIndex();
-	if(index>=0&&!player->getMediaDetail(index).isOnlineMusic())
-		ds << MAGIC << (uint16_t)index; //magic number&index,跳过线上音乐
+	if(index>=0)
+		ds << MAGIC << (uint16_t)index; //magic number&index
 	else
 		ds << MAGIC << (uint16_t)0;
 	for(int i = 0; i < list.size(); i++) {
-		if(!player->getMediaDetail(i).isOnlineMusic())
-			ds << player->getMedia(i).toLocalFile();
+		const QUrl &u = player->getMedia(i);
+		if(u.isLocalFile())
+			ds << u.url();
+		else {
+			const Music &detail = player->getMediaDetail(i);
+			ds << u.url() << detail.getTitle() << detail.getArtist();
+		}
 	}
 	lstFile.close();
 	return true;
@@ -383,9 +389,18 @@ inline bool PlayerWindow::openList(const QString &file) {
 	QStringList tmp;
 	QString str;
 	while (!ds.atEnd()) {
-		ds >> str;tmp.append(str);
+		ds >> str;
+		QUrl u(str);
+		if(!u.isLocalFile()) {
+			ResultInfo info;info.url = str;
+			ds >> info.title >> info.artist;
+			doAddOnlineMedia(info,false);
+		}
+		else {
+			doAddLocalMedia(str,false);
+		}
 	}
-	doAddMedia(tmp);
+	doAddLocalMedias(tmp,false);
 	if(oldSize == 0)
 		player->setCurrentMediaIndex(index);
 	lstFile.close();
@@ -398,7 +413,7 @@ inline void PlayerWindow::openList_old(QDataStream &ds) {
 	while (!ds.atEnd()) {
 		ds >> str;tmp.append(str);
 	}
-	doAddMedia(tmp);
+	doAddLocalMedias(tmp);
 	ds.device()->close();
 }
 
@@ -442,31 +457,42 @@ SLOTS
 #define AFTER_ADD   ui->playView->setList(playList);\
     if(playList.size() > 0)\
         ui->delButton->setEnabled(true);\
-    if(player->getCurrentMediaIndex() < 0)\
+    if(reset&&player->getCurrentMediaIndex() < 0)\
         player->setCurrentMediaIndex(0);\
     f = true;\
     ui->curlistLabel->setText("当前播放列表 共" + QString::number(playList.size()) + "项");\
     ui->cancelButton->hide();\
     ui->waitingLabel->hide();
-void PlayerWindow::doAddMedia(QStringList medias) {
+void PlayerWindow::doAddLocalMedias(QStringList medias, bool reset) {
     if(medias.isEmpty())
         return;
     BEFORE_ADD
     for(QString &fullName:medias) {
         if(!f)
             break;
-        if(!fullName.startsWith("http",Qt::CaseInsensitive)) {  //本地
+        fullName.replace("file:///",""); //以防万一
+//        if(!fullName.startsWith("http",Qt::CaseInsensitive)) {  //本地
             QFileInfo a(fullName);
             ui->waitingLabel->setText("正在打开" + a.fileName());
             if(player->addToList(fullName))
                 playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(fullName)).formatTime());
             lastPath = a.absolutePath();
-        }
+//        }
     }
     AFTER_ADD
 }
 
-void PlayerWindow::doAddOnlineMedia(const QList<ResultInfo> &medias) {
+void PlayerWindow::doAddLocalMedia(QString media,bool reset) {
+    BEFORE_ADD
+    media.replace("file:///","");
+    QFileInfo a(media);
+    if(player->addToList(media))
+        playList.append(a.fileName() + '\n' + Music(QUrl::fromLocalFile(media)).formatTime());
+    ui->playView->setList(playList);
+    AFTER_ADD
+}
+
+void PlayerWindow::doAddOnlineMedias(const QList<ResultInfo> &medias,bool reset) {
     if(medias.isEmpty())
         return;
     BEFORE_ADD
@@ -477,6 +503,14 @@ void PlayerWindow::doAddOnlineMedia(const QList<ResultInfo> &medias) {
         if(player->addToList(item.url,false,item.title))
 			playList.append(QString("%1 - %2\n[%3]").arg(item.title,item.artist,item.getSupplier()));
     }
+    AFTER_ADD
+}
+
+void PlayerWindow::doAddOnlineMedia(const ResultInfo &media,bool reset) {
+    BEFORE_ADD
+    if(player->addToList(media.url,false,media.title))
+        playList.append(QString("%1 - %2\n[%3]").arg(media.title,media.artist,media.getSupplier()));
+    ui->playView->setList(playList);
     AFTER_ADD
 }
 #undef BEFORE_ADD
